@@ -1,5 +1,14 @@
 # NYU Neurolearning Project
 
+## Quickstart
+
+### Install
+npm install
+
+### Run
+yarn dev
+
+
 ## Based on:
 
 # electron-react-boilerplate
