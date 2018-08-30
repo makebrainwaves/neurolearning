@@ -60,6 +60,20 @@ export default merge.smart(baseConfig, {
   module: {
     rules: [
       {
+        test: /\.mp4/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 10000,
+            mimetype: 'video/mp4'
+          }
+        }
+      },
+      {
+        test: /\.html$/,
+        use: 'html-loader?attrs[]=video.src'
+      },
+      {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         use: {
