@@ -45,6 +45,10 @@ export default {
             cacheDirectory: true
           }
         }
+      },
+      {
+        test: /\.mp4?$/,
+        loader: 'file-loader'
       }
     ]
   },

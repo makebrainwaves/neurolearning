@@ -12,9 +12,13 @@ export default class Home extends Component<Props> {
   render() {
     return (
       <div className={styles.container} data-tid="container">
-        <h2>Neurolearning</h2>
-        <h3>Video Container</h3>
-        <Link to={routes.COUNTER}>to Counter</Link>
+        <h3>Neurolearning Video Container</h3>
+        <video width="70%" height="70%" src="../app/Bip_KC_Trim.mp4" controls>
+          <track kind="captions" {...Props} />
+        </video>
+        <div>
+          <Link to={routes.COUNTER}>to Counter</Link>
+        </div>
       </div>
     );
   }
