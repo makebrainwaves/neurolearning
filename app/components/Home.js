@@ -16,7 +16,12 @@ export default class Home extends Component<Props> {
         <h3>Neurolearning</h3>
         <h3>Video Container</h3>
 
-        <Link to={routes.COUNTER}>to Counter</Link>
+        <video width="70%" height="70%" src="../app/Bip_KC_Trim.mp4" controls>
+          <track kind="captions" {...Props} />
+        </video>
+        <div>
+          <Link to={routes.COUNTER}>to Counter</Link>
+        </div>
       </div>
     );
   }
