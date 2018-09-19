@@ -21,7 +21,7 @@ export default class Home extends Component<Props> {
             className={styles.video}
             width="70%"
             height="70%"
-            src="../app/Bip_KC.mp4"
+            src="../app/Bip_KC_Trim.mp4"
             controls
           >
             <track kind="captions" {...Props} />
@@ -63,6 +63,8 @@ export default class Home extends Component<Props> {
                       eyesight
                     </label>
                   </div>
+                  <br />
+                  <Button>Submit</Button>
                 </form>
               </Modal.Description>
             </Modal.Content>
