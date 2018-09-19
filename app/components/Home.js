@@ -11,7 +11,14 @@ type Props = {};
 export default class Home extends Component<Props> {
   props: Props;
 
+  state = { openModal: false };
+
+  close = () => this.setState({ openModal: false });
+
+  open = () => this.setState({ openModal: true });
+
   render() {
+    const { openModal } = this.state;
     return (
       <div className={styles.container} data-tid="container">
         <h3>Neurolearning</h3>
@@ -28,7 +35,12 @@ export default class Home extends Component<Props> {
           </video>
         </div>
 
-        <Modal className={styles.modal} trigger={<Button>Show Modal</Button>}>
+        <Modal
+          open={openModal}
+          className={styles.modal}
+          trigger={<Button onClick={this.open}>Show Modal</Button>}
+          onClose={this.close}
+        >
           <div className={styles.inner}>
             <Modal.Header>Popup Question #1</Modal.Header>
             <Modal.Content className={styles.content}>
@@ -64,7 +76,9 @@ export default class Home extends Component<Props> {
                     </label>
                   </div>
                   <br />
-                  <Button>Submit</Button>
+                  <Button onClick={this.close} negative>
+                    I dont know
+                  </Button>
                 </form>
               </Modal.Description>
             </Modal.Content>
