@@ -19,6 +19,7 @@ export default class Home extends Component<Props> {
 
   render() {
     const { openModal } = this.state;
+
     return (
       <div className={styles.container} data-tid="container">
         <h3>Neurolearning</h3>
@@ -39,6 +40,8 @@ export default class Home extends Component<Props> {
           open={openModal}
           className={styles.modal}
           trigger={<Button onClick={this.open}>Show Modal</Button>}
+          closeOnEscape={false}
+          closeOnDimmerClick={false}
           onClose={this.close}
         >
           <div className={styles.inner}>
