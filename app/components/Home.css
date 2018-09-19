@@ -1,6 +1,10 @@
+body {
+  margin: 0;
+}
+
 .container {
   position: absolute;
-  top: 10%;
+  top: 0%;
   left: 10px;
   text-align: center;
 }
@@ -11,4 +15,48 @@
 
 .container a {
   font-size: 1.4rem;
+}
+
+.content {
+  will-change: transform, opacity;
+}
+
+.video {
+}
+
+.modal {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  position: absolute;
+  display: block;
+  text-align: center;
+}
+.inner {
+  display: block;
+  background-color: #fff;
+  color: #000;
+  height: 40%;
+  width: 40%;
+  padding: 30px;
+  margin-left: 25%;
+  margin-top: 12%;
+  border-radius: 15px;
+}
+
+form {
+  text-align: left;
+  margin-left: 33%;
+}
+.ui.page.modals.dimmer.transition.visible.active {
+  display: flex !important;
+  height: 100%;
+  width: 100%;
+  background-color: green;
+  position: absolute;
+}
+
+button.ui.button {
+  margin-bottom: 60px;
 }
