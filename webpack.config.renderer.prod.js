@@ -31,6 +31,16 @@ export default merge.smart(baseConfig, {
 
   module: {
     rules: [
+      {
+        test: /\.mp4/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 10000,
+            mimetype: 'video/mp4'
+          }
+        }
+      },
       // Extract all .global.css to style.css as is
       {
         test: /\.global\.css$/,
