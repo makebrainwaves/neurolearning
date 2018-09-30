@@ -26,25 +26,74 @@ export default class Home extends Component<Props> {
             <Input placeholder="Subject ID" />
           </p>
         </div>
-        <div>
-          <p>
-            <Link to={routes.VIDEOSET}>Video Set #1</Link>
-          </p>
+
+        <div className={styles.selectionContainer}>
+          <div className={styles.selection}>
+            <span className={styles.selectionText}>Play first:</span>
+            <div className={styles.addValue}>
+              <select>
+                <option value="vid1"> Video 1</option>
+                <option value="vid2"> Video 2</option>
+                <option value="vid3"> Video 3</option>
+                <option value="vid4"> Video 4</option>
+              </select>
+              <select>
+                <option value="control">Control</option>
+                <option value="experimental">Experimental</option>
+              </select>
+            </div>
+          </div>
+
+          <div className={styles.selection}>
+            <span className={styles.selectionText}>Play second:</span>
+            <div className={styles.addValue}>
+              <select>
+                <option value="vid1"> Video 1</option>
+                <option value="vid2"> Video 2</option>
+                <option value="vid3"> Video 3</option>
+                <option value="vid4"> Video 4</option>
+              </select>
+              <select>
+                <option value="control">Control</option>
+                <option value="experimental">Experimental</option>
+              </select>
+            </div>
+          </div>
+
+          <div className={styles.selection}>
+            <span className={styles.selectionText}>Play third:</span>
+            <div className={styles.addValue}>
+              <select>
+                <option value="vid1"> Video 1</option>
+                <option value="vid2"> Video 2</option>
+                <option value="vid3"> Video 3</option>
+                <option value="vid4"> Video 4</option>
+              </select>
+              <select>
+                <option value="control">Control</option>
+                <option value="experimental">Experimental</option>
+              </select>
+            </div>
+          </div>
+
+          <div className={styles.selection}>
+            <span className={styles.selectionText}>Play fourth:</span>
+            <div className={styles.addValue}>
+              <select>
+                <option value="vid1"> Video 1</option>
+                <option value="vid2"> Video 2</option>
+                <option value="vid3"> Video 3</option>
+                <option value="vid4"> Video 4</option>
+              </select>
+              <select>
+                <option value="control">Control</option>
+                <option value="experimental">Experimental</option>
+              </select>
+            </div>
+          </div>
         </div>
-        <div>
-          <p>
-            <Link to={routes.VIDEOSET}>Video Set #2</Link>
-          </p>
-        </div>
-        <div>
-          <p>
-            <Link to={routes.VIDEOSET}>Video Set #3</Link>
-          </p>
-        </div>
-        <div>
-          <p>
-            <Link to={routes.VIDEOSET}>Video Set #4</Link>
-          </p>
+        <div className={styles.submitButton}>
+          <Link to={routes.VIDEOSET}>Submit</Link>
         </div>
       </div>
     );
