@@ -3,6 +3,7 @@ body {
 }
 
 .container {
+  height: 100vh;
   position: absolute;
   top: 0%;
   left: 10px;

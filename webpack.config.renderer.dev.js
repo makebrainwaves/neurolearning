@@ -57,6 +57,8 @@ export default merge.smart(baseConfig, {
     filename: 'renderer.dev.js'
   },
 
+  resolve: { symlinks: false },
+
   module: {
     rules: [
       {

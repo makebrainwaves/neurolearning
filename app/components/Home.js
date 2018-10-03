@@ -5,6 +5,11 @@ import { Link } from 'react-router-dom';
 import { Button, Modal } from 'semantic-ui-react';
 import routes from '../constants/routes.json';
 import styles from './Home.css';
+import {
+  resolveLSLStreams,
+  createStreamInlet,
+  createEEGObservable
+} from '../utils/eeg';
 
 type Props = {};
 
@@ -89,6 +94,27 @@ export default class Home extends Component<Props> {
         </Modal>
         <div>
           <Link to={routes.COUNTER}>to Counter</Link>
+          <Button
+            onClick={() => {
+              // This is our guy! Eventually you'll want to store this in redux so you can access it anywhere
+              const eegObservable = createEEGObservable();
+              let counter = 0.0;
+              // All you have to do to get data is subscribe to this observable like this
+              eegObservable.subscribe(eegData => {
+                console.log(
+                  'Received ',
+                  eegData.data[0].length,
+                  ' samples at  ',
+                  eegData.timestamps[0],
+                  '. Sampling rate = ',
+                  eegData.data[0].length / (eegData.timestamps[0] - counter)
+                );
+                counter = eegData.timestamps[0];
+              });
+            }}
+          >
+            Test EEG
+          </Button>
         </div>
       </div>
     );

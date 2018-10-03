@@ -47,6 +47,15 @@ $ cd your-project-name
 $ yarn
 ```
 
+## Node-LSL
+Until we get node LSL officiall published on npm, installation might be a little bit shaky. Here's the steps that I took to get it working in the app.
+
+1. Download the makebrainwaves/node-lsl repo and run `npm install` inside it
+2. Run `npm link` inside the node-lsl repo to create a symlink to it on your machine
+4. In Brainwaves, after running `npm install in the root dir, cd to the app dir and run `npm link node-lsl` followed by `npm rebuild`
+
+Note: I've installed ffi, ref, and bindings, as dependencies in `app` folder (they're important native dependencies that weren't getting installed right through npm symlink). I've also added a folder with the prebuilt binaries in the app dir. These will hopefully be unnecessary once we get node-lsl updated and on npm.
+
 ## Run
 
 Start the app in the `dev` environment. This starts the renderer process in [**hot-module-replacement**](https://webpack.js.org/guides/hmr-react/) mode and starts a webpack dev server that sends hot updates to the renderer process:
