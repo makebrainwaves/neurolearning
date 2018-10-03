@@ -3,6 +3,12 @@ body {
   font-family: sans-serif;
 }
 
+.backButton {
+  text-align: left;
+}
+h3 {
+  margin-top: -1rem;
+}
 .videoContainer {
   position: absolute;
   top: 0%;
@@ -54,6 +60,9 @@ form {
   position: absolute;
 }
 
+.btnGroup {
+  margin-top: 1.5rem;
+}
 button.ui.button {
   margin-bottom: 60px;
 }

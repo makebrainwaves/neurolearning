@@ -5,14 +5,28 @@ import { Button, Modal } from 'semantic-ui-react';
 import styles from './VideoSet.css';
 import routes from '../constants/routes.json';
 
-type Props = {
-  videoset: number
-};
+interface Props {
+  subjectId: string;
+  firstVideo: string;
+  firstVideoType: string;
+  seocondVideo: string;
+  secondVideoType: string;
+  thirdVideo: string;
+  thirdVideoType: string;
+  fourthVideo: string;
+  fourthVideoType: string;
+}
 
 export default class VideoSet extends Component<Props> {
+  propTypes: {
+    location: React.PropTypes.object
+  };
+
   props: Props;
 
-  state = { openModal: false };
+  state = {
+    openModal: false
+  };
 
   close = () => this.setState({ openModal: false });
 
@@ -21,30 +35,53 @@ export default class VideoSet extends Component<Props> {
   render() {
     const { openModal } = this.state;
 
+    const { location } = this.props;
+
+    const { state } = location;
+
+    const {
+      subjectId,
+      firstVideo,
+      firstVideoType,
+      secondVideo,
+      secondVideoType,
+      thirdVideo,
+      thirdVideoType,
+      fourthVideo,
+      fourthVideoType
+    } = state;
+
     return (
       <div className={styles.videoContainer}>
         <div className={styles.backButton} data-tid="backButton">
           <Link to={routes.HOME}>
-            <i className="fa fa-arrow-left fa-3x" />
+            <i className="fa fa-arrow-left fa-2x" />
           </Link>
         </div>
-
         <h3>Video Container</h3>
+
         <div>
           <video
+            id="vidID"
             className={styles.video}
             width="70%"
             height="70%"
             src="../app/Bip_KC_Trim.mp4"
             controls
+            type="video/mp4"
           >
             <track kind="captions" {...Props} />
           </video>
-        </div>
-        <div className={styles.btnGroup}>
-          <button className={styles.btn} data-tclass="btn" type="button">
-            Play
-          </button>
+          <div className={styles.btnGroup}>
+            <button
+              className={styles.btn}
+              onClick={this.playVideo}
+              data-tclass="btn"
+              type="button"
+            >
+              Play
+            </button>
+          </div>
         </div>
 
         <Modal
@@ -98,6 +135,44 @@ export default class VideoSet extends Component<Props> {
             </Modal.Content>
           </div>
         </Modal>
+        <div>
+          <div>
+            Subject ID:
+            {subjectId}
+          </div>
+          <div>
+            firstVideo:
+            {firstVideo}
+          </div>
+          <div>
+            firstVideoType:
+            {firstVideoType}
+          </div>
+          <div>
+            secondVideo:
+            {secondVideo}
+          </div>
+          <div>
+            secondVideoType:
+            {secondVideoType}
+          </div>
+          <div>
+            thirdVideo:
+            {thirdVideo}
+          </div>
+          <div>
+            thirdVideoType:
+            {thirdVideoType}
+          </div>
+          <div>
+            fourthVideo:
+            {fourthVideo}
+          </div>
+          <div>
+            fourthVideoType:
+            {fourthVideoType}
+          </div>
+        </div>
       </div>
     );
   }

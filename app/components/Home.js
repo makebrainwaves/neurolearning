@@ -1,18 +1,32 @@
 // @flow
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Input } from 'semantic-ui-react';
 import routes from '../constants/routes.json';
 import styles from './Home.css';
 
 type Props = {};
 
+interface State {
+  subjectId: string;
+  firstVideo: string;
+  firstVideoType: string;
+  seocondVideo: string;
+  secondVideoType: string;
+  thirdVideo: string;
+  thirdVideoType: string;
+  fourthVideo: string;
+  fourthVideoType: string;
+}
+
 export default class Home extends Component<Props> {
   props: Props;
+
+  state: State;
 
   constructor(props) {
     super(props);
     this.state = {
+      subjectId: '',
       firstVideo: 'vid1',
       secondVideo: 'vid2',
       thirdVideo: 'vid3',
@@ -22,6 +36,7 @@ export default class Home extends Component<Props> {
       thirdVideoType: 'control',
       fourthVideoType: 'control'
     };
+    this.handleSubjectId = this.handleSubjectId.bind(this);
     this.handleFirstVideo = this.handleFirstVideo.bind(this);
     this.handleFirstVideoType = this.handleFirstVideoType.bind(this);
     this.handleSecondVideo = this.handleSecondVideo.bind(this);
@@ -30,7 +45,6 @@ export default class Home extends Component<Props> {
     this.handleThirdVideoType = this.handleThirdVideoType.bind(this);
     this.handleFourthVideo = this.handleFourthVideo.bind(this);
     this.handleFourthVideoType = this.handleFourthVideoType.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleFirstVideo(event) {
@@ -65,10 +79,8 @@ export default class Home extends Component<Props> {
     this.setState({ fourthVideoType: event.target.value });
   }
 
-  handleSubmit(event) {
-    const { firstVideo } = this.state;
-    console.log('this.state.firstVideo', firstVideo);
-    event.preventDefault();
+  handleSubjectId(event) {
+    this.setState({ subjectId: event.target.value });
   }
 
   render() {
@@ -80,8 +92,10 @@ export default class Home extends Component<Props> {
       thirdVideo,
       thirdVideoType,
       fourthVideo,
-      fourthVideoType
+      fourthVideoType,
+      subjectId
     } = this.state;
+
     return (
       <div className={styles.container} data-tid="container">
         <h2>Neurolearning Project</h2>
@@ -90,99 +104,119 @@ export default class Home extends Component<Props> {
           <p>Welcome</p>
         </div>
 
-        <form onSubmit={this.handleSubmit}>
-          <div>
-            <p>Please enter a subject ID, then choose a video set:</p>
-          </div>
+        <div>
+          <p>Please enter a subject ID, then choose a video set:</p>
+        </div>
 
-          <div>
-            <p>
-              <Input placeholder="Subject ID" />
-            </p>
-          </div>
+        <div>
+          <p>
+            <input
+              placeholder="Subject ID"
+              type="text"
+              value={subjectId}
+              onChange={this.handleSubjectId}
+            />
+          </p>
+        </div>
 
-          <div className={styles.selectionContainer}>
-            <div className={styles.selection}>
-              <span className={styles.selectionText}>Play first:</span>
-              <div className={styles.addValue}>
-                <select value={firstVideo} onChange={this.handleFirstVideo}>
-                  <option value="vid1"> Video 1</option>
-                  <option value="vid2"> Video 2</option>
-                  <option value="vid3"> Video 3</option>
-                  <option value="vid4"> Video 4</option>
-                </select>
-                <select
-                  value={firstVideoType}
-                  onChange={this.handleFirstVideoType}
-                >
-                  <option value="control">Control</option>
-                  <option value="experimental">Experimental</option>
-                </select>
-              </div>
-            </div>
-
-            <div className={styles.selection}>
-              <span className={styles.selectionText}>Play second:</span>
-              <div className={styles.addValue}>
-                <select value={secondVideo} onChange={this.handleSecondVideo}>
-                  <option value="vid1"> Video 1</option>
-                  <option value="vid2"> Video 2</option>
-                  <option value="vid3"> Video 3</option>
-                  <option value="vid4"> Video 4</option>
-                </select>
-                <select
-                  value={secondVideoType}
-                  onChange={this.handleSecondVideoType}
-                >
-                  <option value="control">Control</option>
-                  <option value="experimental">Experimental</option>
-                </select>
-              </div>
-            </div>
-
-            <div className={styles.selection}>
-              <span className={styles.selectionText}>Play third:</span>
-              <div className={styles.addValue}>
-                <select value={thirdVideo} onChange={this.handleThirdVideo}>
-                  <option value="vid1"> Video 1</option>
-                  <option value="vid2"> Video 2</option>
-                  <option value="vid3"> Video 3</option>
-                  <option value="vid4"> Video 4</option>
-                </select>
-                <select
-                  value={thirdVideoType}
-                  onChange={this.handleThirdVideoType}
-                >
-                  <option value="control">Control</option>
-                  <option value="experimental">Experimental</option>
-                </select>
-              </div>
-            </div>
-
-            <div className={styles.selection}>
-              <span className={styles.selectionText}>Play fourth:</span>
-              <div className={styles.addValue}>
-                <select value={fourthVideo} onChange={this.handleFourthVideo}>
-                  <option value="vid1"> Video 1</option>
-                  <option value="vid2"> Video 2</option>
-                  <option value="vid3"> Video 3</option>
-                  <option value="vid4"> Video 4</option>
-                </select>
-                <select
-                  value={fourthVideoType}
-                  onChange={this.handleFourthVideoType}
-                >
-                  <option value="control">Control</option>
-                  <option value="experimental">Experimental</option>
-                </select>
-              </div>
+        <div className={styles.selectionContainer}>
+          <div className={styles.selection}>
+            <span className={styles.selectionText}>Play first:</span>
+            <div className={styles.addValue}>
+              <select value={firstVideo} onChange={this.handleFirstVideo}>
+                <option value="vid1">Video 1</option>
+                <option value="vid2">Video 2</option>
+                <option value="vid3">Video 3</option>
+                <option value="vid4">Video 4</option>
+              </select>
+              <select
+                value={firstVideoType}
+                onChange={this.handleFirstVideoType}
+              >
+                <option value="control">Control</option>
+                <option value="experimental">Experimental</option>
+              </select>
             </div>
           </div>
-          <input type="submit" value="Submit" />
-          <div className={styles.submitButton}>
-            <Link to={routes.VIDEOSET}>Submit</Link>
+
+          <div className={styles.selection}>
+            <span className={styles.selectionText}>Play second:</span>
+            <div className={styles.addValue}>
+              <select value={secondVideo} onChange={this.handleSecondVideo}>
+                <option value="vid1">Video 1</option>
+                <option value="vid2">Video 2</option>
+                <option value="vid3">Video 3</option>
+                <option value="vid4">Video 4</option>
+              </select>
+              <select
+                value={secondVideoType}
+                onChange={this.handleSecondVideoType}
+              >
+                <option value="control">Control</option>
+                <option value="experimental">Experimental</option>
+              </select>
+            </div>
           </div>
-        </form>
+
+          <div className={styles.selection}>
+            <span className={styles.selectionText}>Play third:</span>
+            <div className={styles.addValue}>
+              <select value={thirdVideo} onChange={this.handleThirdVideo}>
+                <option value="vid1">Video 1</option>
+                <option value="vid2">Video 2</option>
+                <option value="vid3">Video 3</option>
+                <option value="vid4">Video 4</option>
+              </select>
+              <select
+                value={thirdVideoType}
+                onChange={this.handleThirdVideoType}
+              >
+                <option value="control">Control</option>
+                <option value="experimental">Experimental</option>
+              </select>
+            </div>
+          </div>
+
+          <div className={styles.selection}>
+            <span className={styles.selectionText}>Play fourth:</span>
+            <div className={styles.addValue}>
+              <select value={fourthVideo} onChange={this.handleFourthVideo}>
+                <option value="vid1">Video 1</option>
+                <option value="vid2">Video 2</option>
+                <option value="vid3">Video 3</option>
+                <option value="vid4">Video 4</option>
+              </select>
+              <select
+                value={fourthVideoType}
+                onChange={this.handleFourthVideoType}
+              >
+                <option value="control">Control</option>
+                <option value="experimental">Experimental</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.submitButton}>
+          <Link
+            to={{
+              pathname: routes.VIDEOSET,
+              state: {
+                firstVideo,
+                firstVideoType,
+                secondVideo,
+                secondVideoType,
+                thirdVideo,
+                thirdVideoType,
+                fourthVideo,
+                fourthVideoType,
+                subjectId
+              }
+            }}
+          >
+            SUBMIT
+          </Link>
+        </div>
       </div>
     );
   }
