@@ -4,8 +4,7 @@
 
 import path from 'path';
 import webpack from 'webpack';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import merge from 'webpack-merge';
 import UglifyJSPlugin from 'uglifyjs-webpack-plugin';
@@ -16,8 +15,6 @@ CheckNodeEnv('production');
 
 export default merge.smart(baseConfig, {
   devtool: 'source-map',
-
-  mode: 'production',
 
   target: 'electron-renderer',
 
@@ -31,96 +28,72 @@ export default merge.smart(baseConfig, {
 
   module: {
     rules: [
-      {
-        test: /\.mp4/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'video/mp4'
-          }
-        }
-      },
       // Extract all .global.css to style.css as is
       {
         test: /\.global\.css$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              publicPath: './'
-            }
-          },
-          {
+        use: ExtractTextPlugin.extract({
+          publicPath: './',
+          use: {
             loader: 'css-loader',
             options: {
-              sourceMap: true
+              minimize: true
             }
-          }
-        ]
+          },
+          fallback: 'style-loader'
+        })
       },
       // Pipe other styles through css modules and append to style.css
       {
         test: /^((?!\.global).)*\.css$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader
-          },
-          {
+        use: ExtractTextPlugin.extract({
+          use: {
             loader: 'css-loader',
             options: {
               modules: true,
-              localIdentName: '[name]__[local]__[hash:base64:5]',
-              sourceMap: true
+              minimize: true,
+              importLoaders: 1,
+              localIdentName: '[name]__[local]__[hash:base64:5]'
             }
           }
-        ]
+        })
       },
       // Add SASS support  - compile all .global.scss files and pipe it to style.css
       {
-        test: /\.global\.(scss|sass)$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-              importLoaders: 1
+        test: /\.global\.scss$/,
+        use: ExtractTextPlugin.extract({
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                minimize: true
+              }
+            },
+            {
+              loader: 'sass-loader'
             }
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: true
-            }
-          }
-        ]
+          ],
+          fallback: 'style-loader'
+        })
       },
       // Add SASS support  - compile all other .scss files and pipe it to style.css
       {
-        test: /^((?!\.global).)*\.(scss|sass)$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              importLoaders: 1,
-              localIdentName: '[name]__[local]__[hash:base64:5]',
-              sourceMap: true
+        test: /^((?!\.global).)*\.scss$/,
+        use: ExtractTextPlugin.extract({
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                modules: true,
+                minimize: true,
+                importLoaders: 1,
+                localIdentName: '[name]__[local]__[hash:base64:5]'
+              }
+            },
+            {
+              loader: 'sass-loader'
             }
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: true
-            }
-          }
-        ]
+          ]
+        })
       },
       // WOFF Font
       {
@@ -179,23 +152,6 @@ export default merge.smart(baseConfig, {
     ]
   },
 
-  optimization: {
-    minimizer: [
-      new UglifyJSPlugin({
-        parallel: true,
-        sourceMap: true
-      }),
-      new OptimizeCSSAssetsPlugin({
-        cssProcessorOptions: {
-          map: {
-            inline: false,
-            annotation: true
-          }
-        }
-      })
-    ]
-  },
-
   plugins: [
     /**
      * Create global constants which can be configured at compile time.
@@ -210,9 +166,12 @@ export default merge.smart(baseConfig, {
       NODE_ENV: 'production'
     }),
 
-    new MiniCssExtractPlugin({
-      filename: 'style.css'
+    new UglifyJSPlugin({
+      parallel: true,
+      sourceMap: true
     }),
+
+    new ExtractTextPlugin('style.css'),
 
     new BundleAnalyzerPlugin({
       analyzerMode:

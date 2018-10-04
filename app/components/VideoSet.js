@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button, Modal } from 'semantic-ui-react';
 import styles from './VideoSet.css';
 import routes from '../constants/routes.json';
+import video1 from './Bip_KC_Trim.mp4';
 
 interface Props {
   subjectId: string;
@@ -62,16 +63,15 @@ export default class VideoSet extends Component<Props> {
 
         <div>
           <video
-            id="vidID"
             className={styles.video}
+            src={video1}
             width="70%"
             height="70%"
-            src="../app/Bip_KC_Trim.mp4"
             controls
-            type="video/mp4"
           >
             <track kind="captions" {...Props} />
           </video>
+
           <div className={styles.btnGroup}>
             <button
               className={styles.btn}
