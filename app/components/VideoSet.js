@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Modal } from 'semantic-ui-react';
+import { CSVLink } from 'react-csv';
 import styles from './VideoSet.css';
 import routes from '../constants/routes.json';
 
@@ -51,6 +52,29 @@ export default class VideoSet extends Component<Props> {
       fourthVideoType
     } = state;
 
+    const subjectCsvData = [
+      {
+        SequenceNumber: '1',
+        VideoName: firstVideo,
+        ExperimentType: firstVideoType
+      },
+      {
+        SequenceNumber: '2',
+        VideoName: secondVideo,
+        ExperimentType: secondVideoType
+      },
+      {
+        SequenceNumber: '3',
+        VideoName: thirdVideo,
+        ExperimentType: thirdVideoType
+      },
+      {
+        SequenceNumber: '4',
+        VideoName: fourthVideo,
+        ExperimentType: fourthVideoType
+      }
+    ];
+
     return (
       <div className={styles.videoContainer}>
         <div className={styles.backButton} data-tid="backButton">
@@ -59,7 +83,9 @@ export default class VideoSet extends Component<Props> {
           </Link>
         </div>
         <h3>Video Container</h3>
-
+        <CSVLink data={subjectCsvData} filename={subjectId}>
+          Download Subject Info
+        </CSVLink>
         <div>
           <video
             id="vidID"
