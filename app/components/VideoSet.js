@@ -69,7 +69,7 @@ export default class VideoSet extends Component<Props> {
             height="70%"
             controls
           >
-            <track kind="captions" {...Props} />
+            <track kind="captions" />
           </video>
 
           <div className={styles.btnGroup}>
