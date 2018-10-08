@@ -1,3 +1,4 @@
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["handleSubmit"] }] */
 // @flow
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
@@ -16,7 +17,12 @@ interface Props {
   thirdVideoType: string;
   fourthVideo: string;
   fourthVideoType: string;
+  isRunning: boolean;
+  questionAlreadyShown: boolean;
+  answer1: string;
 }
+
+const controlPauseTime = 4;
 
 export default class VideoSet extends Component<Props> {
   propTypes: {
@@ -25,21 +31,82 @@ export default class VideoSet extends Component<Props> {
 
   props: Props;
 
+  constructor(props) {
+    super(props);
+    // This binding is necessary to make `this` work in the callback
+    this.playVideo = this.playVideo.bind(this);
+    this.pauseVideo = this.pauseVideo.bind(this);
+    this.handleQuestion1 = this.handleQuestion1.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+
+    this.state = {
+      isRunning: 'false',
+      questionAlreadyShown: 'false',
+      answer1: 'option5'
+    };
+  }
+
   state = {
-    openModal: false
+    modalIsOpen: false,
+    isRunning: false,
+    questionAlreadyShown: false
   };
 
-  close = () => this.setState({ openModal: false });
+  closeModal = () => this.setState({ modalIsOpen: false });
 
-  open = () => this.setState({ openModal: true });
+  openModal = () =>
+    this.setState({
+      modalIsOpen: true
+    });
+
+  playVideo = () => {
+    const videoRef = this.getVideoRef;
+    videoRef.play();
+    this.setState({ isRunning: true });
+  };
+
+  pauseVideo = () => {
+    const videoRef = this.getVideoRef;
+    videoRef.pause();
+    this.setState({ isRunning: false });
+  };
+
+  onTimeUpdate = () => {
+    const { questionAlreadyShown, answer1, isRunning } = this.state;
+    const vidCurrTime = document.getElementById('vidID').currentTime;
+    console.log('isRunning', isRunning);
+    console.log('questionAlreadyShown', questionAlreadyShown);
+    console.log('current time', vidCurrTime);
+    console.log('state of answer 1', answer1);
+
+    if (questionAlreadyShown) {
+      if (vidCurrTime >= controlPauseTime) {
+        this.setState({ questionAlreadyShown: !questionAlreadyShown });
+        this.pauseVideo();
+        this.openModal();
+      }
+    }
+  };
+
+  generateCsvs = () => {
+    console.log('your video has ended');
+  };
+
+  handleQuestion1(event) {
+    console.log('you have chosen', event.target.value);
+    this.setState({
+      answer1: event.target.value
+    });
+  }
+
+  handleSubmit(event) {
+    console.log('what is the handleSubmit event?', event);
+  }
 
   render() {
-    const { openModal } = this.state;
-
+    const { modalIsOpen, answer1 } = this.state;
     const { location } = this.props;
-
     const { state } = location;
-
     const {
       subjectId,
       firstVideo,
@@ -89,14 +156,19 @@ export default class VideoSet extends Component<Props> {
         <div>
           <video
             id="vidID"
+            ref={c => {
+              this.getVideoRef = c;
+            }}
             className={styles.video}
             width="70%"
             height="70%"
             src="../app/Bip_KC_Trim.mp4"
             controls
             type="video/mp4"
+            onTimeUpdate={this.onTimeUpdate}
+            onEnded={this.generateCsvs}
           >
-            <track kind="captions" {...Props} />
+            <track kind="captions" />
           </video>
           <div className={styles.btnGroup}>
             <button
@@ -107,16 +179,24 @@ export default class VideoSet extends Component<Props> {
             >
               Play
             </button>
+            <button
+              className={styles.btn}
+              onClick={this.pauseVideo}
+              data-tclass="btn"
+              type="button"
+            >
+              Pause
+            </button>
           </div>
         </div>
 
         <Modal
-          open={openModal}
+          open={modalIsOpen}
           className={styles.modal}
-          trigger={<Button onClick={this.open}>Show Modal</Button>}
+          trigger={<Button onClick={this.openModal}>Show Modal</Button>}
           closeOnEscape={false}
           closeOnDimmerClick={false}
-          onClose={this.close}
+          onClose={this.closeModal}
         >
           <div className={styles.inner}>
             <Modal.Header>Popup Question #1</Modal.Header>
@@ -127,36 +207,67 @@ export default class VideoSet extends Component<Props> {
                   primates?
                 </p>
 
-                <form>
+                <div>
                   <div className="radio">
                     <label htmlFor="locomotion">
-                      <input type="radio" value="option1" />
-                      locomotion
+                      <input
+                        type="radio"
+                        value="option1"
+                        checked={answer1 === 'option1'}
+                        onChange={this.handleQuestion1}
+                      />
+                      Locomotion
                     </label>
                   </div>
                   <div className="radio">
                     <label htmlFor="nose">
-                      <input type="radio" value="option2" />
-                      nose
+                      <input
+                        type="radio"
+                        value="option2"
+                        checked={answer1 === 'option2'}
+                        onChange={this.handleQuestion1}
+                      />
+                      Nose
                     </label>
                   </div>
                   <div className="radio">
                     <label htmlFor="humor">
-                      <input type="radio" value="option3" />
-                      humor
+                      <input
+                        type="radio"
+                        value="option3"
+                        checked={answer1 === 'option3'}
+                        onChange={this.handleQuestion1}
+                      />
+                      Humor
                     </label>
                   </div>
                   <div className="radio">
                     <label htmlFor="eyesight">
-                      <input type="radio" value="option3" />
-                      eyesight
+                      <input
+                        type="radio"
+                        value="option4"
+                        checked={answer1 === 'option4'}
+                        onChange={this.handleQuestion1}
+                      />
+                      Eyesight
+                    </label>
+                  </div>
+                  <div className="radio">
+                    <label htmlFor="eyesight">
+                      <input
+                        type="radio"
+                        value="option5"
+                        checked={answer1 === 'option5'}
+                        onChange={this.handleQuestion1}
+                      />
+                      I don&apos;t know
                     </label>
                   </div>
                   <br />
-                  <Button onClick={this.close} negative>
-                    I dont know
-                  </Button>
-                </form>
+                  <button onClick={this.closeModal} type="submit">
+                    Submit
+                  </button>
+                </div>
               </Modal.Description>
             </Modal.Content>
           </div>

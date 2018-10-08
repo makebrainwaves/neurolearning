@@ -85,6 +85,7 @@ export default class Home extends Component<Props> {
 
   render() {
     const {
+      subjectId,
       firstVideo,
       firstVideoType,
       secondVideo,
@@ -92,8 +93,7 @@ export default class Home extends Component<Props> {
       thirdVideo,
       thirdVideoType,
       fourthVideo,
-      fourthVideoType,
-      subjectId
+      fourthVideoType
     } = this.state;
 
     return (
