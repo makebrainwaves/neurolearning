@@ -2,9 +2,6 @@ import lsl from 'node-lsl';
 import { fromEvent } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-const CHUNK_SIZE = 12;
-console.log(CHUNK_SIZE);
-
 // Returns an array of StreamInfo objects representing available EEG LSL streams
 // NOTE: This is a synchronous operation and will freeze the UI while it executes. Keep timeout low
 export const resolveLSLStreams = (
@@ -17,7 +14,7 @@ export const resolveLSLStreams = (
 export const createStreamInlet = (streamInfo: lsl.StreamInfo) =>
   new lsl.StreamInlet(streamInfo);
 
-export const createEEGObservable = () => {
+export const createEEGObservable = (chunkSize = 12) => {
   const streams = resolveLSLStreams();
   console.log('Resolved ', streams.length, ' EEG streams');
   if (streams.length > 0) {
@@ -25,10 +22,10 @@ export const createEEGObservable = () => {
 
     // Kick off this LSL Stream by calling this function with however many samples you want to pull at a time
     // 12 is just an example (works best for Muse @ 256hz);
-    streamInlet.streamChunks(12);
+    streamInlet.streamChunks(chunkSize);
 
     // Create RxJS Observable
-    //
+    // Filter operation will prevent any empty samples from being emitted
     return fromEvent(streamInlet, 'chunk').pipe(
       filter(eegChunk => eegChunk.timestamps.length > 0)
     );

@@ -1,13 +1,10 @@
 // @flow
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { Button } from 'semantic-ui-react';
 import routes from '../constants/routes.json';
 import styles from './Home.css';
-import {
-  resolveLSLStreams,
-  createStreamInlet,
-  createEEGObservable
-} from '../utils/eeg';
+import { createEEGObservable } from '../utils/eeg';
 
 type Props = {};
 
@@ -221,7 +218,7 @@ export default class Home extends Component<Props> {
           >
             SUBMIT
           </Link>
-        <Button
+          <Button
             onClick={() => {
               // This is our guy! Eventually you'll want to store this in redux so you can access it anywhere
               const eegObservable = createEEGObservable();
