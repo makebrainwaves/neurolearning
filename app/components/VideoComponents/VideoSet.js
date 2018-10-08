@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 import { Button, Modal } from 'semantic-ui-react';
 import { CSVLink } from 'react-csv';
 import styles from './VideoSet.css';
-import routes from '../constants/routes.json';
-import * as data from '../questions/questions.json';
+import routes from '../../constants/routes.json';
+import * as data from '../../questions/questions.json';
 
 interface Props {
   subjectId: string;
