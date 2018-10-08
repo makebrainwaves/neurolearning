@@ -6,6 +6,7 @@ import { Button, Modal } from 'semantic-ui-react';
 import { CSVLink } from 'react-csv';
 import styles from './VideoSet.css';
 import routes from '../constants/routes.json';
+import * as data from '../questions/questions.json';
 
 interface Props {
   subjectId: string;
@@ -199,68 +200,65 @@ export default class VideoSet extends Component<Props> {
           onClose={this.closeModal}
         >
           <div className={styles.inner}>
-            <Modal.Header>Popup Question #1</Modal.Header>
+            <Modal.Header>{data.q1.name}</Modal.Header>
             <Modal.Content className={styles.content}>
               <Modal.Description>
-                <p>
-                  Which one of the following is NOT a physical characteristic of
-                  primates?
-                </p>
+                <p>{data.q1.question}</p>
 
                 <div>
                   <div className="radio">
-                    <label htmlFor="locomotion">
+                    <label htmlFor={data.q1.option1}>
                       <input
                         type="radio"
                         value="option1"
                         checked={answer1 === 'option1'}
                         onChange={this.handleQuestion1}
                       />
-                      Locomotion
+                      {data.q1.option1}
                     </label>
                   </div>
                   <div className="radio">
-                    <label htmlFor="nose">
+                    <label htmlFor={data.q1.option2}>
                       <input
                         type="radio"
                         value="option2"
                         checked={answer1 === 'option2'}
                         onChange={this.handleQuestion1}
                       />
-                      Nose
+                      {data.q1.option2}
                     </label>
                   </div>
                   <div className="radio">
-                    <label htmlFor="humor">
+                    <label htmlFor={data.q1.option3}>
                       <input
                         type="radio"
                         value="option3"
                         checked={answer1 === 'option3'}
                         onChange={this.handleQuestion1}
                       />
-                      Humor
+                      {data.q1.option3}
                     </label>
                   </div>
                   <div className="radio">
-                    <label htmlFor="eyesight">
+                    <label htmlFor={data.q1.option4}>
                       <input
                         type="radio"
                         value="option4"
                         checked={answer1 === 'option4'}
                         onChange={this.handleQuestion1}
                       />
-                      Eyesight
+                      {data.q1.option4}
                     </label>
                   </div>
                   <div className="radio">
-                    <label htmlFor="eyesight">
+                    <label htmlFor={data.q1.option5}>
                       <input
                         type="radio"
                         value="option5"
                         checked={answer1 === 'option5'}
                         onChange={this.handleQuestion1}
                       />
-                      I don&apos;t know
+                      {data.q1.option5}
                     </label>
                   </div>
                   <br />
