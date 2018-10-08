@@ -5,6 +5,7 @@ import { Button, Modal } from 'semantic-ui-react';
 import { CSVLink } from 'react-csv';
 import styles from './VideoSet.css';
 import routes from '../constants/routes.json';
+import video1 from './Bip_KC_Trim.mp4';
 
 interface Props {
   subjectId: string;
@@ -88,16 +89,15 @@ export default class VideoSet extends Component<Props> {
         </CSVLink>
         <div>
           <video
-            id="vidID"
             className={styles.video}
+            src={video1}
             width="70%"
             height="70%"
-            src="../app/Bip_KC_Trim.mp4"
             controls
-            type="video/mp4"
           >
-            <track kind="captions" {...Props} />
+            <track kind="captions" />
           </video>
+
           <div className={styles.btnGroup}>
             <button
               className={styles.btn}
