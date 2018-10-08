@@ -19,8 +19,10 @@ interface Props {
   fourthVideo: string;
   fourthVideoType: string;
   isRunning: boolean;
-  questionAlreadyShown: boolean;
-  answer1: string;
+  question1AlreadyShown: boolean;
+  question2AlreadyShown: boolean;
+  answerChosenQ1: string;
+  answerChosenQ2: string;
 }
 
 const controlPauseTime = 4;
@@ -38,26 +40,44 @@ export default class VideoSet extends Component<Props> {
     this.playVideo = this.playVideo.bind(this);
     this.pauseVideo = this.pauseVideo.bind(this);
     this.handleQuestion1 = this.handleQuestion1.bind(this);
+    this.handleQuestion2 = this.handleQuestion2.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
     this.state = {
       isRunning: 'false',
-      questionAlreadyShown: 'false',
-      answer1: 'option5'
+      question1AlreadyShown: 'false',
+      question2AlreadyShown: 'false',
+      answerChosenQ1: 'option5',
+      answerChosenQ2: 'option5'
     };
   }
 
   state = {
     modalIsOpen: false,
+    modal2IsOpen: false,
     isRunning: false,
-    questionAlreadyShown: false
+    question1AlreadyShown: false,
+    question2AlreadyShown: false
   };
 
-  closeModal = () => this.setState({ modalIsOpen: false });
+  closeModal = () =>
+    this.setState({
+      modalIsOpen: false
+    });
+
+  closeModal2 = () =>
+    this.setState({
+      modal2IsOpen: false
+    });
 
   openModal = () =>
     this.setState({
       modalIsOpen: true
+    });
+
+  openModal2 = () =>
+    this.setState({
+      modal2IsOpen: true
     });
 
   playVideo = () => {
@@ -73,18 +93,39 @@ export default class VideoSet extends Component<Props> {
   };
 
   onTimeUpdate = () => {
-    const { questionAlreadyShown, answer1, isRunning } = this.state;
+    const {
+      question1AlreadyShown,
+      question2AlreadyShown,
+      answerChosenQ1,
+      answerChosenQ2,
+      isRunning
+    } = this.state;
     const vidCurrTime = document.getElementById('vidID').currentTime;
     console.log('isRunning', isRunning);
-    console.log('questionAlreadyShown', questionAlreadyShown);
+    console.log('question1AlreadyShown', question1AlreadyShown);
+    console.log('question2AlreadyShown', question2AlreadyShown);
     console.log('current time', vidCurrTime);
-    console.log('state of answer 1', answer1);
+    console.log('state of answerChosenQ1', answerChosenQ1);
+    console.log('state of answerChosenQ2', answerChosenQ2);
+    console.log('controlPauseTime*2', controlPauseTime * 2);
 
-    if (questionAlreadyShown) {
+    if (question1AlreadyShown) {
       if (vidCurrTime >= controlPauseTime) {
-        this.setState({ questionAlreadyShown: !questionAlreadyShown });
+        this.setState({
+          question1AlreadyShown: !question1AlreadyShown
+        });
         this.pauseVideo();
         this.openModal();
+      }
+    }
+    if (question2AlreadyShown) {
+      if (vidCurrTime >= controlPauseTime * 2) {
+        this.setState({
+          question2AlreadyShown: !question2AlreadyShown,
+          modal2IsOpen: true
+        });
+        this.pauseVideo();
+        this.openModal1();
       }
     }
   };
@@ -94,9 +135,16 @@ export default class VideoSet extends Component<Props> {
   };
 
   handleQuestion1(event) {
-    console.log('you have chosen', event.target.value);
+    console.log('you have chosen Q1', event.target.value);
     this.setState({
-      answer1: event.target.value
+      answerChosenQ1: event.target.value
+    });
+  }
+
+  handleQuestion2(event) {
+    console.log('you have chosen Q2', event.target.value);
+    this.setState({
+      answerChosenQ2: event.target.value
     });
   }
 
@@ -105,7 +153,12 @@ export default class VideoSet extends Component<Props> {
   }
 
   render() {
-    const { modalIsOpen, answer1 } = this.state;
+    const {
+      modalIsOpen,
+      modal2IsOpen,
+      answerChosenQ1,
+      answerChosenQ2
+    } = this.state;
     const { location } = this.props;
     const { state } = location;
     const {
@@ -143,6 +196,19 @@ export default class VideoSet extends Component<Props> {
       }
     ];
 
+    const answersCsv = [
+      {
+        Subject: subjectId,
+        Question: data.q1.name,
+        Answer: answerChosenQ1
+      },
+      {
+        Subject: subjectId,
+        Question: data.q2.name,
+        Answer: answerChosenQ2
+      }
+    ];
+
     return (
       <div className={styles.videoContainer}>
         <div className={styles.backButton} data-tid="backButton">
@@ -153,6 +219,9 @@ export default class VideoSet extends Component<Props> {
         <h3>Video Container</h3>
         <CSVLink data={subjectCsvData} filename={subjectId}>
           Download Subject Info
+        </CSVLink>
+        <CSVLink data={answersCsv} filename="answers.csv">
+          Download Subject Answers
         </CSVLink>
         <div>
           <video
@@ -211,7 +280,7 @@ export default class VideoSet extends Component<Props> {
                       <input
                         type="radio"
                         value="option1"
-                        checked={answer1 === 'option1'}
+                        checked={answerChosenQ1 === 'option1'}
                         onChange={this.handleQuestion1}
                       />
                       {data.q1.option1}
@@ -222,7 +291,7 @@ export default class VideoSet extends Component<Props> {
                       <input
                         type="radio"
                         value="option2"
-                        checked={answer1 === 'option2'}
+                        checked={answerChosenQ1 === 'option2'}
                         onChange={this.handleQuestion1}
                       />
                       {data.q1.option2}
@@ -233,7 +302,7 @@ export default class VideoSet extends Component<Props> {
                       <input
                         type="radio"
                         value="option3"
-                        checked={answer1 === 'option3'}
+                        checked={answerChosenQ1 === 'option3'}
                         onChange={this.handleQuestion1}
                       />
                       {data.q1.option3}
@@ -244,7 +313,7 @@ export default class VideoSet extends Component<Props> {
                       <input
                         type="radio"
                         value="option4"
-                        checked={answer1 === 'option4'}
+                        checked={answerChosenQ1 === 'option4'}
                         onChange={this.handleQuestion1}
                       />
                       {data.q1.option4}
@@ -255,7 +324,7 @@ export default class VideoSet extends Component<Props> {
                       <input
                         type="radio"
                         value="option5"
-                        checked={answer1 === 'option5'}
+                        checked={answerChosenQ1 === 'option5'}
                         onChange={this.handleQuestion1}
                       />
                       {data.q1.option5}
@@ -270,6 +339,86 @@ export default class VideoSet extends Component<Props> {
             </Modal.Content>
           </div>
         </Modal>
+
+        <Modal
+          open={modal2IsOpen}
+          className={styles.modal}
+          closeOnEscape={false}
+          closeOnDimmerClick={false}
+          onClose={this.closeModal2}
+        >
+          <div className={styles.inner}>
+            <Modal.Header>{data.q2.name}</Modal.Header>
+            <Modal.Content className={styles.content}>
+              <Modal.Description>
+                <p>{data.q2.question}</p>
+
+                <div>
+                  <div className="radio">
+                    <label htmlFor={data.q2.option1}>
+                      <input
+                        type="radio"
+                        value="option1"
+                        checked={answerChosenQ2 === 'option1'}
+                        onChange={this.handleQuestion2}
+                      />
+                      {data.q2.option1}
+                    </label>
+                  </div>
+                  <div className="radio">
+                    <label htmlFor={data.q2.option2}>
+                      <input
+                        type="radio"
+                        value="option2"
+                        checked={answerChosenQ2 === 'option2'}
+                        onChange={this.handleQuestion2}
+                      />
+                      {data.q2.option2}
+                    </label>
+                  </div>
+                  <div className="radio">
+                    <label htmlFor={data.q2.option3}>
+                      <input
+                        type="radio"
+                        value="option3"
+                        checked={answerChosenQ2 === 'option3'}
+                        onChange={this.handleQuestion2}
+                      />
+                      {data.q2.option3}
+                    </label>
+                  </div>
+                  <div className="radio">
+                    <label htmlFor={data.q2.option4}>
+                      <input
+                        type="radio"
+                        value="option4"
+                        checked={answerChosenQ2 === 'option4'}
+                        onChange={this.handleQuestion2}
+                      />
+                      {data.q2.option4}
+                    </label>
+                  </div>
+                  <div className="radio">
+                    <label htmlFor={data.q2.option5}>
+                      <input
+                        type="radio"
+                        value="option5"
+                        checked={answerChosenQ2 === 'option5'}
+                        onChange={this.handleQuestion2}
+                      />
+                      {data.q2.option5}
+                    </label>
+                  </div>
+                  <br />
+                  <button onClick={this.closeModal2} type="submit">
+                    Submit
+                  </button>
+                </div>
+              </Modal.Description>
+            </Modal.Content>
+          </div>
+        </Modal>
+
         <div>
           <div>
             Subject ID:
