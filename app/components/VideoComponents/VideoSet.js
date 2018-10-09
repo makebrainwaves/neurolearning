@@ -2,7 +2,7 @@
 // @flow
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Modal } from 'semantic-ui-react';
+import { Button, Modal } from 'semantic-ui-react';
 import { CSVLink } from 'react-csv';
 import styles from './VideoSet.css';
 import routes from '../../constants/routes.json';
@@ -21,8 +21,6 @@ interface Props {
   isRunning: boolean;
   question1AlreadyShown: boolean;
   question2AlreadyShown: boolean;
-  answerChosenQ1: string;
-  answerChosenQ2: string;
   questionNumber: string;
   questionText: string;
   firstOption: string;
@@ -30,7 +28,8 @@ interface Props {
   thirdOption: string;
   fourthOption: string;
   fifthOption: string;
-  answerChosen: string;
+  answerQ1: string;
+  answerQ2: string;
 }
 
 const controlPauseTime = 4;
@@ -47,7 +46,6 @@ export default class VideoSet extends Component<Props> {
     // This binding is necessary to make `this` work in the callback
     this.playVideo = this.playVideo.bind(this);
     this.pauseVideo = this.pauseVideo.bind(this);
-    this.handleQuestion1 = this.handleQuestion1.bind(this);
     this.handleQuestion = this.handleQuestion.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
@@ -55,8 +53,6 @@ export default class VideoSet extends Component<Props> {
       isRunning: 'false',
       question1AlreadyShown: 'false',
       question2AlreadyShown: 'false',
-      answerChosenQ1: 'option5',
-      answerChosenQ2: 'option5',
       questionNumber: '',
       questionText: '',
       firstOption: '',
@@ -64,7 +60,8 @@ export default class VideoSet extends Component<Props> {
       thirdOption: '',
       fourthOption: '',
       fifthOption: '',
-      answerChosen: 'option5'
+      answerQ1: 'option5',
+      answerQ2: 'option5'
     };
   }
 
@@ -96,15 +93,12 @@ export default class VideoSet extends Component<Props> {
     const {
       question1AlreadyShown,
       question2AlreadyShown,
-      answerChosenQ1,
-      answerChosenQ2,
       isRunning
     } = this.state;
 
     const vidCurrTime = document.getElementById('vidID').currentTime;
-    console.log('answerChosenQ1: ', answerChosenQ1);
-    console.log('answerChosenQ2: ', answerChosenQ2);
     console.log('isRunning: ', isRunning);
+
     if (question1AlreadyShown) {
       if (vidCurrTime >= controlPauseTime) {
         this.setState({
@@ -143,18 +137,20 @@ export default class VideoSet extends Component<Props> {
     console.log('your video has ended');
   };
 
-  handleQuestion1(event) {
-    console.log('you have chosen Q1', event.target.value);
-    this.setState({
-      answerChosenQ1: event.target.value
-    });
-  }
+  handleQuestion(q, e) {
+    console.log(
+      'this is the question you have just answered: ',
+      q.questionNumber
+    );
+    console.log('you have chosen Q2', e.target.value);
 
-  handleQuestion(event) {
-    console.log('you have chosen Q2', event.target.value);
-    this.setState({
-      answerChosen: event.target.value
-    });
+    if (q.questionNumber === 'Question 1:') {
+      this.setState({ answerQ1: e.target.value });
+    }
+
+    if (q.questionNumber === 'Question 2:') {
+      this.setState({ answerQ2: e.target.value });
+    }
   }
 
   handleSubmit(event) {
@@ -164,8 +160,8 @@ export default class VideoSet extends Component<Props> {
   render() {
     const {
       modalIsOpen,
-      answerChosenQ1,
-      answerChosen,
+      answerQ1,
+      answerQ2,
       questionNumber,
       questionText,
       firstOption,
@@ -215,12 +211,12 @@ export default class VideoSet extends Component<Props> {
       {
         Subject: subjectId,
         Question: data.q1.name,
-        Answer: answerChosenQ1
+        Answer: answerQ1
       },
       {
         Subject: subjectId,
         Question: data.q2.name,
-        Answer: answerChosen
+        Answer: answerQ2
       }
     ];
 
@@ -256,14 +252,14 @@ export default class VideoSet extends Component<Props> {
             <track kind="captions" />
           </video>
           <div className={styles.btnGroup}>
-            <button
+            <Button
               className={styles.btn}
               onClick={this.playVideo}
               data-tclass="btn"
               type="button"
             >
               Play
-            </button>
+            </Button>
             <button
               className={styles.btn}
               onClick={this.pauseVideo}
@@ -292,10 +288,12 @@ export default class VideoSet extends Component<Props> {
                   <div className="radio">
                     <label htmlFor={firstOption}>
                       <input
+                        name="option"
                         type="radio"
                         value="option1"
-                        checked={answerChosen === 'option1'}
-                        onChange={this.handleQuestion}
+                        onChange={e =>
+                          this.handleQuestion({ questionNumber }, e)
+                        }
                       />
                       {firstOption}
                     </label>
@@ -303,10 +301,12 @@ export default class VideoSet extends Component<Props> {
                   <div className="radio">
                     <label htmlFor={secondOption}>
                       <input
+                        name="option"
                         type="radio"
                         value="option2"
-                        checked={answerChosen === 'option2'}
-                        onChange={this.handleQuestion}
+                        onChange={e =>
+                          this.handleQuestion({ questionNumber }, e)
+                        }
                       />
                       {secondOption}
                     </label>
@@ -314,10 +314,12 @@ export default class VideoSet extends Component<Props> {
                   <div className="radio">
                     <label htmlFor={thirdOption}>
                       <input
+                        name="option"
                         type="radio"
                         value="option3"
-                        checked={answerChosen === 'option3'}
-                        onChange={this.handleQuestion}
+                        onChange={e =>
+                          this.handleQuestion({ questionNumber }, e)
+                        }
                       />
                       {thirdOption}
                     </label>
@@ -325,10 +327,12 @@ export default class VideoSet extends Component<Props> {
                   <div className="radio">
                     <label htmlFor={fourthOption}>
                       <input
+                        name="option"
                         type="radio"
                         value="option4"
-                        checked={answerChosen === 'option4'}
-                        onChange={this.handleQuestion}
+                        onChange={e =>
+                          this.handleQuestion({ questionNumber }, e)
+                        }
                       />
                       {fourthOption}
                     </label>
@@ -336,10 +340,13 @@ export default class VideoSet extends Component<Props> {
                   <div className="radio">
                     <label htmlFor={fifthOption}>
                       <input
+                        name="option"
                         type="radio"
                         value="option5"
-                        checked={answerChosen === 'option5'}
-                        onChange={this.handleQuestion}
+                        checked
+                        onChange={e =>
+                          this.handleQuestion({ questionNumber }, e)
+                        }
                       />
                       {fifthOption}
                     </label>
