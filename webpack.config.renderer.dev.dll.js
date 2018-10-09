@@ -20,8 +20,6 @@ export default merge.smart(baseConfig, {
 
   devtool: 'eval',
 
-  mode: 'development',
-
   target: 'electron-renderer',
 
   externals: ['fsevents', 'crypto-browserify'],
@@ -33,7 +31,7 @@ export default merge.smart(baseConfig, {
 
   entry: {
     renderer: Object.keys(dependencies || {}).filter(
-      dependency => dependency !== '@fortawesome/fontawesome-free'
+      dependency => dependency !== 'font-awesome'
     )
   },
 

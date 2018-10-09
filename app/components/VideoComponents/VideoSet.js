@@ -7,6 +7,7 @@ import { CSVLink } from 'react-csv';
 import styles from './VideoSet.css';
 import routes from '../../constants/routes.json';
 import * as data from '../../questions/questions.json';
+import video1 from '../Bip_KC_Trim.mp4';
 
 interface Props {
   subjectId: string;
@@ -241,11 +242,10 @@ export default class VideoSet extends Component<Props> {
               this.getVideoRef = c;
             }}
             className={styles.video}
+            src={video1}
             width="70%"
             height="70%"
-            src="../app/Bip_KC_Trim.mp4"
             controls
-            type="video/mp4"
             onTimeUpdate={this.onTimeUpdate}
             onEnded={this.generateCsvs}
           >
