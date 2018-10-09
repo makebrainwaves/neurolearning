@@ -2,7 +2,7 @@
 // @flow
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Modal } from 'semantic-ui-react';
+import { Modal } from 'semantic-ui-react';
 import { CSVLink } from 'react-csv';
 import styles from './VideoSet.css';
 import routes from '../../constants/routes.json';
@@ -23,6 +23,14 @@ interface Props {
   question2AlreadyShown: boolean;
   answerChosenQ1: string;
   answerChosenQ2: string;
+  questionNumber: string;
+  questionText: string;
+  firstOption: string;
+  secondOption: string;
+  thirdOption: string;
+  fourthOption: string;
+  fifthOption: string;
+  answerChosen: string;
 }
 
 const controlPauseTime = 4;
@@ -40,7 +48,7 @@ export default class VideoSet extends Component<Props> {
     this.playVideo = this.playVideo.bind(this);
     this.pauseVideo = this.pauseVideo.bind(this);
     this.handleQuestion1 = this.handleQuestion1.bind(this);
-    this.handleQuestion2 = this.handleQuestion2.bind(this);
+    this.handleQuestion = this.handleQuestion.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
     this.state = {
@@ -48,13 +56,20 @@ export default class VideoSet extends Component<Props> {
       question1AlreadyShown: 'false',
       question2AlreadyShown: 'false',
       answerChosenQ1: 'option5',
-      answerChosenQ2: 'option5'
+      answerChosenQ2: 'option5',
+      questionNumber: '',
+      questionText: '',
+      firstOption: '',
+      secondOption: '',
+      thirdOption: '',
+      fourthOption: '',
+      fifthOption: '',
+      answerChosen: 'option5'
     };
   }
 
   state = {
     modalIsOpen: false,
-    modal2IsOpen: false,
     isRunning: false,
     question1AlreadyShown: false,
     question2AlreadyShown: false
@@ -63,21 +78,6 @@ export default class VideoSet extends Component<Props> {
   closeModal = () =>
     this.setState({
       modalIsOpen: false
-    });
-
-  closeModal2 = () =>
-    this.setState({
-      modal2IsOpen: false
-    });
-
-  openModal = () =>
-    this.setState({
-      modalIsOpen: true
-    });
-
-  openModal2 = () =>
-    this.setState({
-      modal2IsOpen: true
     });
 
   playVideo = () => {
@@ -100,32 +100,41 @@ export default class VideoSet extends Component<Props> {
       answerChosenQ2,
       isRunning
     } = this.state;
-    const vidCurrTime = document.getElementById('vidID').currentTime;
-    console.log('isRunning', isRunning);
-    console.log('question1AlreadyShown', question1AlreadyShown);
-    console.log('question2AlreadyShown', question2AlreadyShown);
-    console.log('current time', vidCurrTime);
-    console.log('state of answerChosenQ1', answerChosenQ1);
-    console.log('state of answerChosenQ2', answerChosenQ2);
-    console.log('controlPauseTime*2', controlPauseTime * 2);
 
+    const vidCurrTime = document.getElementById('vidID').currentTime;
+    console.log('answerChosenQ1: ', answerChosenQ1);
+    console.log('answerChosenQ2: ', answerChosenQ2);
+    console.log('isRunning: ', isRunning);
     if (question1AlreadyShown) {
       if (vidCurrTime >= controlPauseTime) {
         this.setState({
-          question1AlreadyShown: !question1AlreadyShown
+          modalIsOpen: true,
+          question1AlreadyShown: !question1AlreadyShown,
+          questionNumber: data.q1.name,
+          questionText: data.q1.question,
+          firstOption: data.q1.option1,
+          secondOption: data.q1.option2,
+          thirdOption: data.q1.option3,
+          fourthOption: data.q1.option4,
+          fifthOption: data.q1.option5
         });
         this.pauseVideo();
-        this.openModal();
       }
     }
     if (question2AlreadyShown) {
       if (vidCurrTime >= controlPauseTime * 2) {
         this.setState({
+          modalIsOpen: true,
           question2AlreadyShown: !question2AlreadyShown,
-          modal2IsOpen: true
+          questionNumber: data.q2.name,
+          questionText: data.q2.question,
+          firstOption: data.q2.option1,
+          secondOption: data.q2.option2,
+          thirdOption: data.q2.option3,
+          fourthOption: data.q2.option4,
+          fifthOption: data.q2.option5
         });
         this.pauseVideo();
-        this.openModal1();
       }
     }
   };
@@ -141,10 +150,10 @@ export default class VideoSet extends Component<Props> {
     });
   }
 
-  handleQuestion2(event) {
+  handleQuestion(event) {
     console.log('you have chosen Q2', event.target.value);
     this.setState({
-      answerChosenQ2: event.target.value
+      answerChosen: event.target.value
     });
   }
 
@@ -155,9 +164,15 @@ export default class VideoSet extends Component<Props> {
   render() {
     const {
       modalIsOpen,
-      modal2IsOpen,
       answerChosenQ1,
-      answerChosenQ2
+      answerChosen,
+      questionNumber,
+      questionText,
+      firstOption,
+      secondOption,
+      thirdOption,
+      fourthOption,
+      fifthOption
     } = this.state;
     const { location } = this.props;
     const { state } = location;
@@ -205,7 +220,7 @@ export default class VideoSet extends Component<Props> {
       {
         Subject: subjectId,
         Question: data.q2.name,
-        Answer: answerChosenQ2
+        Answer: answerChosen
       }
     ];
 
@@ -263,154 +278,74 @@ export default class VideoSet extends Component<Props> {
         <Modal
           open={modalIsOpen}
           className={styles.modal}
-          trigger={<Button onClick={this.openModal}>Show Modal</Button>}
           closeOnEscape={false}
           closeOnDimmerClick={false}
           onClose={this.closeModal}
         >
           <div className={styles.inner}>
-            <Modal.Header>{data.q1.name}</Modal.Header>
+            <Modal.Header>{questionNumber}</Modal.Header>
             <Modal.Content className={styles.content}>
               <Modal.Description>
-                <p>{data.q1.question}</p>
+                <p>{questionText}</p>
 
                 <div>
                   <div className="radio">
-                    <label htmlFor={data.q1.option1}>
+                    <label htmlFor={firstOption}>
                       <input
                         type="radio"
                         value="option1"
-                        checked={answerChosenQ1 === 'option1'}
-                        onChange={this.handleQuestion1}
+                        checked={answerChosen === 'option1'}
+                        onChange={this.handleQuestion}
                       />
-                      {data.q1.option1}
+                      {firstOption}
                     </label>
                   </div>
                   <div className="radio">
-                    <label htmlFor={data.q1.option2}>
+                    <label htmlFor={secondOption}>
                       <input
                         type="radio"
                         value="option2"
-                        checked={answerChosenQ1 === 'option2'}
-                        onChange={this.handleQuestion1}
+                        checked={answerChosen === 'option2'}
+                        onChange={this.handleQuestion}
                       />
-                      {data.q1.option2}
+                      {secondOption}
                     </label>
                   </div>
                   <div className="radio">
-                    <label htmlFor={data.q1.option3}>
+                    <label htmlFor={thirdOption}>
                       <input
                         type="radio"
                         value="option3"
-                        checked={answerChosenQ1 === 'option3'}
-                        onChange={this.handleQuestion1}
+                        checked={answerChosen === 'option3'}
+                        onChange={this.handleQuestion}
                       />
-                      {data.q1.option3}
+                      {thirdOption}
                     </label>
                   </div>
                   <div className="radio">
-                    <label htmlFor={data.q1.option4}>
+                    <label htmlFor={fourthOption}>
                       <input
                         type="radio"
                         value="option4"
-                        checked={answerChosenQ1 === 'option4'}
-                        onChange={this.handleQuestion1}
+                        checked={answerChosen === 'option4'}
+                        onChange={this.handleQuestion}
                       />
-                      {data.q1.option4}
+                      {fourthOption}
                     </label>
                   </div>
                   <div className="radio">
-                    <label htmlFor={data.q1.option5}>
+                    <label htmlFor={fifthOption}>
                       <input
                         type="radio"
                         value="option5"
-                        checked={answerChosenQ1 === 'option5'}
-                        onChange={this.handleQuestion1}
+                        checked={answerChosen === 'option5'}
+                        onChange={this.handleQuestion}
                       />
-                      {data.q1.option5}
+                      {fifthOption}
                     </label>
                   </div>
                   <br />
                   <button onClick={this.closeModal} type="submit">
-                    Submit
-                  </button>
-                </div>
-              </Modal.Description>
-            </Modal.Content>
-          </div>
-        </Modal>
-
-        <Modal
-          open={modal2IsOpen}
-          className={styles.modal}
-          closeOnEscape={false}
-          closeOnDimmerClick={false}
-          onClose={this.closeModal2}
-        >
-          <div className={styles.inner}>
-            <Modal.Header>{data.q2.name}</Modal.Header>
-            <Modal.Content className={styles.content}>
-              <Modal.Description>
-                <p>{data.q2.question}</p>
-
-                <div>
-                  <div className="radio">
-                    <label htmlFor={data.q2.option1}>
-                      <input
-                        type="radio"
-                        value="option1"
-                        checked={answerChosenQ2 === 'option1'}
-                        onChange={this.handleQuestion2}
-                      />
-                      {data.q2.option1}
-                    </label>
-                  </div>
-                  <div className="radio">
-                    <label htmlFor={data.q2.option2}>
-                      <input
-                        type="radio"
-                        value="option2"
-                        checked={answerChosenQ2 === 'option2'}
-                        onChange={this.handleQuestion2}
-                      />
-                      {data.q2.option2}
-                    </label>
-                  </div>
-                  <div className="radio">
-                    <label htmlFor={data.q2.option3}>
-                      <input
-                        type="radio"
-                        value="option3"
-                        checked={answerChosenQ2 === 'option3'}
-                        onChange={this.handleQuestion2}
-                      />
-                      {data.q2.option3}
-                    </label>
-                  </div>
-                  <div className="radio">
-                    <label htmlFor={data.q2.option4}>
-                      <input
-                        type="radio"
-                        value="option4"
-                        checked={answerChosenQ2 === 'option4'}
-                        onChange={this.handleQuestion2}
-                      />
-                      {data.q2.option4}
-                    </label>
-                  </div>
-                  <div className="radio">
-                    <label htmlFor={data.q2.option5}>
-                      <input
-                        type="radio"
-                        value="option5"
-                        checked={answerChosenQ2 === 'option5'}
-                        onChange={this.handleQuestion2}
-                      />
-                      {data.q2.option5}
-                    </label>
-                  </div>
-                  <br />
-                  <button onClick={this.closeModal2} type="submit">
                     Submit
                   </button>
                 </div>
