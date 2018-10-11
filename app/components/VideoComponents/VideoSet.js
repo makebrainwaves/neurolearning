@@ -229,12 +229,16 @@ export default class VideoSet extends Component<Props> {
           </Link>
         </div>
         <h3>Video Container</h3>
-        <CSVLink data={subjectCsvData} filename={subjectId}>
-          Download Subject Info
-        </CSVLink>
-        <CSVLink data={answersCsv} filename="answers.csv">
-          Download Subject Answers
-        </CSVLink>
+        <Button>
+          <CSVLink data={subjectCsvData} filename={subjectId}>
+            Download Subject Info
+          </CSVLink>
+        </Button>
+        <Button>
+          <CSVLink data={answersCsv} filename="answers.csv">
+            Download Subject Answers
+          </CSVLink>
+        </Button>
         <div>
           <video
             id="vidID"
@@ -243,9 +247,8 @@ export default class VideoSet extends Component<Props> {
             }}
             className={styles.video}
             src={video1}
-            width="70%"
-            height="70%"
-            controls
+            width="60%"
+            height="60%"
             onTimeUpdate={this.onTimeUpdate}
             onEnded={this.generateCsvs}
           >
@@ -260,14 +263,14 @@ export default class VideoSet extends Component<Props> {
             >
               Play
             </Button>
-            <button
+            <Button
               className={styles.btn}
               onClick={this.pauseVideo}
               data-tclass="btn"
               type="button"
             >
               Pause
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -352,9 +355,9 @@ export default class VideoSet extends Component<Props> {
                     </label>
                   </div>
                   <br />
-                  <button onClick={this.closeModal} type="submit">
+                  <Button onClick={this.closeModal} type="submit">
                     Submit
-                  </button>
+                  </Button>
                 </div>
               </Modal.Description>
             </Modal.Content>

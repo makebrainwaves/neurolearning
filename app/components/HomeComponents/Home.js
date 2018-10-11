@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Segment, Icon } from 'semantic-ui-react';
+import { Button, Dropdown, Segment, Icon, Input } from 'semantic-ui-react';
 import { isNil } from 'lodash';
 import { Observable } from 'rxjs';
 import routes from '../../constants/routes.json';
@@ -62,36 +62,36 @@ export default class Home extends Component<Props, State> {
     this.handleConnectEEG = this.handleConnectEEG.bind(this);
   }
 
-  handleFirstVideo(event: Object) {
-    this.setState({ firstVideo: event.target.value });
+  handleFirstVideo(event: Object, data) {
+    this.setState({ firstVideo: data.value });
   }
 
-  handleFirstVideoType(event: Object) {
-    this.setState({ firstVideoType: event.target.value });
+  handleFirstVideoType(event: Object, data) {
+    this.setState({ firstVideoType: data.value });
   }
 
-  handleSecondVideo(event: Object) {
-    this.setState({ secondVideo: event.target.value });
+  handleSecondVideo(event: Object, data) {
+    this.setState({ secondVideo: data.value });
   }
 
-  handleSecondVideoType(event: Object) {
-    this.setState({ secondVideoType: event.target.value });
+  handleSecondVideoType(event: Object, data) {
+    this.setState({ secondVideoType: data.value });
   }
 
-  handleThirdVideo(event: Object) {
-    this.setState({ thirdVideo: event.target.value });
+  handleThirdVideo(event: Object, data) {
+    this.setState({ thirdVideo: data.value });
   }
 
-  handleThirdVideoType(event: Object) {
-    this.setState({ thirdVideoType: event.target.value });
+  handleThirdVideoType(event: Object, data) {
+    this.setState({ thirdVideoType: data.value });
   }
 
-  handleFourthVideo(event: Object) {
-    this.setState({ fourthVideo: event.target.value });
+  handleFourthVideo(event: Object, data) {
+    this.setState({ fourthVideo: data.value });
   }
 
-  handleFourthVideoType(event: Object) {
-    this.setState({ fourthVideoType: event.target.value });
+  handleFourthVideoType(event: Object, data) {
+    this.setState({ fourthVideoType: data.value });
   }
 
   handleSubjectId(event: Object) {
@@ -123,7 +123,7 @@ export default class Home extends Component<Props, State> {
     }
     return (
       <Segment basic>
-        <Button primary fluid onClick={this.handleConnectEEG}>
+        <Button primary onClick={this.handleConnectEEG}>
           Connect to EEG Stream
         </Button>
       </Segment>
@@ -144,6 +144,18 @@ export default class Home extends Component<Props, State> {
       rawEEGObservable
     } = this.state;
 
+    const videoOptions = [
+      { key: 'vid1', value: 'vid1', text: 'vid1' },
+      { key: 'vid2', value: 'vid2', text: 'vid2' },
+      { key: 'vid3', value: 'vid3', text: 'vid3' },
+      { key: 'vid4', value: 'vid4', text: 'vid4' }
+    ];
+
+    const experimentOptions = [
+      { key: 'control', value: 'control', text: 'control' },
+      { key: 'experimental', value: 'experimental', text: 'experimental' }
+    ];
+
     return (
       <div className={styles.container} data-tid="container">
         <h2>Neurolearning Project</h2>
@@ -156,116 +168,109 @@ export default class Home extends Component<Props, State> {
           <p>Please enter a subject ID, then choose a video set:</p>
         </div>
 
-        <div>
-          <p>
-            <input
-              placeholder="Subject ID"
-              type="text"
-              value={subjectId}
-              onChange={this.handleSubjectId}
-            />
-          </p>
+        <Input
+          placeholder="Subject ID"
+          type="text"
+          value={subjectId}
+          onChange={this.handleSubjectId}
+        />
+
+        <div className={styles.selectionContainer}>
+          <span className={styles.selectionText}>Play first:</span>
+          <Dropdown
+            placeholder="Select First Video"
+            value={firstVideo}
+            onChange={this.handleFirstVideo}
+            selection
+            options={videoOptions}
+          />
+          <Dropdown
+            placeholder="Select Experiment Type"
+            value={firstVideoType}
+            onChange={this.handleFirstVideoType}
+            selection
+            options={experimentOptions}
+          />
         </div>
 
         <div className={styles.selectionContainer}>
-          <div className={styles.selection}>
-            <span className={styles.selectionText}>Play first:</span>
-            <div className={styles.addValue}>
-              <select value={firstVideo} onChange={this.handleFirstVideo}>
-                <option value="vid1">Video 1</option>
-                <option value="vid2">Video 2</option>
-                <option value="vid3">Video 3</option>
-                <option value="vid4">Video 4</option>
-              </select>
-              <select
-                value={firstVideoType}
-                onChange={this.handleFirstVideoType}
-              >
-                <option value="control">Control</option>
-                <option value="experimental">Experimental</option>
-              </select>
-            </div>
-          </div>
-
-          <div className={styles.selection}>
-            <span className={styles.selectionText}>Play second:</span>
-            <div className={styles.addValue}>
-              <select value={secondVideo} onChange={this.handleSecondVideo}>
-                <option value="vid1">Video 1</option>
-                <option value="vid2">Video 2</option>
-                <option value="vid3">Video 3</option>
-                <option value="vid4">Video 4</option>
-              </select>
-              <select
-                value={secondVideoType}
-                onChange={this.handleSecondVideoType}
-              >
-                <option value="control">Control</option>
-                <option value="experimental">Experimental</option>
-              </select>
-            </div>
-          </div>
-
-          <div className={styles.selection}>
-            <span className={styles.selectionText}>Play third:</span>
-            <div className={styles.addValue}>
-              <select value={thirdVideo} onChange={this.handleThirdVideo}>
-                <option value="vid1">Video 1</option>
-                <option value="vid2">Video 2</option>
-                <option value="vid3">Video 3</option>
-                <option value="vid4">Video 4</option>
-              </select>
-              <select
-                value={thirdVideoType}
-                onChange={this.handleThirdVideoType}
-              >
-                <option value="control">Control</option>
-                <option value="experimental">Experimental</option>
-              </select>
-            </div>
-          </div>
-
-          <div className={styles.selection}>
-            <span className={styles.selectionText}>Play fourth:</span>
-            <div className={styles.addValue}>
-              <select value={fourthVideo} onChange={this.handleFourthVideo}>
-                <option value="vid1">Video 1</option>
-                <option value="vid2">Video 2</option>
-                <option value="vid3">Video 3</option>
-                <option value="vid4">Video 4</option>
-              </select>
-              <select
-                value={fourthVideoType}
-                onChange={this.handleFourthVideoType}
-              >
-                <option value="control">Control</option>
-                <option value="experimental">Experimental</option>
-              </select>
-            </div>
-          </div>
+          <span className={styles.selectionText}>Play second:</span>
+          <Dropdown
+            placeholder="Select Second Video"
+            value={secondVideo}
+            onChange={this.handleSecondVideo}
+            selection
+            options={videoOptions}
+          />
+          <Dropdown
+            placeholder="Select Experiment Type"
+            value={secondVideoType}
+            onChange={this.handleSecondVideoType}
+            selection
+            options={experimentOptions}
+          />
         </div>
 
-        <div className={styles.submitButton}>
-          <Link
-            to={{
-              pathname: routes.VIDEOSET,
-              state: {
-                firstVideo,
-                firstVideoType,
-                secondVideo,
-                secondVideoType,
-                thirdVideo,
-                thirdVideoType,
-                fourthVideo,
-                fourthVideoType,
-                subjectId
-              }
-            }}
-          >
-            SUBMIT
-          </Link>
-          {this.renderEEGConnector()}
+        <div className={styles.selectionContainer}>
+          <span className={styles.selectionText}>Play third:</span>
+          <Dropdown
+            placeholder="Select Third Video"
+            value={thirdVideo}
+            onChange={this.handleThirdVideo}
+            selection
+            options={videoOptions}
+          />
+          <Dropdown
+            placeholder="Select Experiment Type"
+            value={thirdVideoType}
+            onChange={this.handleThirdVideoType}
+            selection
+            options={experimentOptions}
+          />
         </div>
+
+        <div className={styles.selectionContainer}>
+          <span className={styles.selectionText}>Play fourth:</span>
+          <Dropdown
+            placeholder="Select Fourth Video"
+            value={fourthVideo}
+            onChange={this.handleFourthVideo}
+            selection
+            options={videoOptions}
+          />
+          <Dropdown
+            placeholder="Select Experiment Type"
+            value={fourthVideoType}
+            onChange={this.handleFourthVideoType}
+            selection
+            options={experimentOptions}
+          />
+        </div>
+
+        <Segment basic>
+          <Button>
+            <Link
+              to={{
+                pathname: routes.VIDEOSET,
+                state: {
+                  firstVideo,
+                  firstVideoType,
+                  secondVideo,
+                  secondVideoType,
+                  thirdVideo,
+                  thirdVideoType,
+                  fourthVideo,
+                  fourthVideoType,
+                  subjectId
+                }
+              }}
+            >
+              SUBMIT
+            </Link>
+          </Button>
+        </Segment>
+
+        {this.renderEEGConnector()}
       </div>
     );
   }
