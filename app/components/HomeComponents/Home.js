@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Segment, Icon } from 'semantic-ui-react';
+import { Button, Segment, Icon, Input } from 'semantic-ui-react';
 import { isNil } from 'lodash';
 import { Observable } from 'rxjs';
 import routes from '../../constants/routes.json';
@@ -123,7 +123,7 @@ export default class Home extends Component<Props, State> {
     }
     return (
       <Segment basic>
-        <Button primary fluid onClick={this.handleConnectEEG}>
+        <Button primary onClick={this.handleConnectEEG}>
           Connect to EEG Stream
         </Button>
       </Segment>
@@ -156,16 +156,12 @@ export default class Home extends Component<Props, State> {
           <p>Please enter a subject ID, then choose a video set:</p>
         </div>
 
-        <div>
-          <p>
-            <input
-              placeholder="Subject ID"
-              type="text"
-              value={subjectId}
-              onChange={this.handleSubjectId}
-            />
-          </p>
-        </div>
+        <Input
+          placeholder="Subject ID"
+          type="text"
+          value={subjectId}
+          onChange={this.handleSubjectId}
+        />
 
         <div className={styles.selectionContainer}>
           <div className={styles.selection}>
@@ -245,27 +241,30 @@ export default class Home extends Component<Props, State> {
           </div>
         </div>
 
-        <div className={styles.submitButton}>
-          <Link
-            to={{
-              pathname: routes.VIDEOSET,
-              state: {
-                firstVideo,
-                firstVideoType,
-                secondVideo,
-                secondVideoType,
-                thirdVideo,
-                thirdVideoType,
-                fourthVideo,
-                fourthVideoType,
-                subjectId
-              }
-            }}
-          >
-            SUBMIT
-          </Link>
-          {this.renderEEGConnector()}
-        </div>
+        <Segment basic>
+          <Button>
+            <Link
+              to={{
+                pathname: routes.VIDEOSET,
+                state: {
+                  firstVideo,
+                  firstVideoType,
+                  secondVideo,
+                  secondVideoType,
+                  thirdVideo,
+                  thirdVideoType,
+                  fourthVideo,
+                  fourthVideoType,
+                  subjectId
+                }
+              }}
+            >
+              SUBMIT
+            </Link>
+          </Button>
+        </Segment>
+
+        {this.renderEEGConnector()}
       </div>
     );
   }
