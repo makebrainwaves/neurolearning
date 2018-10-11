@@ -4,27 +4,6 @@ body {
   text-align: center;
 }
 
-.addValue {
-  display: inline;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  margin: 1rem 0;
-  font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
-  background: #fff;
-  font-weight: 400;
-  border: 1px solid rgba(34, 36, 38, 0.15);
-  -webkit-box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15);
-  box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15);
-  border-radius: 0.28571429rem;
-  min-height: 2em;
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  margin: 0;
-  vertical-align: middle;
-}
-
 .container {
   top: 0%;
   left: 10px;
@@ -42,32 +21,11 @@ body {
 
 .selectionContainer {
   text-align: center;
-}
-
-.selectionText {
-  margin-right: 1rem;
-}
-.selection {
   margin: 1rem;
 }
 
-.submitButton {
-  margin: 2rem;
-  margin-left: 44%;
-  padding: 10px;
-  padding-top: 8px;
-  display: block;
-  height: 1.5rem;
-  max-width: 6rem;
-  text-align: center;
-  border: 1px solid white;
-  background-color: lightgrey;
-  border-radius: 5px;
-}
-.submitButton a {
-  color: black;
-}
-
-.submitButton a:hover {
-  color: grey;
+.selectionText {
+  font-size: 1.5rem;
+  margin-right: 1rem;
+  text-align: left;
 }
