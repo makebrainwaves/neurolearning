@@ -1,6 +1,9 @@
 import lsl from 'node-lsl';
-import { fromEvent } from 'rxjs';
+import { fromEvent, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { epoch, fft, alphaPower, powerByBand, map } from '@neurosity/pipes';
+
+const ENOBIO_SAMPLE_RATE = 500;
 
 // Returns an array of StreamInfo objects representing available EEG LSL streams
 // NOTE: This is a synchronous operation and will freeze the UI while it executes. Keep timeout low
@@ -31,3 +34,29 @@ export const createEEGObservable = (chunkSize = 12) => {
     );
   }
 };
+
+export const createAlphaClassifierObservable = (rawObservable: Observable) =>
+  rawObservable.pipe(
+    // Epoch the data into 10s long segments emitted every 1s
+    epoch({
+      samplingRate: ENOBIO_SAMPLE_RATE,
+      duration: ENOBIO_SAMPLE_RATE * 10,
+      interval: ENOBIO_SAMPLE_RATE
+    }),
+    fft({ bins: ENOBIO_SAMPLE_RATE }),
+    alphaPower()
+  );
+
+export const createThetaBetaClassifierObservable = (
+  rawObservable: Observable
+) =>
+  rawObservable.pipe(
+    epoch({
+      samplingRate: ENOBIO_SAMPLE_RATE,
+      duration: ENOBIO_SAMPLE_RATE * 10,
+      interval: ENOBIO_SAMPLE_RATE
+    }),
+    fft({ bins: ENOBIO_SAMPLE_RATE }),
+    powerByBand(),
+    map(bandPowers => bandPowers.theta / bandPowers.beta)
+  );
