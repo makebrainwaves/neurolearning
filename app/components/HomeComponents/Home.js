@@ -1,8 +1,10 @@
 // @flow
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { Button } from 'semantic-ui-react';
 import routes from '../../constants/routes.json';
 import styles from './Home.css';
+import { createEEGObservable } from '../../utils/eeg';
 
 type Props = {};
 
@@ -10,7 +12,7 @@ interface State {
   subjectId: string;
   firstVideo: string;
   firstVideoType: string;
-  seocondVideo: string;
+  secondVideo: string;
   secondVideoType: string;
   thirdVideo: string;
   thirdVideoType: string;
@@ -18,12 +20,20 @@ interface State {
   fourthVideoType: string;
 }
 
-export default class Home extends Component<Props> {
+export default class Home extends Component<Props, State> {
   props: Props;
-
   state: State;
+  handleSubjectId: Object => void;
+  handleFirstVideo: Object => void;
+  handleFirstVideoType: Object => void;
+  handleSecondVideo: Object => void;
+  handleSecondVideoType: Object => void;
+  handleThirdVideo: Object => void;
+  handleThirdVideoType: Object => void;
+  handleFourthVideo: Object => void;
+  handleFourthVideoType: Object => void;
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       subjectId: '',
@@ -47,39 +57,39 @@ export default class Home extends Component<Props> {
     this.handleFourthVideoType = this.handleFourthVideoType.bind(this);
   }
 
-  handleFirstVideo(event) {
+  handleFirstVideo(event: Object) {
     this.setState({ firstVideo: event.target.value });
   }
 
-  handleFirstVideoType(event) {
+  handleFirstVideoType(event: Object) {
     this.setState({ firstVideoType: event.target.value });
   }
 
-  handleSecondVideo(event) {
+  handleSecondVideo(event: Object) {
     this.setState({ secondVideo: event.target.value });
   }
 
-  handleSecondVideoType(event) {
+  handleSecondVideoType(event: Object) {
     this.setState({ secondVideoType: event.target.value });
   }
 
-  handleThirdVideo(event) {
+  handleThirdVideo(event: Object) {
     this.setState({ thirdVideo: event.target.value });
   }
 
-  handleThirdVideoType(event) {
+  handleThirdVideoType(event: Object) {
     this.setState({ thirdVideoType: event.target.value });
   }
 
-  handleFourthVideo(event) {
+  handleFourthVideo(event: Object) {
     this.setState({ fourthVideo: event.target.value });
   }
 
-  handleFourthVideoType(event) {
+  handleFourthVideoType(event: Object) {
     this.setState({ fourthVideoType: event.target.value });
   }
 
-  handleSubjectId(event) {
+  handleSubjectId(event: Object) {
     this.setState({ subjectId: event.target.value });
   }
 
@@ -216,6 +226,27 @@ export default class Home extends Component<Props> {
           >
             SUBMIT
           </Link>
+          <Button
+            onClick={() => {
+              // This is our guy! Eventually you'll want to store this in redux so you can access it anywhere
+              const eegObservable = createEEGObservable();
+              let counter = 0.0;
+              // All you have to do to get data is subscribe to this observable like this
+              eegObservable.subscribe(eegData => {
+                console.log(
+                  'Received ',
+                  eegData.data[0].length,
+                  ' samples at  ',
+                  eegData.timestamps[0],
+                  '. Sampling rate = ',
+                  eegData.data[0].length / (eegData.timestamps[0] - counter)
+                );
+                counter = eegData.timestamps[0];
+              });
+            }}
+          >
+            Test EEG
+          </Button>
         </div>
       </div>
     );
