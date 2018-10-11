@@ -210,10 +210,12 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.2.0",
+    "@neurosity/pipes": "^3.2.3",
     "devtron": "^1.4.0",
     "electron-debug": "^2.0.0",
     "font-awesome": "^4.7.0",
     "history": "^4.7.2",
+    "lodash": "^4.17.11",
     "react": "^16.4.1",
     "react-csv": "^1.0.15-RC2",
     "react-dom": "^16.4.1",

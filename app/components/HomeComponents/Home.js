@@ -1,7 +1,9 @@
 // @flow
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from 'semantic-ui-react';
+import { Button, Segment, Icon } from 'semantic-ui-react';
+import { isNil } from 'lodash';
+import { Observable } from 'rxjs';
 import routes from '../../constants/routes.json';
 import styles from './Home.css';
 import { createEEGObservable } from '../../utils/eeg';
@@ -18,6 +20,7 @@ interface State {
   thirdVideoType: string;
   fourthVideo: string;
   fourthVideoType: string;
+  rawEEGObservable: Observable<Object>;
 }
 
 export default class Home extends Component<Props, State> {
@@ -44,7 +47,8 @@ export default class Home extends Component<Props, State> {
       firstVideoType: 'control',
       secondVideoType: 'control',
       thirdVideoType: 'control',
-      fourthVideoType: 'control'
+      fourthVideoType: 'control',
+      rawEEGObservable: null
     };
     this.handleSubjectId = this.handleSubjectId.bind(this);
     this.handleFirstVideo = this.handleFirstVideo.bind(this);
@@ -55,6 +59,7 @@ export default class Home extends Component<Props, State> {
     this.handleThirdVideoType = this.handleThirdVideoType.bind(this);
     this.handleFourthVideo = this.handleFourthVideo.bind(this);
     this.handleFourthVideoType = this.handleFourthVideoType.bind(this);
+    this.handleConnectEEG = this.handleConnectEEG.bind(this);
   }
 
   handleFirstVideo(event: Object) {
@@ -93,6 +98,38 @@ export default class Home extends Component<Props, State> {
     this.setState({ subjectId: event.target.value });
   }
 
+  handleConnectEEG() {
+    try {
+      const eegObservable = createEEGObservable();
+      if (!isNil(eegObservable)) {
+        this.setState({ rawEEGObservable: eegObservable });
+        eegObservable.subscribe(eegData => {
+          console.log(eegData.data);
+        });
+      }
+    } catch (e) {
+      console.log('Error in handleConnectEEG: ', e);
+    }
+  }
+
+  renderEEGConnector() {
+    if (!isNil(this.state.rawEEGObservable)) {
+      return (
+        <Segment basic>
+          Connected
+          <Icon name="check" color="green" />
+        </Segment>
+      );
+    }
+    return (
+      <Segment basic>
+        <Button primary fluid onClick={this.handleConnectEEG}>
+          Connect to EEG Stream
+        </Button>
+      </Segment>
+    );
+  }
+
   render() {
     const {
       subjectId,
@@ -103,7 +140,8 @@ export default class Home extends Component<Props, State> {
       thirdVideo,
       thirdVideoType,
       fourthVideo,
-      fourthVideoType
+      fourthVideoType,
+      rawEEGObservable
     } = this.state;
 
     return (
@@ -226,27 +264,7 @@ export default class Home extends Component<Props, State> {
           >
             SUBMIT
           </Link>
-          <Button
-            onClick={() => {
-              // This is our guy! Eventually you'll want to store this in redux so you can access it anywhere
-              const eegObservable = createEEGObservable();
-              let counter = 0.0;
-              // All you have to do to get data is subscribe to this observable like this
-              eegObservable.subscribe(eegData => {
-                console.log(
-                  'Received ',
-                  eegData.data[0].length,
-                  ' samples at  ',
-                  eegData.timestamps[0],
-                  '. Sampling rate = ',
-                  eegData.data[0].length / (eegData.timestamps[0] - counter)
-                );
-                counter = eegData.timestamps[0];
-              });
-            }}
-          >
-            Test EEG
-          </Button>
+          {this.renderEEGConnector()}
         </div>
       </div>
     );
