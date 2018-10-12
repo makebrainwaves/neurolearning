@@ -8,7 +8,6 @@ import { Subscription } from 'rxjs';
 import styles from './VideoSet.css';
 import routes from '../../constants/routes.json';
 import * as data from '../../questions/questions.json';
-import * as questionsArray from '../../questions/questionsArray.json';
 import video1 from '../Bip_KC_Trim.mp4';
 import {
   createAlphaClassifierObservable,
@@ -42,6 +41,53 @@ interface State {
 interface Props {}
 
 const controlPauseTime = 4;
+
+const questionsArray = [
+  {
+    key: 'q1',
+    name: 'Question 1:',
+    question:
+      '1Which one of the following is NOT a physical characteristic of primates?',
+    option1: 'Locomotion',
+    option2: 'Nose',
+    option3: 'Humor',
+    option4: 'Eyesight',
+    option5: "I don't know"
+  },
+  {
+    key: 'q2',
+    name: 'Question 2:',
+    question:
+      '2Which one of the following is NOT a physical characteristic of primates?',
+    option1: 'Locomotion',
+    option2: 'Nose',
+    option3: 'Humor',
+    option4: 'Eyesight',
+    option5: "I don't know"
+  },
+  {
+    key: 'q3',
+    name: 'Question 3:',
+    question:
+      '3Which one of the following is NOT a physical characteristic of primates?',
+    option1: 'Locomotion',
+    option2: 'Nose',
+    option3: 'Humor',
+    option4: 'Eyesight',
+    option5: "I don't know"
+  },
+  {
+    key: 'q4',
+    name: 'Question 4:',
+    question:
+      '4Which one of the following is NOT a physical characteristic of primates?',
+    option1: 'Locomotion',
+    option2: 'Nose',
+    option3: 'Humor',
+    option4: 'Eyesight',
+    option5: "I don't know"
+  }
+];
 
 export default class VideoSet extends Component<Props, State> {
   props: Props;
@@ -97,7 +143,6 @@ export default class VideoSet extends Component<Props, State> {
 
   componentDidMount() {
     // Might be able to subscribe to these guys in constructor, but I've always done it in componentDidMount
-
     if (this.props.location.state.firstVideoType === 'experimental') {
       this.classifierEEGSubscription = this.state.classifierEEGObservable.subscribe(
         classifierScore => {
@@ -125,6 +170,25 @@ export default class VideoSet extends Component<Props, State> {
     this.setState({ isRunning: false });
   };
 
+  nextQuestion = key => {
+    this.pauseVideo();
+    this.setState({ modalIsOpen: true });
+
+    for (let i = 0; i < questionsArray.length; i++) {
+      if (questionsArray[i].key === key) {
+        this.setState({
+          questionNumber: questionsArray[i].name,
+          questionText: questionsArray[i].question,
+          firstOption: questionsArray[i].option1,
+          secondOption: questionsArray[i].option2,
+          thirdOption: questionsArray[i].option3,
+          fourthOption: questionsArray[i].option4,
+          fifthOption: questionsArray[i].option5
+        });
+      }
+    }
+  };
+
   onTimeUpdate = () => {
     const {
       question1AlreadyShown,
@@ -139,7 +203,6 @@ export default class VideoSet extends Component<Props, State> {
       if (this.state.classifierScore >= this.state.classifierThreshold) {
         this.setState({
           modalIsOpen: true,
-          question1AlreadyShown: !question1AlreadyShown,
           questionNumber: data.q1.name,
           questionText: data.q1.question,
           firstOption: data.q1.option1,
@@ -151,38 +214,17 @@ export default class VideoSet extends Component<Props, State> {
         this.pauseVideo();
       }
     } else {
-      // TODO: else experiment type = control
-      // TODO: Refactor this so you won't have to manually describe states for every different question
+      // control:
       if (question1AlreadyShown) {
         if (vidCurrTime >= controlPauseTime) {
-          this.setState({
-            modalIsOpen: true,
-            question1AlreadyShown: !question1AlreadyShown,
-            questionNumber: data.q1.name,
-            questionText: data.q1.question,
-            firstOption: data.q1.option1,
-            secondOption: data.q1.option2,
-            thirdOption: data.q1.option3,
-            fourthOption: data.q1.option4,
-            fifthOption: data.q1.option5
-          });
-          this.pauseVideo();
+          this.setState({ question1AlreadyShown: !question1AlreadyShown });
+          this.nextQuestion('q1');
         }
       }
       if (question2AlreadyShown) {
         if (vidCurrTime >= controlPauseTime * 2) {
-          this.setState({
-            modalIsOpen: true,
-            question2AlreadyShown: !question2AlreadyShown,
-            questionNumber: data.q2.name,
-            questionText: data.q2.question,
-            firstOption: data.q2.option1,
-            secondOption: data.q2.option2,
-            thirdOption: data.q2.option3,
-            fourthOption: data.q2.option4,
-            fifthOption: data.q2.option5
-          });
-          this.pauseVideo();
+          this.setState({ question2AlreadyShown: !question2AlreadyShown });
+          this.nextQuestion('q2');
         }
       }
     }
