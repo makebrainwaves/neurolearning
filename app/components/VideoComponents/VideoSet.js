@@ -82,7 +82,7 @@ export default class VideoSet extends Component<Props, State> {
       answerQ2: 'option5',
       classifierEEGObservable,
       classifierScore: 0,
-      classifierThreshold: 80 // TODO: set this based on baseline data collection
+      classifierThreshold: 0.24 // TODO: set this based on baseline data collection
     };
     // These are just so that we can unsubscribe from the observables
     this.rawEEGSubscription = null;
@@ -129,11 +129,9 @@ export default class VideoSet extends Component<Props, State> {
     } = this.state;
 
     const vidCurrTime = document.getElementById('vidID').currentTime;
-    console.log('isRunning: ', isRunning);
 
-    // TODO: Add way to tell if this video is an experimental or control video
-    const isVideoExperimental = true;
-    if (isVideoExperimental) {
+    console.log('video type', this.props.location.state.firstVideoType);
+    if (this.props.location.state.firstVideoType === 'experimental') {
       if (this.state.classifierScore >= this.state.classifierThreshold) {
         this.setState({
           modalIsOpen: true,
@@ -148,6 +146,8 @@ export default class VideoSet extends Component<Props, State> {
         });
         this.pauseVideo();
       }
+    } else {
+      // TODO: else experiment type = control
     }
 
     // TODO: Refactor this so you won't have to manually describe states for every different question
