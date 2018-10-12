@@ -42,52 +42,7 @@ interface Props {}
 
 const controlPauseTime = 4;
 
-const questionsArray = [
-  {
-    key: 'q1',
-    name: 'Question 1:',
-    question:
-      '1Which one of the following is NOT a physical characteristic of primates?',
-    option1: 'Locomotion',
-    option2: 'Nose',
-    option3: 'Humor',
-    option4: 'Eyesight',
-    option5: "I don't know"
-  },
-  {
-    key: 'q2',
-    name: 'Question 2:',
-    question:
-      '2Which one of the following is NOT a physical characteristic of primates?',
-    option1: 'Locomotion',
-    option2: 'Nose',
-    option3: 'Humor',
-    option4: 'Eyesight',
-    option5: "I don't know"
-  },
-  {
-    key: 'q3',
-    name: 'Question 3:',
-    question:
-      '3Which one of the following is NOT a physical characteristic of primates?',
-    option1: 'Locomotion',
-    option2: 'Nose',
-    option3: 'Humor',
-    option4: 'Eyesight',
-    option5: "I don't know"
-  },
-  {
-    key: 'q4',
-    name: 'Question 4:',
-    question:
-      '4Which one of the following is NOT a physical characteristic of primates?',
-    option1: 'Locomotion',
-    option2: 'Nose',
-    option3: 'Humor',
-    option4: 'Eyesight',
-    option5: "I don't know"
-  }
-];
+const questionsArray = require('../../questions/questionsArray');
 
 export default class VideoSet extends Component<Props, State> {
   props: Props;
