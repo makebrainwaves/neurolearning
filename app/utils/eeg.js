@@ -1,7 +1,7 @@
 import lsl from 'node-lsl';
-import { fromEvent, Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { epoch, fft, alphaPower, powerByBand, map } from '@neurosity/pipes';
+import { fromEvent, Observable, of } from 'rxjs';
+import { filter, map, mergeMap } from 'rxjs/operators';
+import { epoch, fft, alphaPower, powerByBand } from '@neurosity/pipes';
 
 const ENOBIO_SAMPLE_RATE = 500;
 
@@ -17,7 +17,7 @@ export const resolveLSLStreams = (
 export const createStreamInlet = (streamInfo: lsl.StreamInfo) =>
   new lsl.StreamInlet(streamInfo);
 
-export const createEEGObservable = (chunkSize = 12) => {
+export const createEEGObservable = (chunkSize = 250) => {
   const streams = resolveLSLStreams();
   console.log('Resolved ', streams.length, ' EEG streams');
   if (streams.length > 0) {
@@ -37,14 +37,27 @@ export const createEEGObservable = (chunkSize = 12) => {
 
 export const createAlphaClassifierObservable = (rawObservable: Observable) =>
   rawObservable.pipe(
+    mergeMap(chunk =>
+      of(
+        ...chunk.timestamps.map((timestamp, index) => ({
+          data: chunk.data.map(channelData => channelData[index]),
+          timestamp
+        }))
+      )
+    ),
     // Epoch the data into 10s long segments emitted every 1s
     epoch({
       samplingRate: ENOBIO_SAMPLE_RATE,
-      duration: ENOBIO_SAMPLE_RATE * 10,
+      duration: 1024,
       interval: ENOBIO_SAMPLE_RATE
     }),
-    fft({ bins: ENOBIO_SAMPLE_RATE }),
-    alphaPower()
+    fft({ bins: 1024 }),
+    alphaPower(),
+    // Average alpha power across all channels
+    map(
+      alphaArray =>
+        alphaArray.reduce((acc, curr) => acc + curr) / alphaArray.length
+    )
   );
 
 export const createThetaBetaClassifierObservable = (
@@ -58,5 +71,10 @@ export const createThetaBetaClassifierObservable = (
     }),
     fft({ bins: ENOBIO_SAMPLE_RATE }),
     powerByBand(),
-    map(bandPowers => bandPowers.theta / bandPowers.beta)
+    map(bandPowers => bandPowers.theta / bandPowers.beta),
+    // Average power ratio across all channels
+    map(
+      powerArray =>
+        powerArray.reduce((acc, curr) => acc + curr) / powerArray.length
+    )
   );

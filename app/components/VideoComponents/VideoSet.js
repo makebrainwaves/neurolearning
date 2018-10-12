@@ -4,13 +4,17 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Modal } from 'semantic-ui-react';
 import { CSVLink } from 'react-csv';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import styles from './VideoSet.css';
 import routes from '../../constants/routes.json';
 import * as data from '../../questions/questions.json';
 import video1 from '../Bip_KC_Trim.mp4';
+import {
+  createAlphaClassifierObservable,
+  createThetaBetaClassifierObservable
+} from '../../utils/eeg';
 
-interface Props {
+interface State {
   subjectId: string;
   firstVideo: string;
   firstVideoType: string;
@@ -34,9 +38,11 @@ interface Props {
   answerQ2: string;
 }
 
+interface Props {}
+
 const controlPauseTime = 4;
 
-export default class VideoSet extends Component<Props> {
+export default class VideoSet extends Component<Props, State> {
   props: Props;
   classifierEEGSubscription: ?Subscription;
   rawEEGSubscription: ?Subscription;
@@ -44,14 +50,21 @@ export default class VideoSet extends Component<Props> {
   constructor(props) {
     super(props);
     let classifierEEGObservable = null;
+    console.log('you reeg osevabe', props.location.state.classifierType);
+    console.log(
+      'you rawEEGObservable state',
+      props.location.state.rawEEGObservable
+    );
     if (props.location.state.classifierType === 'alpha') {
       classifierEEGObservable = createAlphaClassifierObservable(
         props.location.state.rawEEGObservable
       );
-    } else if (props.location.classifierType === 'thetaBeta') {
+      console.log('your classifierEEGObservable: ', classifierEEGObservable);
+    } else if (props.location.state.classifierType === 'thetaBeta') {
       classifierEEGObservable = createThetaBetaClassifierObservable(
         props.location.state.rawEEGObservable
       );
+      console.log('your classifierEEGObservable: ', classifierEEGObservable);
     }
 
     this.state = {
@@ -84,7 +97,10 @@ export default class VideoSet extends Component<Props> {
   componentDidMount() {
     // Might be able to subscribe to these guys in constructor, but I've always done it in componentDidMount
     this.classifierEEGSubscription = this.state.classifierEEGObservable.subscribe(
-      classifierScore => this.setState({ classifierScore })
+      classifierScore => {
+        this.setState({ classifierScore });
+        console.log('classifierScore', classifierScore);
+      }
     );
   }
 
