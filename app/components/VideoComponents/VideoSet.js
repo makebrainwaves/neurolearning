@@ -4,12 +4,17 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Modal } from 'semantic-ui-react';
 import { CSVLink } from 'react-csv';
+import { Subscription } from 'rxjs';
 import styles from './VideoSet.css';
 import routes from '../../constants/routes.json';
 import * as data from '../../questions/questions.json';
 import video1 from '../Bip_KC_Trim.mp4';
+import {
+  createAlphaClassifierObservable,
+  createThetaBetaClassifierObservable
+} from '../../utils/eeg';
 
-interface Props {
+interface State {
   subjectId: string;
   firstVideo: string;
   firstVideoType: string;
@@ -33,22 +38,34 @@ interface Props {
   answerQ2: string;
 }
 
+interface Props {}
+
 const controlPauseTime = 4;
 
-export default class VideoSet extends Component<Props> {
-  propTypes: {
-    location: React.PropTypes.object
-  };
-
+export default class VideoSet extends Component<Props, State> {
   props: Props;
+  classifierEEGSubscription: ?Subscription;
+  rawEEGSubscription: ?Subscription;
 
   constructor(props) {
     super(props);
-    // This binding is necessary to make `this` work in the callback
-    this.playVideo = this.playVideo.bind(this);
-    this.pauseVideo = this.pauseVideo.bind(this);
-    this.handleQuestion = this.handleQuestion.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    let classifierEEGObservable = null;
+    console.log('you reeg osevabe', props.location.state.classifierType);
+    console.log(
+      'you rawEEGObservable state',
+      props.location.state.rawEEGObservable
+    );
+    if (props.location.state.classifierType === 'alpha') {
+      classifierEEGObservable = createAlphaClassifierObservable(
+        props.location.state.rawEEGObservable
+      );
+      console.log('your classifierEEGObservable: ', classifierEEGObservable);
+    } else if (props.location.state.classifierType === 'thetaBeta') {
+      classifierEEGObservable = createThetaBetaClassifierObservable(
+        props.location.state.rawEEGObservable
+      );
+      console.log('your classifierEEGObservable: ', classifierEEGObservable);
+    }
 
     this.state = {
       isRunning: 'false',
@@ -62,16 +79,30 @@ export default class VideoSet extends Component<Props> {
       fourthOption: '',
       fifthOption: '',
       answerQ1: 'option5',
-      answerQ2: 'option5'
+      answerQ2: 'option5',
+      classifierEEGObservable,
+      classifierScore: 0,
+      classifierThreshold: 80 // TODO: set this based on baseline data collection
     };
+    // These are just so that we can unsubscribe from the observables
+    this.rawEEGSubscription = null;
+    this.classifierEEGSubscription = null;
+    // This binding is necessary to make `this` work in the callback
+    this.playVideo = this.playVideo.bind(this);
+    this.pauseVideo = this.pauseVideo.bind(this);
+    this.handleQuestion = this.handleQuestion.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  state = {
-    modalIsOpen: false,
-    isRunning: false,
-    question1AlreadyShown: false,
-    question2AlreadyShown: false
-  };
+  componentDidMount() {
+    // Might be able to subscribe to these guys in constructor, but I've always done it in componentDidMount
+    this.classifierEEGSubscription = this.state.classifierEEGObservable.subscribe(
+      classifierScore => {
+        this.setState({ classifierScore });
+        console.log('classifierScore', classifierScore);
+      }
+    );
+  }
 
   closeModal = () =>
     this.setState({
@@ -100,6 +131,26 @@ export default class VideoSet extends Component<Props> {
     const vidCurrTime = document.getElementById('vidID').currentTime;
     console.log('isRunning: ', isRunning);
 
+    // TODO: Add way to tell if this video is an experimental or control video
+    const isVideoExperimental = true;
+    if (isVideoExperimental) {
+      if (this.state.classifierScore >= this.state.classifierThreshold) {
+        this.setState({
+          modalIsOpen: true,
+          question1AlreadyShown: !question1AlreadyShown,
+          questionNumber: data.q1.name,
+          questionText: data.q1.question,
+          firstOption: data.q1.option1,
+          secondOption: data.q1.option2,
+          thirdOption: data.q1.option3,
+          fourthOption: data.q1.option4,
+          fifthOption: data.q1.option5
+        });
+        this.pauseVideo();
+      }
+    }
+
+    // TODO: Refactor this so you won't have to manually describe states for every different question
     if (question1AlreadyShown) {
       if (vidCurrTime >= controlPauseTime) {
         this.setState({

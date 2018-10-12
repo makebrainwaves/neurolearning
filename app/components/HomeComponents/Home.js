@@ -1,7 +1,14 @@
 // @flow
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Dropdown, Segment, Icon, Input } from 'semantic-ui-react';
+import {
+  Button,
+  Dropdown,
+  Segment,
+  Icon,
+  Input,
+  Select
+} from 'semantic-ui-react';
 import { isNil } from 'lodash';
 import { Observable } from 'rxjs';
 import routes from '../../constants/routes.json';
@@ -21,7 +28,14 @@ interface State {
   fourthVideo: string;
   fourthVideoType: string;
   rawEEGObservable: Observable<Object>;
+  classifierType: string;
 }
+
+// TODO: Move this into global constants
+const CLASSIFIER_OPTIONS = [
+  { key: 'thetaBeta', value: 'thetaBeta', text: 'Theta/Beta' },
+  { key: 'alpha', value: 'alpha', text: 'Alpha' }
+];
 
 export default class Home extends Component<Props, State> {
   props: Props;
@@ -35,6 +49,8 @@ export default class Home extends Component<Props, State> {
   handleThirdVideoType: Object => void;
   handleFourthVideo: Object => void;
   handleFourthVideoType: Object => void;
+  handleConnectEEG: () => void;
+  handleClassiferType: (Object, Object) => void;
 
   constructor(props: Props) {
     super(props);
@@ -48,7 +64,8 @@ export default class Home extends Component<Props, State> {
       secondVideoType: 'control',
       thirdVideoType: 'control',
       fourthVideoType: 'control',
-      rawEEGObservable: null
+      rawEEGObservable: null,
+      classifierType: 'alpha'
     };
     this.handleSubjectId = this.handleSubjectId.bind(this);
     this.handleFirstVideo = this.handleFirstVideo.bind(this);
@@ -60,6 +77,7 @@ export default class Home extends Component<Props, State> {
     this.handleFourthVideo = this.handleFourthVideo.bind(this);
     this.handleFourthVideoType = this.handleFourthVideoType.bind(this);
     this.handleConnectEEG = this.handleConnectEEG.bind(this);
+    this.handleClassiferType = this.handleClassiferType.bind(this);
   }
 
   handleFirstVideo(event: Object, data) {
@@ -103,13 +121,15 @@ export default class Home extends Component<Props, State> {
       const eegObservable = createEEGObservable();
       if (!isNil(eegObservable)) {
         this.setState({ rawEEGObservable: eegObservable });
-        eegObservable.subscribe(eegData => {
-          console.log(eegData.data);
-        });
       }
     } catch (e) {
       console.log('Error in handleConnectEEG: ', e);
     }
+  }
+
+  handleClassiferType(event: Object, data: Object) {
+    console.log(data);
+    this.setState({ classifierType: data.value });
   }
 
   renderEEGConnector() {
@@ -118,6 +138,11 @@ export default class Home extends Component<Props, State> {
         <Segment basic>
           Connected
           <Icon name="check" color="green" />
+          <Select
+            placeholder="Select classifier type"
+            options={CLASSIFIER_OPTIONS}
+            onChange={this.handleClassiferType}
+          />
         </Segment>
       );
     }
@@ -141,7 +166,8 @@ export default class Home extends Component<Props, State> {
       thirdVideoType,
       fourthVideo,
       fourthVideoType,
-      rawEEGObservable
+      rawEEGObservable,
+      classifierType
     } = this.state;
 
     const videoOptions = [
@@ -247,7 +273,7 @@ export default class Home extends Component<Props, State> {
           />
         </div>
 
-        <Segment basic>
+        <div className={styles.submitButton}>
           <Button>
             <Link
               to={{
@@ -261,15 +287,16 @@ export default class Home extends Component<Props, State> {
                   thirdVideoType,
                   fourthVideo,
                   fourthVideoType,
-                  subjectId
+                  subjectId,
+                  rawEEGObservable,
+                  classifierType
                 }
               }}
             >
               SUBMIT
             </Link>
           </Button>
-        </Segment>
-
+        </div>
         {this.renderEEGConnector()}
       </div>
     );
