@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import styles from './VideoSet.css';
 import routes from '../../constants/routes.json';
 import * as data from '../../questions/questions.json';
+import * as questionsArray from '../../questions/questionsArray.json';
 import video1 from '../Bip_KC_Trim.mp4';
 import {
   createAlphaClassifierObservable,
@@ -96,12 +97,15 @@ export default class VideoSet extends Component<Props, State> {
 
   componentDidMount() {
     // Might be able to subscribe to these guys in constructor, but I've always done it in componentDidMount
-    this.classifierEEGSubscription = this.state.classifierEEGObservable.subscribe(
-      classifierScore => {
-        this.setState({ classifierScore });
-        console.log('classifierScore', classifierScore);
-      }
-    );
+
+    if (this.props.location.state.firstVideoType === 'experimental') {
+      this.classifierEEGSubscription = this.state.classifierEEGObservable.subscribe(
+        classifierScore => {
+          this.setState({ classifierScore });
+          console.log('classifierScore', classifierScore);
+        }
+      );
+    }
   }
 
   closeModal = () =>
@@ -148,39 +152,38 @@ export default class VideoSet extends Component<Props, State> {
       }
     } else {
       // TODO: else experiment type = control
-    }
-
-    // TODO: Refactor this so you won't have to manually describe states for every different question
-    if (question1AlreadyShown) {
-      if (vidCurrTime >= controlPauseTime) {
-        this.setState({
-          modalIsOpen: true,
-          question1AlreadyShown: !question1AlreadyShown,
-          questionNumber: data.q1.name,
-          questionText: data.q1.question,
-          firstOption: data.q1.option1,
-          secondOption: data.q1.option2,
-          thirdOption: data.q1.option3,
-          fourthOption: data.q1.option4,
-          fifthOption: data.q1.option5
-        });
-        this.pauseVideo();
+      // TODO: Refactor this so you won't have to manually describe states for every different question
+      if (question1AlreadyShown) {
+        if (vidCurrTime >= controlPauseTime) {
+          this.setState({
+            modalIsOpen: true,
+            question1AlreadyShown: !question1AlreadyShown,
+            questionNumber: data.q1.name,
+            questionText: data.q1.question,
+            firstOption: data.q1.option1,
+            secondOption: data.q1.option2,
+            thirdOption: data.q1.option3,
+            fourthOption: data.q1.option4,
+            fifthOption: data.q1.option5
+          });
+          this.pauseVideo();
+        }
       }
-    }
-    if (question2AlreadyShown) {
-      if (vidCurrTime >= controlPauseTime * 2) {
-        this.setState({
-          modalIsOpen: true,
-          question2AlreadyShown: !question2AlreadyShown,
-          questionNumber: data.q2.name,
-          questionText: data.q2.question,
-          firstOption: data.q2.option1,
-          secondOption: data.q2.option2,
-          thirdOption: data.q2.option3,
-          fourthOption: data.q2.option4,
-          fifthOption: data.q2.option5
-        });
-        this.pauseVideo();
+      if (question2AlreadyShown) {
+        if (vidCurrTime >= controlPauseTime * 2) {
+          this.setState({
+            modalIsOpen: true,
+            question2AlreadyShown: !question2AlreadyShown,
+            questionNumber: data.q2.name,
+            questionText: data.q2.question,
+            firstOption: data.q2.option1,
+            secondOption: data.q2.option2,
+            thirdOption: data.q2.option3,
+            fourthOption: data.q2.option4,
+            fifthOption: data.q2.option5
+          });
+          this.pauseVideo();
+        }
       }
     }
   };
@@ -300,6 +303,7 @@ export default class VideoSet extends Component<Props, State> {
             src={video1}
             width="60%"
             height="60%"
+            controls
             onTimeUpdate={this.onTimeUpdate}
             onEnded={this.generateCsvs}
           >
