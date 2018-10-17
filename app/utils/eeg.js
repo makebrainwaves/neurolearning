@@ -1,6 +1,6 @@
 import lsl from 'node-lsl';
 import { fromEvent, Observable, of } from 'rxjs';
-import { filter, map, mergeMap } from 'rxjs/operators';
+import { filter, map, mergeMap, tap } from 'rxjs/operators';
 import { epoch, fft, alphaPower, powerByBand } from '@neurosity/pipes';
 
 const ENOBIO_SAMPLE_RATE = 500;
@@ -48,15 +48,16 @@ export const createAlphaClassifierObservable = (rawObservable: Observable) =>
     // Epoch the data into 10s long segments emitted every 1s
     epoch({
       samplingRate: ENOBIO_SAMPLE_RATE,
-      duration: 1024,
+      duration: 1024 * 4,
       interval: ENOBIO_SAMPLE_RATE
     }),
-    fft({ bins: 1024 }),
+    fft({ bins: 1024 * 4 }),
     alphaPower(),
     // Average alpha power across all channels
     map(
       alphaArray =>
-        alphaArray.reduce((acc, curr) => acc + curr) / alphaArray.length
+        alphaArray.slice(4, 7).reduce((acc, curr) => acc + curr) /
+        alphaArray.length
     )
   );
 
@@ -64,17 +65,22 @@ export const createThetaBetaClassifierObservable = (
   rawObservable: Observable
 ) =>
   rawObservable.pipe(
+    mergeMap(chunk =>
+      of(
+        ...chunk.timestamps.map((timestamp, index) => ({
+          data: chunk.data.map(channelData => channelData[index]),
+          timestamp
+        }))
+      )
+    ),
     epoch({
       samplingRate: ENOBIO_SAMPLE_RATE,
-      duration: ENOBIO_SAMPLE_RATE * 10,
+      duration: 1024 * 4,
       interval: ENOBIO_SAMPLE_RATE
     }),
-    fft({ bins: ENOBIO_SAMPLE_RATE }),
+    fft({ bins: 1024 * 4 }),
     powerByBand(),
-    map(bandPowers => bandPowers.theta / bandPowers.beta),
+    tap(console.log),
+    map(bandPowers => bandPowers.theta[2] / bandPowers.beta[2])
     // Average power ratio across all channels
-    map(
-      powerArray =>
-        powerArray.reduce((acc, curr) => acc + curr) / powerArray.length
-    )
   );
