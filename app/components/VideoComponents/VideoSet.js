@@ -84,7 +84,7 @@ export default class VideoSet extends Component<Props, State> {
       answerQ2: 'option5',
       classifierEEGObservable,
       classifierScore: 0,
-      classifierThreshold: 0.24 // TODO: set this based on baseline data collection
+      classifierThreshold: 1.1 // TODO: set this based on baseline data collection
     };
     // These are just so that we can unsubscribe from the observables
     this.rawEEGSubscription = null;
@@ -155,18 +155,21 @@ export default class VideoSet extends Component<Props, State> {
 
     console.log('video type', this.props.location.state.firstVideoType);
     if (this.props.location.state.firstVideoType === 'experimental') {
-      if (this.state.classifierScore >= this.state.classifierThreshold) {
-        this.setState({
-          modalIsOpen: true,
-          questionNumber: data.q1.name,
-          questionText: data.q1.question,
-          firstOption: data.q1.option1,
-          secondOption: data.q1.option2,
-          thirdOption: data.q1.option3,
-          fourthOption: data.q1.option4,
-          fifthOption: data.q1.option5
-        });
-        this.pauseVideo();
+      if (question1AlreadyShown) {
+        if (this.state.classifierScore >= this.state.classifierThreshold) {
+          this.setState({
+            modalIsOpen: true,
+            question1AlreadyShown: !question1AlreadyShown,
+            questionNumber: data.q1.name,
+            questionText: data.q1.question,
+            firstOption: data.q1.option1,
+            secondOption: data.q1.option2,
+            thirdOption: data.q1.option3,
+            fourthOption: data.q1.option4,
+            fifthOption: data.q1.option5
+          });
+          this.pauseVideo();
+        }
       }
     } else {
       // control:
@@ -398,7 +401,6 @@ export default class VideoSet extends Component<Props, State> {
                         name="option"
                         type="radio"
                         value="option5"
-                        checked
                         onChange={e =>
                           this.handleQuestion({ questionNumber }, e)
                         }
