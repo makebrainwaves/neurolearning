@@ -265,29 +265,6 @@ export default class VideoSet extends Component<Props, State> {
       fourthVideoType
     } = state;
 
-    const subjectCsvData = [
-      {
-        SequenceNumber: '1',
-        VideoName: firstVideo,
-        ExperimentType: firstVideoType
-      },
-      {
-        SequenceNumber: '2',
-        VideoName: secondVideo,
-        ExperimentType: secondVideoType
-      },
-      {
-        SequenceNumber: '3',
-        VideoName: thirdVideo,
-        ExperimentType: thirdVideoType
-      },
-      {
-        SequenceNumber: '4',
-        VideoName: fourthVideo,
-        ExperimentType: fourthVideoType
-      }
-    ];
-
     const answersCsv = [
       {
         Subject: subjectId,
@@ -328,11 +305,6 @@ export default class VideoSet extends Component<Props, State> {
           </Link>
         </div>
         <h3>Video Container</h3>
-        <Button>
-          <CSVLink data={subjectCsvData} filename={subjectId}>
-            Download Subject Info
-          </CSVLink>
-        </Button>
         <Button>
           <CSVLink data={answersCsv} filename="answers.csv">
             Download Subject Answers
