@@ -15,6 +15,11 @@ import routes from '../../constants/routes.json';
 import styles from './Home.css';
 import { createEEGObservable } from '../../utils/eeg';
 
+import videoSrc1 from '../Bip_KC_Trim.mp4';
+import videoSrc2 from '../Lipid_KZ.mp4';
+import videoSrc3 from '../Bip_KC.mp4';
+import videoSrc4 from '../Insulin_KZ.mp4';
+
 type Props = {};
 
 interface State {
@@ -56,10 +61,10 @@ export default class Home extends Component<Props, State> {
     super(props);
     this.state = {
       subjectId: '',
-      firstVideo: 'vid1',
-      secondVideo: 'vid2',
-      thirdVideo: 'vid3',
-      fourthVideo: 'vid4',
+      firstVideo: videoSrc1,
+      secondVideo: videoSrc2,
+      thirdVideo: videoSrc3,
+      fourthVideo: videoSrc4,
       firstVideoType: 'control',
       secondVideoType: 'control',
       thirdVideoType: 'control',
@@ -171,10 +176,10 @@ export default class Home extends Component<Props, State> {
     } = this.state;
 
     const videoOptions = [
-      { key: 'vid1', value: 'vid1', text: 'vid1' },
-      { key: 'vid2', value: 'vid2', text: 'vid2' },
-      { key: 'vid3', value: 'vid3', text: 'vid3' },
-      { key: 'vid4', value: 'vid4', text: 'vid4' }
+      { key: 'vid1', value: videoSrc1, text: 'Niches' },
+      { key: 'vid2', value: videoSrc2, text: 'Lipids' },
+      { key: 'vid3', value: videoSrc3, text: 'BIP' },
+      { key: 'vid4', value: videoSrc4, text: 'Insulin' }
     ];
 
     const experimentOptions = [
@@ -205,7 +210,6 @@ export default class Home extends Component<Props, State> {
           <span className={styles.selectionText}>Play first:</span>
           <Dropdown
             placeholder="Select First Video"
-            value={firstVideo}
             onChange={this.handleFirstVideo}
             selection
             options={videoOptions}
@@ -223,7 +227,6 @@ export default class Home extends Component<Props, State> {
           <span className={styles.selectionText}>Play second:</span>
           <Dropdown
             placeholder="Select Second Video"
-            value={secondVideo}
             onChange={this.handleSecondVideo}
             selection
             options={videoOptions}
@@ -241,7 +244,6 @@ export default class Home extends Component<Props, State> {
           <span className={styles.selectionText}>Play third:</span>
           <Dropdown
             placeholder="Select Third Video"
-            value={thirdVideo}
             onChange={this.handleThirdVideo}
             selection
             options={videoOptions}
@@ -259,7 +261,6 @@ export default class Home extends Component<Props, State> {
           <span className={styles.selectionText}>Play fourth:</span>
           <Dropdown
             placeholder="Select Fourth Video"
-            value={fourthVideo}
             onChange={this.handleFourthVideo}
             selection
             options={videoOptions}

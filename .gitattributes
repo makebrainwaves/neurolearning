@@ -5,3 +5,4 @@
 *.ico binary
 *.icns binary
 *.mp4 binary
+*.mp4 filter=lfs diff=lfs merge=lfs -text
