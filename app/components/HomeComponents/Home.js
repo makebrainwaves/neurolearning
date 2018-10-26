@@ -9,23 +9,33 @@ import {
   Input,
   Select
 } from 'semantic-ui-react';
+import { CSVLink } from 'react-csv';
 import { isNil } from 'lodash';
 import { Observable } from 'rxjs';
 import routes from '../../constants/routes.json';
 import styles from './Home.css';
 import { createEEGObservable } from '../../utils/eeg';
 
+import videoSrc1 from '../Bip_KC_Trim.mp4';
+import videoSrc2 from '../Lipid_KZ.mp4';
+import videoSrc3 from '../Bip_KC.mp4';
+import videoSrc4 from '../Insulin_KZ.mp4';
+
 type Props = {};
 
 interface State {
   subjectId: string;
   firstVideo: string;
+  firstVideoName: string;
   firstVideoType: string;
   secondVideo: string;
+  secondVideoName: string;
   secondVideoType: string;
   thirdVideo: string;
+  thirdVideoName: string;
   thirdVideoType: string;
   fourthVideo: string;
+  fourthVideoName: string;
   fourthVideoType: string;
   rawEEGObservable: Observable<Object>;
   classifierType: string;
@@ -56,10 +66,14 @@ export default class Home extends Component<Props, State> {
     super(props);
     this.state = {
       subjectId: '',
-      firstVideo: 'vid1',
-      secondVideo: 'vid2',
-      thirdVideo: 'vid3',
-      fourthVideo: 'vid4',
+      firstVideo: videoSrc1,
+      secondVideo: videoSrc2,
+      thirdVideo: videoSrc3,
+      fourthVideo: videoSrc4,
+      firstVideoName: 'Niches',
+      secondVideoName: 'Lipids',
+      thirdVideoName: 'BIP',
+      fourthVideoName: 'Insulin',
       firstVideoType: 'control',
       secondVideoType: 'control',
       thirdVideoType: 'control',
@@ -80,8 +94,39 @@ export default class Home extends Component<Props, State> {
     this.handleClassiferType = this.handleClassiferType.bind(this);
   }
 
+  getVideoName = value => {
+    let videoName = '';
+    if (
+      value ===
+      'http://localhost:1212/dist/0aaa1f67050e199bf65b346ed1e6bddf.mp4'
+    ) {
+      videoName = 'Niches';
+    } else if (
+      value ===
+      'http://localhost:1212/dist/2ab8ce87a09d1d6b7303006753ca0251.mp4'
+    ) {
+      videoName = 'Lipids';
+    } else if (
+      value ===
+      'http://localhost:1212/dist/0b30e12cf7d23e654b6d6c306bd13618.mp4'
+    ) {
+      videoName = 'BIP';
+    } else if (
+      value ===
+      'http://localhost:1212/dist/a6e5c47df7b77a974f47cce5b094f90c.mp4'
+    ) {
+      videoName = 'Insulin';
+    } else {
+      videoName = 'Unknown';
+    }
+    return videoName;
+  };
+
   handleFirstVideo(event: Object, data) {
-    this.setState({ firstVideo: data.value });
+    this.setState({
+      firstVideo: data.value,
+      firstVideoName: this.getVideoName(data.value)
+    });
   }
 
   handleFirstVideoType(event: Object, data) {
@@ -89,7 +134,10 @@ export default class Home extends Component<Props, State> {
   }
 
   handleSecondVideo(event: Object, data) {
-    this.setState({ secondVideo: data.value });
+    this.setState({
+      secondVideo: data.value,
+      secondVideoName: this.getVideoName(data.value)
+    });
   }
 
   handleSecondVideoType(event: Object, data) {
@@ -97,7 +145,10 @@ export default class Home extends Component<Props, State> {
   }
 
   handleThirdVideo(event: Object, data) {
-    this.setState({ thirdVideo: data.value });
+    this.setState({
+      thirdVideo: data.value,
+      thirdVideoName: this.getVideoName(data.value)
+    });
   }
 
   handleThirdVideoType(event: Object, data) {
@@ -105,7 +156,10 @@ export default class Home extends Component<Props, State> {
   }
 
   handleFourthVideo(event: Object, data) {
-    this.setState({ fourthVideo: data.value });
+    this.setState({
+      fourthVideo: data.value,
+      fourthVideoName: this.getVideoName(data.value)
+    });
   }
 
   handleFourthVideoType(event: Object, data) {
@@ -159,27 +213,54 @@ export default class Home extends Component<Props, State> {
     const {
       subjectId,
       firstVideo,
+      firstVideoName,
       firstVideoType,
       secondVideo,
+      secondVideoName,
       secondVideoType,
       thirdVideo,
+      thirdVideoName,
       thirdVideoType,
       fourthVideo,
+      fourthVideoName,
       fourthVideoType,
       rawEEGObservable,
       classifierType
     } = this.state;
 
     const videoOptions = [
-      { key: 'vid1', value: 'vid1', text: 'vid1' },
-      { key: 'vid2', value: 'vid2', text: 'vid2' },
-      { key: 'vid3', value: 'vid3', text: 'vid3' },
-      { key: 'vid4', value: 'vid4', text: 'vid4' }
+      { key: 'vid1', value: videoSrc1, text: 'Niches' },
+      { key: 'vid2', value: videoSrc2, text: 'Lipids' },
+      { key: 'vid3', value: videoSrc3, text: 'BIP' },
+      { key: 'vid4', value: videoSrc4, text: 'Insulin' }
     ];
 
     const experimentOptions = [
       { key: 'control', value: 'control', text: 'control' },
       { key: 'experimental', value: 'experimental', text: 'experimental' }
+    ];
+
+    const subjectCsvData = [
+      {
+        SequenceNumber: '1',
+        VideoName: firstVideoName,
+        ExperimentType: firstVideoType
+      },
+      {
+        SequenceNumber: '2',
+        VideoName: secondVideoName,
+        ExperimentType: secondVideoType
+      },
+      {
+        SequenceNumber: '3',
+        VideoName: thirdVideoName,
+        ExperimentType: thirdVideoType
+      },
+      {
+        SequenceNumber: '4',
+        VideoName: fourthVideoName,
+        ExperimentType: fourthVideoType
+      }
     ];
 
     return (
@@ -272,7 +353,12 @@ export default class Home extends Component<Props, State> {
             options={experimentOptions}
           />
         </div>
-
+        {this.renderEEGConnector()}
+        <Button>
+          <CSVLink data={subjectCsvData} filename={subjectId}>
+            Download Subject Info
+          </CSVLink>
+        </Button>
         <div className={styles.submitButton}>
           <Button>
             <Link
@@ -297,7 +383,6 @@ export default class Home extends Component<Props, State> {
             </Link>
           </Button>
         </div>
-        {this.renderEEGConnector()}
       </div>
     );
   }

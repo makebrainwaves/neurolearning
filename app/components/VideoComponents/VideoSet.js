@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 import styles from './VideoSet.css';
 import routes from '../../constants/routes.json';
 import * as data from '../../questions/questions.json';
-import video1 from '../Bip_KC_Trim.mp4';
+
 import {
   createAlphaClassifierObservable,
   createThetaBetaClassifierObservable
@@ -52,7 +52,8 @@ export default class VideoSet extends Component<Props, State> {
   constructor(props) {
     super(props);
     let classifierEEGObservable = null;
-    console.log('you reeg osevabe', props.location.state.classifierType);
+    console.log('check varrrr', this.props.location.state.firstVideo);
+    console.log('your eeg osevabe', props.location.state.classifierType);
     console.log(
       'you rawEEGObservable state',
       props.location.state.rawEEGObservable
@@ -96,6 +97,11 @@ export default class VideoSet extends Component<Props, State> {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentWillMount() {
+    this.setState({
+      currentVideo: this.props.location.state.firstVideo
+    });
+  }
   componentDidMount() {
     // Might be able to subscribe to these guys in constructor, but I've always done it in componentDidMount
     if (this.props.location.state.firstVideoType === 'experimental') {
@@ -113,7 +119,8 @@ export default class VideoSet extends Component<Props, State> {
       modalIsOpen: false
     });
 
-  playVideo = () => {
+  playVideo = videoSequence => {
+    console.log('videoSequence', videoSequence);
     const videoRef = this.getVideoRef;
     videoRef.play();
     this.setState({ isRunning: true });
@@ -153,7 +160,6 @@ export default class VideoSet extends Component<Props, State> {
 
     const vidCurrTime = document.getElementById('vidID').currentTime;
 
-    console.log('video type', this.props.location.state.firstVideoType);
     if (this.props.location.state.firstVideoType === 'experimental') {
       if (question1AlreadyShown) {
         if (this.state.classifierScore >= this.state.classifierThreshold) {
@@ -188,8 +194,27 @@ export default class VideoSet extends Component<Props, State> {
     }
   };
 
-  generateCsvs = () => {
-    console.log('your video has ended');
+  generateCsvs = videoSequence => {
+    console.log('your video has ended with sequence', videoSequence);
+    console.log('your current video at end: ', this.state.currentVideo);
+
+    if (this.state.currentVideo === this.props.location.state.firstVideo) {
+      this.setState({
+        currentVideo: this.props.location.state.secondVideo
+      });
+    } else if (
+      this.state.currentVideo === this.props.location.state.secondVideo
+    ) {
+      this.setState({
+        currentVideo: this.props.location.state.thirdVideo
+      });
+    } else if (
+      this.state.currentVideo === this.props.location.state.thirdVideo
+    ) {
+      this.setState({
+        currentVideo: this.props.location.state.fourthVideo
+      });
+    }
   };
 
   handleQuestion(q, e) {
@@ -223,7 +248,8 @@ export default class VideoSet extends Component<Props, State> {
       secondOption,
       thirdOption,
       fourthOption,
-      fifthOption
+      fifthOption,
+      currentVideo
     } = this.state;
     const { location } = this.props;
     const { state } = location;
@@ -239,29 +265,6 @@ export default class VideoSet extends Component<Props, State> {
       fourthVideoType
     } = state;
 
-    const subjectCsvData = [
-      {
-        SequenceNumber: '1',
-        VideoName: firstVideo,
-        ExperimentType: firstVideoType
-      },
-      {
-        SequenceNumber: '2',
-        VideoName: secondVideo,
-        ExperimentType: secondVideoType
-      },
-      {
-        SequenceNumber: '3',
-        VideoName: thirdVideo,
-        ExperimentType: thirdVideoType
-      },
-      {
-        SequenceNumber: '4',
-        VideoName: fourthVideo,
-        ExperimentType: fourthVideoType
-      }
-    ];
-
     const answersCsv = [
       {
         Subject: subjectId,
@@ -275,6 +278,25 @@ export default class VideoSet extends Component<Props, State> {
       }
     ];
 
+    const videoSequence = [
+      {
+        key: 'v1',
+        value: firstVideo
+      },
+      {
+        key: 'v2',
+        value: secondVideo
+      },
+      {
+        key: 'v3',
+        value: thirdVideo
+      },
+      {
+        key: 'v4',
+        value: fourthVideo
+      }
+    ];
+
     return (
       <div className={styles.videoContainer}>
         <div className={styles.backButton} data-tid="backButton">
@@ -283,11 +305,6 @@ export default class VideoSet extends Component<Props, State> {
           </Link>
         </div>
         <h3>Video Container</h3>
-        <Button>
-          <CSVLink data={subjectCsvData} filename={subjectId}>
-            Download Subject Info
-          </CSVLink>
-        </Button>
         <Button>
           <CSVLink data={answersCsv} filename="answers.csv">
             Download Subject Answers
@@ -300,19 +317,19 @@ export default class VideoSet extends Component<Props, State> {
               this.getVideoRef = c;
             }}
             className={styles.video}
-            src={video1}
+            src={currentVideo}
             width="60%"
             height="60%"
             controls
             onTimeUpdate={this.onTimeUpdate}
-            onEnded={this.generateCsvs}
+            onEnded={() => this.generateCsvs(videoSequence)}
           >
             <track kind="captions" />
           </video>
           <div className={styles.btnGroup}>
             <Button
               className={styles.btn}
-              onClick={this.playVideo}
+              onClick={() => this.playVideo(videoSequence)}
               data-tclass="btn"
               type="button"
             >
