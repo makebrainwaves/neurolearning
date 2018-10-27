@@ -25,6 +25,7 @@ type Props = {};
 
 interface State {
   subjectId: string;
+  experimenterId: string;
   firstVideo: string;
   firstVideoName: string;
   firstVideoType: string;
@@ -41,6 +42,9 @@ interface State {
   classifierType: string;
 }
 
+const time = new Date().getTime();
+const date = new Date(time).toString();
+
 // TODO: Move this into global constants
 const CLASSIFIER_OPTIONS = [
   { key: 'thetaBeta', value: 'thetaBeta', text: 'Theta/Beta' },
@@ -51,6 +55,7 @@ export default class Home extends Component<Props, State> {
   props: Props;
   state: State;
   handleSubjectId: Object => void;
+  handleExperimenterId: Object => void;
   handleFirstVideo: Object => void;
   handleFirstVideoType: Object => void;
   handleSecondVideo: Object => void;
@@ -66,6 +71,7 @@ export default class Home extends Component<Props, State> {
     super(props);
     this.state = {
       subjectId: '',
+      experimenterId: '',
       firstVideo: videoSrc1,
       secondVideo: videoSrc2,
       thirdVideo: videoSrc3,
@@ -82,6 +88,7 @@ export default class Home extends Component<Props, State> {
       classifierType: 'alpha'
     };
     this.handleSubjectId = this.handleSubjectId.bind(this);
+    this.handleExperimenterId = this.handleExperimenterId.bind(this);
     this.handleFirstVideo = this.handleFirstVideo.bind(this);
     this.handleFirstVideoType = this.handleFirstVideoType.bind(this);
     this.handleSecondVideo = this.handleSecondVideo.bind(this);
@@ -170,6 +177,10 @@ export default class Home extends Component<Props, State> {
     this.setState({ subjectId: event.target.value });
   }
 
+  handleExperimenterId(event: Object) {
+    this.setState({ experimenterId: event.target.value });
+  }
+
   handleConnectEEG() {
     try {
       const eegObservable = createEEGObservable();
@@ -212,6 +223,7 @@ export default class Home extends Component<Props, State> {
   render() {
     const {
       subjectId,
+      experimenterId,
       firstVideo,
       firstVideoName,
       firstVideoType,
@@ -242,24 +254,40 @@ export default class Home extends Component<Props, State> {
 
     const subjectCsvData = [
       {
+        DayTime: date,
+        SubjectID: subjectId,
+        ExperimenterID: experimenterId,
         SequenceNumber: '1',
         VideoName: firstVideoName,
-        ExperimentType: firstVideoType
+        ExperimentType: firstVideoType,
+        Classifier: classifierType
       },
       {
+        DayTime: date,
+        SubjectID: subjectId,
+        ExperimenterID: experimenterId,
         SequenceNumber: '2',
         VideoName: secondVideoName,
-        ExperimentType: secondVideoType
+        ExperimentType: secondVideoType,
+        Classifier: classifierType
       },
       {
+        DayTime: date,
+        SubjectID: subjectId,
+        ExperimenterID: experimenterId,
         SequenceNumber: '3',
         VideoName: thirdVideoName,
-        ExperimentType: thirdVideoType
+        ExperimentType: thirdVideoType,
+        Classifier: classifierType
       },
       {
+        DayTime: date,
+        SubjectID: subjectId,
+        ExperimenterID: experimenterId,
         SequenceNumber: '4',
         VideoName: fourthVideoName,
-        ExperimentType: fourthVideoType
+        ExperimentType: fourthVideoType,
+        Classifier: classifierType
       }
     ];
 
@@ -280,6 +308,12 @@ export default class Home extends Component<Props, State> {
           type="text"
           value={subjectId}
           onChange={this.handleSubjectId}
+        />
+        <Input
+          placeholder="Experimenter ID"
+          type="text"
+          value={experimenterId}
+          onChange={this.handleExperimenterId}
         />
 
         <div className={styles.selectionContainer}>
