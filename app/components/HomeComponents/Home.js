@@ -7,7 +7,11 @@ import {
   Segment,
   Icon,
   Input,
-  Select
+  Select,
+  Container,
+  Grid,
+  Checkbox,
+  Header
 } from 'semantic-ui-react';
 import { CSVLink } from 'react-csv';
 import { isNil } from 'lodash';
@@ -200,7 +204,7 @@ export default class Home extends Component<Props, State> {
   renderEEGConnector() {
     if (!isNil(this.state.rawEEGObservable)) {
       return (
-        <Segment basic>
+        <div>
           Connected
           <Icon name="check" color="green" />
           <Select
@@ -208,15 +212,13 @@ export default class Home extends Component<Props, State> {
             options={CLASSIFIER_OPTIONS}
             onChange={this.handleClassiferType}
           />
-        </Segment>
+        </div>
       );
     }
     return (
-      <Segment basic>
-        <Button primary onClick={this.handleConnectEEG}>
-          Connect to EEG Stream
-        </Button>
-      </Segment>
+      <Button primary onClick={this.handleConnectEEG}>
+        Connect to EEG Stream
+      </Button>
     );
   }
 
@@ -292,132 +294,294 @@ export default class Home extends Component<Props, State> {
     ];
 
     return (
-      <div className={styles.container} data-tid="container">
-        <h2>Neurolearning Project</h2>
+      <Grid divided="vertically">
+        <Grid.Row columns={1}>
+          <Grid.Column>
+            <h2>Neurolearning Project</h2>
+          </Grid.Column>
+        </Grid.Row>
 
-        <div>
-          <p>Welcome</p>
-        </div>
+        <Grid.Row columns={2} divided>
+          <Grid.Column>
+            <h3>Step 1: Choose a video sequence:</h3>
+            <Grid columns={2}>
+              <Grid.Row>
+                <Grid.Column>
+                  1.
+                  <Dropdown
+                    placeholder="Select First Video"
+                    onChange={this.handleFirstVideo}
+                    selection
+                    options={videoOptions}
+                  />
+                </Grid.Column>
+                <Grid.Column>
+                  <Dropdown
+                    placeholder="Select Experiment Type"
+                    value={firstVideoType}
+                    onChange={this.handleFirstVideoType}
+                    selection
+                    options={experimentOptions}
+                  />
+                </Grid.Column>
+              </Grid.Row>
 
-        <div>
-          <p>Please enter a subject ID, then choose a video set:</p>
-        </div>
+              <Grid.Row>
+                <Grid.Column>
+                  2.
+                  <Dropdown
+                    placeholder="Select Second Video"
+                    onChange={this.handleSecondVideo}
+                    selection
+                    options={videoOptions}
+                  />
+                </Grid.Column>
+                <Grid.Column>
+                  <Dropdown
+                    placeholder="Select Experiment Type"
+                    value={secondVideoType}
+                    onChange={this.handleSecondVideoType}
+                    selection
+                    options={experimentOptions}
+                  />
+                </Grid.Column>
+              </Grid.Row>
 
-        <Input
-          placeholder="Subject ID"
-          type="text"
-          value={subjectId}
-          onChange={this.handleSubjectId}
-        />
-        <Input
-          placeholder="Experimenter ID"
-          type="text"
-          value={experimenterId}
-          onChange={this.handleExperimenterId}
-        />
+              <Grid.Row>
+                <Grid.Column>
+                  3.
+                  <Dropdown
+                    placeholder="Select Third Video"
+                    onChange={this.handleThirdVideo}
+                    selection
+                    options={videoOptions}
+                  />
+                </Grid.Column>
+                <Grid.Column>
+                  <Dropdown
+                    placeholder="Select Experiment Type"
+                    value={thirdVideoType}
+                    onChange={this.handleThirdVideoType}
+                    selection
+                    options={experimentOptions}
+                  />
+                </Grid.Column>
+              </Grid.Row>
 
-        <div className={styles.selectionContainer}>
-          <span className={styles.selectionText}>Play first:</span>
-          <Dropdown
-            placeholder="Select First Video"
-            value={firstVideo}
-            onChange={this.handleFirstVideo}
-            selection
-            options={videoOptions}
-          />
-          <Dropdown
-            placeholder="Select Experiment Type"
-            value={firstVideoType}
-            onChange={this.handleFirstVideoType}
-            selection
-            options={experimentOptions}
-          />
-        </div>
+              <Grid.Row>
+                <Grid.Column>
+                  4.
+                  <Dropdown
+                    placeholder="Select Fourth Video"
+                    onChange={this.handleFourthVideo}
+                    selection
+                    options={videoOptions}
+                  />
+                </Grid.Column>
+                <Grid.Column>
+                  <Dropdown
+                    placeholder="Select Experiment Type"
+                    value={fourthVideoType}
+                    onChange={this.handleFourthVideoType}
+                    selection
+                    options={experimentOptions}
+                  />
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Grid.Column>
 
-        <div className={styles.selectionContainer}>
-          <span className={styles.selectionText}>Play second:</span>
-          <Dropdown
-            placeholder="Select Second Video"
-            value={secondVideo}
-            onChange={this.handleSecondVideo}
-            selection
-            options={videoOptions}
-          />
-          <Dropdown
-            placeholder="Select Experiment Type"
-            value={secondVideoType}
-            onChange={this.handleSecondVideoType}
-            selection
-            options={experimentOptions}
-          />
-        </div>
+          <Grid.Column>
+            <h3>Step 2: Select electrodes:</h3>
+            <Grid divided="vertically">
+              <Grid.Row columns={3}>
+                <Grid.Column>
+                  <Checkbox name="electrode" label=" Select/Deselect All" />
+                </Grid.Column>
+                <Grid.Column>
+                  <Checkbox label=" Select/Deselect All" />
+                </Grid.Column>
+                <Grid.Column>
+                  <Checkbox label=" Select/Deselect All" />
+                </Grid.Column>
+              </Grid.Row>
 
-        <div className={styles.selectionContainer}>
-          <span className={styles.selectionText}>Play third:</span>
-          <Dropdown
-            placeholder="Select Third Video"
-            value={thirdVideo}
-            onChange={this.handleThirdVideo}
-            selection
-            options={videoOptions}
-          />
-          <Dropdown
-            placeholder="Select Experiment Type"
-            value={thirdVideoType}
-            onChange={this.handleThirdVideoType}
-            selection
-            options={experimentOptions}
-          />
-        </div>
+              <Grid.Row columns={4}>
+                <Grid.Column>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                </Grid.Column>
 
-        <div className={styles.selectionContainer}>
-          <span className={styles.selectionText}>Play fourth:</span>
-          <Dropdown
-            placeholder="Select Fourth Video"
-            value={fourthVideo}
-            onChange={this.handleFourthVideo}
-            selection
-            options={videoOptions}
-          />
-          <Dropdown
-            placeholder="Select Experiment Type"
-            value={fourthVideoType}
-            onChange={this.handleFourthVideoType}
-            selection
-            options={experimentOptions}
-          />
-        </div>
-        {this.renderEEGConnector()}
-        <Button>
-          <CSVLink data={subjectCsvData} filename={subjectId}>
-            Download Subject Info
-          </CSVLink>
-        </Button>
-        <div className={styles.submitButton}>
-          <Button>
-            <Link
-              to={{
-                pathname: routes.VIDEOSET,
-                state: {
-                  firstVideo,
-                  firstVideoType,
-                  secondVideo,
-                  secondVideoType,
-                  thirdVideo,
-                  thirdVideoType,
-                  fourthVideo,
-                  fourthVideoType,
-                  subjectId,
-                  rawEEGObservable,
-                  classifierType
-                }
-              }}
-            >
-              SUBMIT
-            </Link>
-          </Button>
-        </div>
-      </div>
+                <Grid.Column>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                </Grid.Column>
+
+                <Grid.Column>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                </Grid.Column>
+
+                <Grid.Column>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox label="C7" />
+                  </Grid.Row>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Grid.Column>
+        </Grid.Row>
+
+        <Grid.Row columns={4}>
+          <Grid.Column>
+            Step 3: Enter subject ID
+            <Input
+              placeholder="Subject ID"
+              type="text"
+              value={subjectId}
+              onChange={this.handleSubjectId}
+            />
+          </Grid.Column>
+
+          <Grid.Column>
+            Step 4: Enter experimenter ID
+            <Input
+              placeholder="Experimenter ID"
+              type="text"
+              value={experimenterId}
+              onChange={this.handleExperimenterId}
+            />
+          </Grid.Column>
+
+          <Grid.Column>
+            Step 5: Connect to EEG Stream
+            {this.renderEEGConnector()}
+          </Grid.Column>
+
+          <Grid.Column>
+            Step 6: D/L subject info
+            <Button secondary>
+              <CSVLink data={subjectCsvData} filename={subjectId}>
+                Download Subject Info
+              </CSVLink>
+            </Button>
+          </Grid.Column>
+        </Grid.Row>
+
+        <Grid.Row columns={1}>
+          <Grid.Column>
+            <Button secondary>
+              <Link
+                to={{
+                  pathname: routes.VIDEOSET,
+                  state: {
+                    firstVideo,
+                    firstVideoType,
+                    secondVideo,
+                    secondVideoType,
+                    thirdVideo,
+                    thirdVideoType,
+                    fourthVideo,
+                    fourthVideoType,
+                    subjectId,
+                    rawEEGObservable,
+                    classifierType
+                  }
+                }}
+              >
+                SUBMIT
+              </Link>
+            </Button>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     );
   }
 }
