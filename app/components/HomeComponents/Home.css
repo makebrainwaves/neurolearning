@@ -4,54 +4,21 @@ body {
   text-align: center;
 }
 
-.container {
-  top: 0%;
-  left: 10px;
-  */text-align: center;
+.title {
+  padding-top: 30px !important;
+  padding-bottom: 0px !important;
+}
+.labelPaddingBottom {
+  padding-bottom: 0px !important;
 }
 
-.container h2 {
-  font-size: 4rem;
-  margin-top: 3rem;
+.labelPaddingTop {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
 }
 
-.container a {
-  font-size: 1.4rem;
-}
-
-.leftSubContainer {
-  display: block;
-  float: left;
-  border: 1px solid grey;
-  max-width: 45%;
-  margin-left: 5%;
-}
-
-.rightSubContainer {
-  display: block;
-  float: right;
-  border: 1px solid grey;
-  max-width: 45%;
-  margin-right: 5%;
-}
-
-.leftElectrodeContainer {
-  float: left;
-  margin-left: 15%;
-}
-
-.rightElectrodeContainer {
-  float: right;
-  margin-right: 15%;
-}
-
-.selectionContainer {
-  text-align: center;
-  margin: 1rem;
-}
-
-.selectionText {
-  font-size: 1.5rem;
-  margin-right: 1rem;
+.electrode {
+  padding-top: 0px !important;
+  padding-bottom: 8px !important;
   text-align: left;
 }
