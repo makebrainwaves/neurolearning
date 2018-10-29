@@ -1,4 +1,5 @@
 // @flow
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["selectAllElectrodes", "electrodesChosen"] }] */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -44,6 +45,7 @@ interface State {
   fourthVideoType: string;
   rawEEGObservable: Observable<Object>;
   classifierType: string;
+  electrodes: Object;
 }
 
 const time = new Date().getTime();
@@ -70,6 +72,8 @@ export default class Home extends Component<Props, State> {
   handleFourthVideoType: Object => void;
   handleConnectEEG: () => void;
   handleClassiferType: (Object, Object) => void;
+  selectAllElectrodes: Object => void;
+  electrodesChosen: Object => void;
 
   constructor(props: Props) {
     super(props);
@@ -89,8 +93,43 @@ export default class Home extends Component<Props, State> {
       thirdVideoType: 'control',
       fourthVideoType: 'control',
       rawEEGObservable: null,
-      classifierType: 'alpha'
+      classifierType: 'alpha',
+      electrodes: {
+        P7: true,
+        P4: true,
+        Cz: true,
+        Pz: true,
+        P3: true,
+        P8: true,
+        O1: true,
+        O2: true,
+        T8: true,
+        F8: true,
+        C4: true,
+        F4: true,
+        Fp2: true,
+        Fz: true,
+        C3: true,
+        F3: true,
+        Fp1: true,
+        T7: true,
+        F7: true,
+        Oz: true,
+        PO4: true,
+        FC6: true,
+        FC2: true,
+        AF4: true,
+        CP6: true,
+        CP2: true,
+        CP1: true,
+        CP5: true,
+        FC1: true,
+        FC5: true,
+        AF3: true,
+        PO3: true
+      }
     };
+
     this.handleSubjectId = this.handleSubjectId.bind(this);
     this.handleExperimenterId = this.handleExperimenterId.bind(this);
     this.handleFirstVideo = this.handleFirstVideo.bind(this);
@@ -103,6 +142,8 @@ export default class Home extends Component<Props, State> {
     this.handleFourthVideoType = this.handleFourthVideoType.bind(this);
     this.handleConnectEEG = this.handleConnectEEG.bind(this);
     this.handleClassiferType = this.handleClassiferType.bind(this);
+    this.selectAllElectrodes = this.selectAllElectrodes.bind(this);
+    this.electrodesChosen = this.electrodesChosen.bind(this);
   }
 
   getVideoName = value => {
@@ -201,6 +242,23 @@ export default class Home extends Component<Props, State> {
     this.setState({ classifierType: data.value });
   }
 
+  selectAllElectrodes() {
+    const x = document.getElementsByTagName('Checkbox')[0];
+    console.log('all class', x);
+    x.checked = true;
+  }
+
+  electrodesChosen(electrodes) {
+    let electrodesChosen = '';
+    const entries = Object.entries(electrodes);
+    for (const entry of entries) {
+      if (entry[1] === true) {
+        electrodesChosen = electrodesChosen.concat(`${entry[0]}, `);
+      }
+    }
+    return electrodesChosen;
+  }
+
   renderEEGConnector() {
     if (!isNil(this.state.rawEEGObservable)) {
       return (
@@ -239,7 +297,8 @@ export default class Home extends Component<Props, State> {
       fourthVideoName,
       fourthVideoType,
       rawEEGObservable,
-      classifierType
+      classifierType,
+      electrodes
     } = this.state;
 
     const videoOptions = [
@@ -254,6 +313,8 @@ export default class Home extends Component<Props, State> {
       { key: 'experimental', value: 'experimental', text: 'experimental' }
     ];
 
+    const electrodesChosen = this.electrodesChosen(electrodes);
+
     const subjectCsvData = [
       {
         DayTime: date,
@@ -262,7 +323,8 @@ export default class Home extends Component<Props, State> {
         SequenceNumber: '1',
         VideoName: firstVideoName,
         ExperimentType: firstVideoType,
-        Classifier: classifierType
+        Classifier: classifierType,
+        Electrodes: electrodesChosen
       },
       {
         DayTime: date,
@@ -396,7 +458,12 @@ export default class Home extends Component<Props, State> {
             <Grid divided="vertically">
               <Grid.Row columns={3} className={styles.labelPaddingBottom}>
                 <Grid.Column>
-                  <Checkbox name="electrode" label="Select/Deselect All" />
+                  <Checkbox
+                    name="electrode"
+                    defaultChecked
+                    label="Select/Deselect All"
+                    onChange={this.selectAllElectrodes}
+                  />
                 </Grid.Column>
                 <Grid.Column>
                   <Checkbox label="Alpha only" />
@@ -409,109 +476,237 @@ export default class Home extends Component<Props, State> {
               <Grid.Row columns={4} className={styles.labelPaddingTop}>
                 <Grid.Column>
                   <Grid.Row>
-                    <Checkbox label="P7" className={styles.electrode} />
+                    <Checkbox
+                      label="P7"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
                   </Grid.Row>
                   <Grid.Row>
-                    <Checkbox label="P4" className={styles.electrode} />
+                    <Checkbox
+                      label="P4"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
                   </Grid.Row>
                   <Grid.Row>
-                    <Checkbox label="Cz" className={styles.electrode} />
+                    <Checkbox
+                      label="Cz"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
                   </Grid.Row>
                   <Grid.Row>
-                    <Checkbox label="Pz" className={styles.electrode} />
+                    <Checkbox
+                      label="Pz"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
                   </Grid.Row>
                   <Grid.Row>
-                    <Checkbox label="P3" className={styles.electrode} />
+                    <Checkbox
+                      label="P3"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
                   </Grid.Row>
                   <Grid.Row>
-                    <Checkbox label="P8" className={styles.electrode} />
+                    <Checkbox
+                      label="P8"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
                   </Grid.Row>
                   <Grid.Row>
-                    <Checkbox label="O1" className={styles.electrode} />
+                    <Checkbox
+                      label="O1"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
                   </Grid.Row>
                   <Grid.Row>
-                    <Checkbox label="O2" className={styles.electrode} />
-                  </Grid.Row>
-                </Grid.Column>
-
-                <Grid.Column>
-                  <Grid.Row>
-                    <Checkbox label="T8" className={styles.electrode} />
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Checkbox label="F8" className={styles.electrode} />
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Checkbox label="C4" className={styles.electrode} />
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Checkbox label="F4" className={styles.electrode} />
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Checkbox label="Fp2" className={styles.electrode} />
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Checkbox label="Fz" className={styles.electrode} />
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Checkbox label="C3" className={styles.electrode} />
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Checkbox label="F3" className={styles.electrode} />
-                  </Grid.Row>
-                </Grid.Column>
-
-                <Grid.Column>
-                  <Grid.Row>
-                    <Checkbox label="Fp1" className={styles.electrode} />
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Checkbox label="T7" className={styles.electrode} />
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Checkbox label="F7" className={styles.electrode} />
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Checkbox label="Oz" className={styles.electrode} />
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Checkbox label="PO4" className={styles.electrode} />
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Checkbox label="FC6" className={styles.electrode} />
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Checkbox label="FC2" className={styles.electrode} />
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Checkbox label="AF4" className={styles.electrode} />
+                    <Checkbox
+                      label="O2"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
                   </Grid.Row>
                 </Grid.Column>
 
                 <Grid.Column>
                   <Grid.Row>
-                    <Checkbox label="CP6" className={styles.electrode} />
+                    <Checkbox
+                      label="T8"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
                   </Grid.Row>
                   <Grid.Row>
-                    <Checkbox label="CP2" className={styles.electrode} />
+                    <Checkbox
+                      label="F8"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
                   </Grid.Row>
                   <Grid.Row>
-                    <Checkbox label="CP1" className={styles.electrode} />
+                    <Checkbox
+                      label="C4"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
                   </Grid.Row>
                   <Grid.Row>
-                    <Checkbox label="CP5" className={styles.electrode} />
+                    <Checkbox
+                      label="F4"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
                   </Grid.Row>
                   <Grid.Row>
-                    <Checkbox label="FC1" className={styles.electrode} />
+                    <Checkbox
+                      label="Fp2"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
                   </Grid.Row>
                   <Grid.Row>
-                    <Checkbox label="FC5" className={styles.electrode} />
+                    <Checkbox
+                      label="Fz"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
                   </Grid.Row>
                   <Grid.Row>
-                    <Checkbox label="AF3" className={styles.electrode} />
+                    <Checkbox
+                      label="C3"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
                   </Grid.Row>
                   <Grid.Row>
-                    <Checkbox label="PO3" className={styles.electrode} />
+                    <Checkbox
+                      label="F3"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                </Grid.Column>
+
+                <Grid.Column>
+                  <Grid.Row>
+                    <Checkbox
+                      label="Fp1"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="T7"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="F7"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="Oz"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="PO4"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="FC6"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="FC2"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="AF4"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                </Grid.Column>
+
+                <Grid.Column>
+                  <Grid.Row>
+                    <Checkbox
+                      label="CP6"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="CP2"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="CP1"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="CP5"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="FC1"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="FC5"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="AF3"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="PO3"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
                   </Grid.Row>
                 </Grid.Column>
               </Grid.Row>
