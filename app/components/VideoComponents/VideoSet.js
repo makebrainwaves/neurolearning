@@ -1,4 +1,3 @@
-/* eslint class-methods-use-this: ["error", { "exceptMethods": ["handleSubmit"] }] */
 // @flow
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
@@ -94,7 +93,6 @@ export default class VideoSet extends Component<Props, State> {
     this.playVideo = this.playVideo.bind(this);
     this.pauseVideo = this.pauseVideo.bind(this);
     this.handleQuestion = this.handleQuestion.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentWillMount() {
@@ -231,10 +229,6 @@ export default class VideoSet extends Component<Props, State> {
     if (q.questionNumber === 'Question 2:') {
       this.setState({ answerQ2: e.target.value });
     }
-  }
-
-  handleSubmit(event) {
-    console.log('what is the handleSubmit event?', event);
   }
 
   render() {
