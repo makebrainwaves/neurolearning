@@ -1,4 +1,5 @@
 // @flow
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["selectAllElectrodes", "electrodesChosen"] }] */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -7,7 +8,11 @@ import {
   Segment,
   Icon,
   Input,
-  Select
+  Select,
+  Container,
+  Grid,
+  Checkbox,
+  Header
 } from 'semantic-ui-react';
 import { CSVLink } from 'react-csv';
 import { isNil } from 'lodash';
@@ -25,6 +30,7 @@ type Props = {};
 
 interface State {
   subjectId: string;
+  experimenterId: string;
   firstVideo: string;
   firstVideoName: string;
   firstVideoType: string;
@@ -39,7 +45,11 @@ interface State {
   fourthVideoType: string;
   rawEEGObservable: Observable<Object>;
   classifierType: string;
+  electrodes: Object;
 }
+
+const time = new Date().getTime();
+const date = new Date(time).toString();
 
 // TODO: Move this into global constants
 const CLASSIFIER_OPTIONS = [
@@ -51,6 +61,7 @@ export default class Home extends Component<Props, State> {
   props: Props;
   state: State;
   handleSubjectId: Object => void;
+  handleExperimenterId: Object => void;
   handleFirstVideo: Object => void;
   handleFirstVideoType: Object => void;
   handleSecondVideo: Object => void;
@@ -61,11 +72,14 @@ export default class Home extends Component<Props, State> {
   handleFourthVideoType: Object => void;
   handleConnectEEG: () => void;
   handleClassiferType: (Object, Object) => void;
+  selectAllElectrodes: Object => void;
+  electrodesChosen: Object => void;
 
   constructor(props: Props) {
     super(props);
     this.state = {
       subjectId: '',
+      experimenterId: '',
       firstVideo: videoSrc1,
       secondVideo: videoSrc2,
       thirdVideo: videoSrc3,
@@ -79,9 +93,45 @@ export default class Home extends Component<Props, State> {
       thirdVideoType: 'control',
       fourthVideoType: 'control',
       rawEEGObservable: null,
-      classifierType: 'alpha'
+      classifierType: 'alpha',
+      electrodes: {
+        P7: true,
+        P4: true,
+        Cz: true,
+        Pz: true,
+        P3: true,
+        P8: true,
+        O1: true,
+        O2: true,
+        T8: true,
+        F8: true,
+        C4: true,
+        F4: true,
+        Fp2: true,
+        Fz: true,
+        C3: true,
+        F3: true,
+        Fp1: true,
+        T7: true,
+        F7: true,
+        Oz: true,
+        PO4: true,
+        FC6: true,
+        FC2: true,
+        AF4: true,
+        CP6: true,
+        CP2: true,
+        CP1: true,
+        CP5: true,
+        FC1: true,
+        FC5: true,
+        AF3: true,
+        PO3: true
+      }
     };
+
     this.handleSubjectId = this.handleSubjectId.bind(this);
+    this.handleExperimenterId = this.handleExperimenterId.bind(this);
     this.handleFirstVideo = this.handleFirstVideo.bind(this);
     this.handleFirstVideoType = this.handleFirstVideoType.bind(this);
     this.handleSecondVideo = this.handleSecondVideo.bind(this);
@@ -92,6 +142,8 @@ export default class Home extends Component<Props, State> {
     this.handleFourthVideoType = this.handleFourthVideoType.bind(this);
     this.handleConnectEEG = this.handleConnectEEG.bind(this);
     this.handleClassiferType = this.handleClassiferType.bind(this);
+    this.selectAllElectrodes = this.selectAllElectrodes.bind(this);
+    this.electrodesChosen = this.electrodesChosen.bind(this);
   }
 
   getVideoName = value => {
@@ -170,6 +222,10 @@ export default class Home extends Component<Props, State> {
     this.setState({ subjectId: event.target.value });
   }
 
+  handleExperimenterId(event: Object) {
+    this.setState({ experimenterId: event.target.value });
+  }
+
   handleConnectEEG() {
     try {
       const eegObservable = createEEGObservable();
@@ -186,10 +242,27 @@ export default class Home extends Component<Props, State> {
     this.setState({ classifierType: data.value });
   }
 
+  selectAllElectrodes() {
+    const x = document.getElementsByTagName('Checkbox')[0];
+    console.log('all class', x);
+    x.checked = true;
+  }
+
+  electrodesChosen(electrodes) {
+    let electrodesChosen = '';
+    const entries = Object.entries(electrodes);
+    for (const entry of entries) {
+      if (entry[1] === true) {
+        electrodesChosen = electrodesChosen.concat(`${entry[0]}, `);
+      }
+    }
+    return electrodesChosen;
+  }
+
   renderEEGConnector() {
     if (!isNil(this.state.rawEEGObservable)) {
       return (
-        <Segment basic>
+        <div>
           Connected
           <Icon name="check" color="green" />
           <Select
@@ -197,21 +270,20 @@ export default class Home extends Component<Props, State> {
             options={CLASSIFIER_OPTIONS}
             onChange={this.handleClassiferType}
           />
-        </Segment>
+        </div>
       );
     }
     return (
-      <Segment basic>
-        <Button primary onClick={this.handleConnectEEG}>
-          Connect to EEG Stream
-        </Button>
-      </Segment>
+      <Button primary onClick={this.handleConnectEEG}>
+        Connect to EEG Stream
+      </Button>
     );
   }
 
   render() {
     const {
       subjectId,
+      experimenterId,
       firstVideo,
       firstVideoName,
       firstVideoType,
@@ -225,7 +297,8 @@ export default class Home extends Component<Props, State> {
       fourthVideoName,
       fourthVideoType,
       rawEEGObservable,
-      classifierType
+      classifierType,
+      electrodes
     } = this.state;
 
     const videoOptions = [
@@ -240,150 +313,470 @@ export default class Home extends Component<Props, State> {
       { key: 'experimental', value: 'experimental', text: 'experimental' }
     ];
 
+    const electrodesChosen = this.electrodesChosen(electrodes);
+
     const subjectCsvData = [
       {
+        DayTime: date,
+        SubjectID: subjectId,
+        ExperimenterID: experimenterId,
         SequenceNumber: '1',
         VideoName: firstVideoName,
-        ExperimentType: firstVideoType
+        ExperimentType: firstVideoType,
+        Classifier: classifierType,
+        Electrodes: electrodesChosen
       },
       {
+        DayTime: date,
+        SubjectID: subjectId,
+        ExperimenterID: experimenterId,
         SequenceNumber: '2',
         VideoName: secondVideoName,
-        ExperimentType: secondVideoType
+        ExperimentType: secondVideoType,
+        Classifier: classifierType
       },
       {
+        DayTime: date,
+        SubjectID: subjectId,
+        ExperimenterID: experimenterId,
         SequenceNumber: '3',
         VideoName: thirdVideoName,
-        ExperimentType: thirdVideoType
+        ExperimentType: thirdVideoType,
+        Classifier: classifierType
       },
       {
+        DayTime: date,
+        SubjectID: subjectId,
+        ExperimenterID: experimenterId,
         SequenceNumber: '4',
         VideoName: fourthVideoName,
-        ExperimentType: fourthVideoType
+        ExperimentType: fourthVideoType,
+        Classifier: classifierType
       }
     ];
 
     return (
-      <div className={styles.container} data-tid="container">
-        <h2>Neurolearning Project</h2>
+      <Grid divided="vertically">
+        <Grid.Row columns={1} className={styles.title}>
+          <Grid.Column>
+            <h2>Neurolearning Project</h2>
+          </Grid.Column>
+        </Grid.Row>
 
-        <div>
-          <p>Welcome</p>
-        </div>
+        <Grid.Row columns={2} divided>
+          <Grid.Column>
+            <h3>Step 1: Choose a video sequence:</h3>
+            <Grid columns={2}>
+              <Grid.Row>
+                <Grid.Column>
+                  1.
+                  <Dropdown
+                    placeholder="Select First Video"
+                    onChange={this.handleFirstVideo}
+                    selection
+                    options={videoOptions}
+                  />
+                </Grid.Column>
+                <Grid.Column>
+                  <Dropdown
+                    placeholder="Select Experiment Type"
+                    value={firstVideoType}
+                    onChange={this.handleFirstVideoType}
+                    selection
+                    options={experimentOptions}
+                  />
+                </Grid.Column>
+              </Grid.Row>
 
-        <div>
-          <p>Please enter a subject ID, then choose a video set:</p>
-        </div>
+              <Grid.Row>
+                <Grid.Column>
+                  2.
+                  <Dropdown
+                    placeholder="Select Second Video"
+                    onChange={this.handleSecondVideo}
+                    selection
+                    options={videoOptions}
+                  />
+                </Grid.Column>
+                <Grid.Column>
+                  <Dropdown
+                    placeholder="Select Experiment Type"
+                    value={secondVideoType}
+                    onChange={this.handleSecondVideoType}
+                    selection
+                    options={experimentOptions}
+                  />
+                </Grid.Column>
+              </Grid.Row>
 
-        <Input
-          placeholder="Subject ID"
-          type="text"
-          value={subjectId}
-          onChange={this.handleSubjectId}
-        />
+              <Grid.Row>
+                <Grid.Column>
+                  3.
+                  <Dropdown
+                    placeholder="Select Third Video"
+                    onChange={this.handleThirdVideo}
+                    selection
+                    options={videoOptions}
+                  />
+                </Grid.Column>
+                <Grid.Column>
+                  <Dropdown
+                    placeholder="Select Experiment Type"
+                    value={thirdVideoType}
+                    onChange={this.handleThirdVideoType}
+                    selection
+                    options={experimentOptions}
+                  />
+                </Grid.Column>
+              </Grid.Row>
 
-        <div className={styles.selectionContainer}>
-          <span className={styles.selectionText}>Play first:</span>
-          <Dropdown
-            placeholder="Select First Video"
-            value={firstVideo}
-            onChange={this.handleFirstVideo}
-            selection
-            options={videoOptions}
-          />
-          <Dropdown
-            placeholder="Select Experiment Type"
-            value={firstVideoType}
-            onChange={this.handleFirstVideoType}
-            selection
-            options={experimentOptions}
-          />
-        </div>
+              <Grid.Row>
+                <Grid.Column>
+                  4.
+                  <Dropdown
+                    placeholder="Select Fourth Video"
+                    onChange={this.handleFourthVideo}
+                    selection
+                    options={videoOptions}
+                  />
+                </Grid.Column>
+                <Grid.Column>
+                  <Dropdown
+                    placeholder="Select Experiment Type"
+                    value={fourthVideoType}
+                    onChange={this.handleFourthVideoType}
+                    selection
+                    options={experimentOptions}
+                  />
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Grid.Column>
 
-        <div className={styles.selectionContainer}>
-          <span className={styles.selectionText}>Play second:</span>
-          <Dropdown
-            placeholder="Select Second Video"
-            value={secondVideo}
-            onChange={this.handleSecondVideo}
-            selection
-            options={videoOptions}
-          />
-          <Dropdown
-            placeholder="Select Experiment Type"
-            value={secondVideoType}
-            onChange={this.handleSecondVideoType}
-            selection
-            options={experimentOptions}
-          />
-        </div>
+          <Grid.Column>
+            <h3>Step 2: Select electrodes:</h3>
+            <Grid divided="vertically">
+              <Grid.Row columns={3} className={styles.labelPaddingBottom}>
+                <Grid.Column>
+                  <Checkbox
+                    name="electrode"
+                    defaultChecked
+                    label="Select/Deselect All"
+                    onChange={this.selectAllElectrodes}
+                  />
+                </Grid.Column>
+                <Grid.Column>
+                  <Checkbox label="Alpha only" />
+                </Grid.Column>
+                <Grid.Column>
+                  <Checkbox label="Theta/Beta only" />
+                </Grid.Column>
+              </Grid.Row>
 
-        <div className={styles.selectionContainer}>
-          <span className={styles.selectionText}>Play third:</span>
-          <Dropdown
-            placeholder="Select Third Video"
-            value={thirdVideo}
-            onChange={this.handleThirdVideo}
-            selection
-            options={videoOptions}
-          />
-          <Dropdown
-            placeholder="Select Experiment Type"
-            value={thirdVideoType}
-            onChange={this.handleThirdVideoType}
-            selection
-            options={experimentOptions}
-          />
-        </div>
+              <Grid.Row columns={4} className={styles.labelPaddingTop}>
+                <Grid.Column>
+                  <Grid.Row>
+                    <Checkbox
+                      label="P7"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="P4"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="Cz"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="Pz"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="P3"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="P8"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="O1"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="O2"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                </Grid.Column>
 
-        <div className={styles.selectionContainer}>
-          <span className={styles.selectionText}>Play fourth:</span>
-          <Dropdown
-            placeholder="Select Fourth Video"
-            value={fourthVideo}
-            onChange={this.handleFourthVideo}
-            selection
-            options={videoOptions}
-          />
-          <Dropdown
-            placeholder="Select Experiment Type"
-            value={fourthVideoType}
-            onChange={this.handleFourthVideoType}
-            selection
-            options={experimentOptions}
-          />
-        </div>
-        {this.renderEEGConnector()}
-        <Button>
-          <CSVLink data={subjectCsvData} filename={subjectId}>
-            Download Subject Info
-          </CSVLink>
-        </Button>
-        <div className={styles.submitButton}>
-          <Button>
-            <Link
-              to={{
-                pathname: routes.VIDEOSET,
-                state: {
-                  firstVideo,
-                  firstVideoType,
-                  secondVideo,
-                  secondVideoType,
-                  thirdVideo,
-                  thirdVideoType,
-                  fourthVideo,
-                  fourthVideoType,
-                  subjectId,
-                  rawEEGObservable,
-                  classifierType
-                }
-              }}
-            >
-              SUBMIT
-            </Link>
-          </Button>
-        </div>
-      </div>
+                <Grid.Column>
+                  <Grid.Row>
+                    <Checkbox
+                      label="T8"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="F8"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="C4"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="F4"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="Fp2"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="Fz"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="C3"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="F3"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                </Grid.Column>
+
+                <Grid.Column>
+                  <Grid.Row>
+                    <Checkbox
+                      label="Fp1"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="T7"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="F7"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="Oz"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="PO4"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="FC6"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="FC2"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="AF4"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                </Grid.Column>
+
+                <Grid.Column>
+                  <Grid.Row>
+                    <Checkbox
+                      label="CP6"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="CP2"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="CP1"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="CP5"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="FC1"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="FC5"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="AF3"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Checkbox
+                      label="PO3"
+                      defaultChecked
+                      className={styles.electrode}
+                    />
+                  </Grid.Row>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Grid.Column>
+        </Grid.Row>
+
+        <Grid.Row columns={4}>
+          <Grid.Column>
+            Step 3: Enter subject ID
+            <Input
+              placeholder="Subject ID"
+              type="text"
+              value={subjectId}
+              onChange={this.handleSubjectId}
+            />
+          </Grid.Column>
+
+          <Grid.Column>
+            Step 4: Enter experimenter ID
+            <Input
+              placeholder="Experimenter ID"
+              type="text"
+              value={experimenterId}
+              onChange={this.handleExperimenterId}
+            />
+          </Grid.Column>
+
+          <Grid.Column>
+            Step 5: Connect to EEG Stream
+            {this.renderEEGConnector()}
+          </Grid.Column>
+
+          <Grid.Column>
+            Step 6: D/L subject info
+            <Button secondary>
+              <CSVLink data={subjectCsvData} filename={subjectId}>
+                Download Subject Info
+              </CSVLink>
+            </Button>
+          </Grid.Column>
+        </Grid.Row>
+
+        <Grid.Row columns={1}>
+          <Grid.Column>
+            <Button secondary>
+              <Link
+                to={{
+                  pathname: routes.VIDEOSET,
+                  state: {
+                    firstVideo,
+                    firstVideoType,
+                    secondVideo,
+                    secondVideoType,
+                    thirdVideo,
+                    thirdVideoType,
+                    fourthVideo,
+                    fourthVideoType,
+                    subjectId,
+                    rawEEGObservable,
+                    classifierType
+                  }
+                }}
+              >
+                SUBMIT
+              </Link>
+            </Button>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     );
   }
 }
