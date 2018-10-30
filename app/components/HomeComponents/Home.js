@@ -478,23 +478,6 @@ export default class Home extends Component<Props, State> {
           <Grid.Column>
             <h3>Step 2: Select electrodes:</h3>
             <Grid divided="vertically">
-              <Grid.Row columns={3} className={styles.labelPaddingBottom}>
-                <Grid.Column>
-                  <Checkbox
-                    name="electrode"
-                    defaultChecked
-                    label="Select/Deselect All"
-                    onChange={this.selectAllElectrodes}
-                  />
-                </Grid.Column>
-                <Grid.Column>
-                  <Checkbox label="Alpha only" />
-                </Grid.Column>
-                <Grid.Column>
-                  <Checkbox label="Theta/Beta only" />
-                </Grid.Column>
-              </Grid.Row>
-
               <Grid.Row columns={4} className={styles.labelPaddingTop}>
                 <Grid.Column>
                   <Grid.Row>
@@ -902,31 +885,38 @@ export default class Home extends Component<Props, State> {
 
         <Grid.Row columns={1}>
           <Grid.Column>
-            <Button secondary>
-              <Link
-                to={{
-                  pathname: routes.VIDEOSET,
-                  state: {
-                    firstVideo,
-                    firstVideoType,
-                    secondVideo,
-                    secondVideoType,
-                    thirdVideo,
-                    thirdVideoType,
-                    fourthVideo,
-                    fourthVideoType,
-                    subjectId,
-                    rawEEGObservable,
-                    classifierType
-                  },
-                  props: {
-                    electrodesChosen
-                  }
-                }}
-              >
-                SUBMIT
-              </Link>
-            </Button>
+            {electrodesChosen && (
+              <Button secondary>
+                <Link
+                  to={{
+                    pathname: routes.VIDEOSET,
+                    state: {
+                      firstVideo,
+                      firstVideoType,
+                      secondVideo,
+                      secondVideoType,
+                      thirdVideo,
+                      thirdVideoType,
+                      fourthVideo,
+                      fourthVideoType,
+                      subjectId,
+                      rawEEGObservable,
+                      classifierType
+                    },
+                    props: {
+                      electrodesChosen
+                    }
+                  }}
+                >
+                  SUBMIT
+                </Link>
+              </Button>
+            )}
+            {!electrodesChosen && (
+              <h3 className={styles.electrodeWarning}>
+                Please select at least one electrode to continue.
+              </h3>
+            )}
           </Grid.Column>
         </Grid.Row>
       </Grid>
