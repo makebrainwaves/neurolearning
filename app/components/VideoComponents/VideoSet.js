@@ -37,7 +37,9 @@ interface State {
   answerQ2: string;
 }
 
-interface Props {}
+interface Props {
+  electrodesChosen: string;
+}
 
 const controlPauseTime = 4;
 
@@ -68,6 +70,8 @@ export default class VideoSet extends Component<Props, State> {
       );
       console.log('your classifierEEGObservable: ', classifierEEGObservable);
     }
+
+    console.log('tests', this.props.location.props.electrodesChosen);
 
     this.state = {
       isRunning: 'false',

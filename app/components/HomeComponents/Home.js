@@ -46,6 +46,7 @@ interface State {
   rawEEGObservable: Observable<Object>;
   classifierType: string;
   electrodes: Object;
+  electrodesChosen: string;
 }
 
 const time = new Date().getTime();
@@ -77,6 +78,11 @@ export default class Home extends Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
+
+    this.props = {
+      electrodesChosen: ''
+    };
+
     this.state = {
       subjectId: '',
       experimenterId: '',
@@ -94,40 +100,40 @@ export default class Home extends Component<Props, State> {
       fourthVideoType: 'control',
       rawEEGObservable: null,
       classifierType: 'alpha',
-      electrodes: {
-        P7: true,
-        P4: true,
-        Cz: true,
-        Pz: true,
-        P3: true,
-        P8: true,
-        O1: true,
-        O2: true,
-        T8: true,
-        F8: true,
-        C4: true,
-        F4: true,
-        Fp2: true,
-        Fz: true,
-        C3: true,
-        F3: true,
-        Fp1: true,
-        T7: true,
-        F7: true,
-        Oz: true,
-        PO4: true,
-        FC6: true,
-        FC2: true,
-        AF4: true,
-        CP6: true,
-        CP2: true,
-        CP1: true,
-        CP5: true,
-        FC1: true,
-        FC5: true,
-        AF3: true,
-        PO3: true
-      }
+      electrodes: [
+        { id: 1, value: 'P7', checked: true },
+        { id: 2, value: 'P4', checked: true },
+        { id: 3, value: 'Cz', checked: true },
+        { id: 4, value: 'Pz', checked: true },
+        { id: 5, value: 'P3', checked: true },
+        { id: 6, value: 'P8', checked: true },
+        { id: 7, value: 'O1', checked: true },
+        { id: 8, value: 'O2', checked: true },
+        { id: 9, value: 'T8', checked: true },
+        { id: 10, value: 'F8', checked: true },
+        { id: 11, value: 'C4', checked: true },
+        { id: 12, value: 'F4', checked: true },
+        { id: 13, value: 'Fp2', checked: true },
+        { id: 14, value: 'Fz', checked: true },
+        { id: 15, value: 'C3', checked: true },
+        { id: 16, value: 'F3', checked: true },
+        { id: 17, value: 'Fp1', checked: true },
+        { id: 18, value: 'T7', checked: true },
+        { id: 19, value: 'F7', checked: true },
+        { id: 20, value: 'Oz', checked: true },
+        { id: 21, value: 'PO4', checked: true },
+        { id: 22, value: 'FC6', checked: true },
+        { id: 23, value: 'FC2', checked: true },
+        { id: 24, value: 'AF4', checked: true },
+        { id: 25, value: 'CP6', checked: true },
+        { id: 26, value: 'CP2', checked: true },
+        { id: 27, value: 'CP1', checked: true },
+        { id: 28, value: 'CP5', checked: true },
+        { id: 29, value: 'FC1', checked: true },
+        { id: 30, value: 'FC5', checked: true },
+        { id: 31, value: 'AF3', checked: true },
+        { id: 32, value: 'PO3', checked: true }
+      ]
     };
 
     this.handleSubjectId = this.handleSubjectId.bind(this);
@@ -248,14 +254,30 @@ export default class Home extends Component<Props, State> {
     x.checked = true;
   }
 
-  electrodesChosen(electrodes) {
-    let electrodesChosen = '';
-    const entries = Object.entries(electrodes);
-    for (const entry of entries) {
-      if (entry[1] === true) {
-        electrodesChosen = electrodesChosen.concat(`${entry[0]}, `);
+  selectElectrode = (event: Object, data) => {
+    const electrodes = this.state.electrodes;
+    electrodes.forEach(electrode => {
+      if (electrode.value === data.label) {
+        electrode.checked = data.checked;
       }
-    }
+    });
+    this.setState({ electrodes });
+  };
+
+  electrodesChosen(electrodes) {
+    let electrodesChosen =
+      'P7, P4, Cz, Pz, P3, P8, O1, O2, T8, F8, C4, F4, Fp2, Fz, C3, F3, Fp1, T7, F7, Oz, PO4, FC6, FC2, AF4, CP6, CP2, CP1, CP5, FC1, FC5, AF3, PO3, ';
+    const selectedElectrodes = this.state.electrodes;
+
+    selectedElectrodes.forEach(selectedElectrode => {
+      if (selectedElectrode.checked === false) {
+        electrodesChosen = electrodesChosen.replace(
+          `${selectedElectrode.value}, `,
+          ''
+        );
+      }
+    });
+
     return electrodesChosen;
   }
 
@@ -477,58 +499,90 @@ export default class Home extends Component<Props, State> {
                 <Grid.Column>
                   <Grid.Row>
                     <Checkbox
+                      id="1"
                       label="P7"
+                      value={!!electrodes.P7}
+                      name="P7"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="2"
                       label="P4"
+                      value={!!electrodes.P4}
+                      name="P4"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="3"
                       label="Cz"
+                      value={!!electrodes.Cz}
+                      name="Cz"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="4"
                       label="Pz"
+                      value={!!electrodes.Pz}
+                      name="Pz"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="5"
                       label="P3"
+                      value={!!electrodes.P3}
+                      name="P3"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="6"
                       label="P8"
+                      value={!!electrodes.P8}
+                      name="P8"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="7"
                       label="O1"
+                      value={!!electrodes.O1}
+                      name="O1"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="8"
                       label="O2"
+                      value={!!electrodes.O2}
+                      name="O2"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                 </Grid.Column>
@@ -536,58 +590,90 @@ export default class Home extends Component<Props, State> {
                 <Grid.Column>
                   <Grid.Row>
                     <Checkbox
+                      id="9"
                       label="T8"
+                      value={!!electrodes.T8}
+                      name="T8"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="10"
                       label="F8"
+                      value={!!electrodes.F8}
+                      name="F8"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="11"
                       label="C4"
+                      value={!!electrodes.C4}
+                      name="C4"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="12"
                       label="F4"
+                      value={!!electrodes.F4}
+                      name="F4"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="13"
                       label="Fp2"
+                      value={!!electrodes.Fp2}
+                      name="Fp2"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="14"
                       label="Fz"
+                      value={!!electrodes.Fz}
+                      name="Fz"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="15"
                       label="C3"
+                      value={!!electrodes.C3}
+                      name="C3"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="16"
                       label="F3"
+                      value={!!electrodes.F3}
+                      name="F3"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                 </Grid.Column>
@@ -595,58 +681,90 @@ export default class Home extends Component<Props, State> {
                 <Grid.Column>
                   <Grid.Row>
                     <Checkbox
+                      id="17"
                       label="Fp1"
+                      value={!!electrodes.Fp1}
+                      name="Fp1"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="18"
                       label="T7"
+                      value={!!electrodes.T7}
+                      name="T7"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="19"
                       label="F7"
+                      value={!!electrodes.F7}
+                      name="F7"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="20"
                       label="Oz"
+                      value={!!electrodes.Oz}
+                      name="Oz"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="21"
                       label="PO4"
+                      value={!!electrodes.PO4}
+                      name="PO4"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="22"
                       label="FC6"
+                      value={!!electrodes.FC6}
+                      name="FC6"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="23"
                       label="FC2"
+                      value={!!electrodes.FC2}
+                      name="FC2"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="24"
                       label="AF4"
+                      value={!!electrodes.AF4}
+                      name="AF4"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                 </Grid.Column>
@@ -654,58 +772,90 @@ export default class Home extends Component<Props, State> {
                 <Grid.Column>
                   <Grid.Row>
                     <Checkbox
+                      id="25"
                       label="CP6"
+                      value={!!electrodes.CP6}
+                      name="CP6"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="26"
                       label="CP2"
+                      value={!!electrodes.CP2}
+                      name="CP2"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="27"
                       label="CP1"
+                      value={!!electrodes.CP1}
+                      name="CP1"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="28"
                       label="CP5"
+                      value={!!electrodes.CP5}
+                      name="CP5"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="29"
                       label="FC1"
+                      value={!!electrodes.FC1}
+                      name="FC1"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="30"
                       label="FC5"
+                      value={!!electrodes.FC5}
+                      name="FC5"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="31"
                       label="AF3"
+                      value={!!electrodes.AF3}
+                      name="AF3"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                   <Grid.Row>
                     <Checkbox
+                      id="32"
                       label="PO3"
+                      value={!!electrodes.PO3}
+                      name="PO3"
                       defaultChecked
                       className={styles.electrode}
+                      onChange={this.selectElectrode}
                     />
                   </Grid.Row>
                 </Grid.Column>
@@ -768,6 +918,9 @@ export default class Home extends Component<Props, State> {
                     subjectId,
                     rawEEGObservable,
                     classifierType
+                  },
+                  props: {
+                    electrodesChosen
                   }
                 }}
               >
