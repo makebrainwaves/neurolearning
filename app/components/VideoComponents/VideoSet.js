@@ -1,4 +1,5 @@
 // @flow
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["getVideoName", "getExperimentType", "convertArrayOfObjectsToCSV"] }] */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Modal } from 'semantic-ui-react';
@@ -16,12 +17,16 @@ import {
 interface State {
   subjectId: string;
   firstVideo: string;
+  firstVideoName: string;
   firstVideoType: string;
-  seocondVideo: string;
+  secondVideo: string;
+  secondVideoName: string;
   secondVideoType: string;
   thirdVideo: string;
+  thirdVideoName: string;
   thirdVideoType: string;
   fourthVideo: string;
+  fourthVideoName: string;
   fourthVideoType: string;
   isRunning: boolean;
   question1AlreadyShown: boolean;
@@ -42,8 +47,11 @@ interface Props {
 }
 
 const controlPauseTime = 4;
-
+const rollbackTime = 5;
 const questionsArray = require('../../questions/questionsArray');
+
+const time = new Date().getTime();
+const date = new Date(time).toString();
 
 export default class VideoSet extends Component<Props, State> {
   props: Props;
@@ -53,8 +61,8 @@ export default class VideoSet extends Component<Props, State> {
   constructor(props) {
     super(props);
     let classifierEEGObservable = null;
-    console.log('check varrrr', this.props.location.state.firstVideo);
-    console.log('your eeg osevabe', props.location.state.classifierType);
+    //console.log('check varrrr', this.props.location);
+    //console.log('your eeg osevabe', props.location.state.classifierType);
     console.log(
       'you rawEEGObservable state',
       props.location.state.rawEEGObservable
@@ -196,26 +204,93 @@ export default class VideoSet extends Component<Props, State> {
     }
   };
 
+  convertArrayOfObjectsToCSV(args) {
+    let result, ctr, keys, columnDelimiter, lineDelimiter, data;
+
+    data = args.data || null;
+    if (data == null || !data.length) {
+      return null;
+    }
+
+    columnDelimiter = args.columnDelimiter || ',';
+    lineDelimiter = args.lineDelimiter || '\n';
+
+    keys = Object.keys(data[0]);
+
+    result = '';
+    result += keys.join(columnDelimiter);
+    result += lineDelimiter;
+
+    data.forEach(item => {
+      ctr = 0;
+      keys.forEach(key => {
+        if (ctr > 0) result += columnDelimiter;
+
+        result += item[key];
+        ctr++;
+      });
+      result += lineDelimiter;
+    });
+    console.log('CSV result', result);
+    return result;
+  }
+
+  downloadCSV(args) {
+    let data, filename, link;
+    //console.log('downloadCSV data', args);
+    let csv = this.convertArrayOfObjectsToCSV({
+      data: args.videoSequence
+    });
+
+    if (csv == null) return;
+
+    filename = args.filename || 'export.csv';
+
+    if (!csv.match(/^data:text\/csv/i)) {
+      csv = 'data:text/csv;charset=utf-8,' + csv;
+    }
+    data = encodeURI(csv);
+
+    //link = document.createElement('a');
+    //link.setAttribute('href', data);
+    //link.setAttribute('download', filename);
+    //link.click();
+  }
+
   generateCsvs = videoSequence => {
     console.log('your video has ended with sequence', videoSequence);
     console.log('your current video at end: ', this.state.currentVideo);
+    this.downloadCSV({ filename: 'answers.csv', videoSequence });
 
     if (this.state.currentVideo === this.props.location.state.firstVideo) {
+      //TODO: create CSV for answers - firstVideo
+      //TODO: create CSV for electrodes - firstVideo
+      //TODO: create CSV for classifiers - firstVideo
       this.setState({
         currentVideo: this.props.location.state.secondVideo
       });
     } else if (
       this.state.currentVideo === this.props.location.state.secondVideo
     ) {
+      //TODO: create CSV for answers - secondVideo
+      //TODO: create CSV for electrodes - secondVideo
+      //TODO: create CSV for classifiers - secondVideo
       this.setState({
         currentVideo: this.props.location.state.thirdVideo
       });
     } else if (
       this.state.currentVideo === this.props.location.state.thirdVideo
     ) {
+      //TODO: create CSV for answers - thirdVideo
+      //TODO: create CSV for electrodes - thirdVideo
+      //TODO: create CSV for classifiers - thirdVideo
       this.setState({
         currentVideo: this.props.location.state.fourthVideo
       });
+    } else {
+      //TODO: create CSV for answers - fourthVideo
+      //TODO: create CSV for electrodes - fourthVideo
+      //TODO: create CSV for classifiers - fourthVideo
     }
   };
 
@@ -233,6 +308,14 @@ export default class VideoSet extends Component<Props, State> {
     if (q.questionNumber === 'Question 2:') {
       this.setState({ answerQ2: e.target.value });
     }
+  }
+
+  getExperimentType(first, second, third, fourth) {
+    return first;
+  }
+
+  getVideoName(first, second, third, fourth) {
+    return first;
   }
 
   render() {
@@ -254,28 +337,87 @@ export default class VideoSet extends Component<Props, State> {
     const {
       subjectId,
       firstVideo,
+      firstVideoName,
       firstVideoType,
       secondVideo,
+      secondVideoName,
       secondVideoType,
       thirdVideo,
+      thirdVideoName,
       thirdVideoType,
       fourthVideo,
+      fourthVideoName,
       fourthVideoType
     } = state;
 
+    const experimentType = this.getExperimentType(
+      firstVideoType,
+      secondVideoType,
+      thirdVideoType,
+      fourthVideoType
+    );
+    const videoName = this.getVideoName(
+      firstVideoName,
+      secondVideoName,
+      thirdVideoName,
+      fourthVideoName
+    );
     const answersCsv = [
       {
+        DayTime: date,
         Subject: subjectId,
+        ExperimentType: experimentType,
+        VideoName: videoName,
         Question: data.q1.name,
         Answer: answerQ1
       },
       {
+        DayTime: date,
         Subject: subjectId,
+        ExperimentType: experimentType,
+        VideoName: videoName,
         Question: data.q2.name,
         Answer: answerQ2
       }
     ];
 
+    const electrodeCsv = [
+      {
+        DayTime: date,
+        Subject: subjectId,
+        ExperimentType: experimentType,
+        VideoName: videoName,
+        Question: data.q1.name,
+        Answer: answerQ1
+      },
+      {
+        DayTime: date,
+        Subject: subjectId,
+        ExperimentType: experimentType,
+        VideoName: videoName,
+        Question: data.q2.name,
+        Answer: answerQ2
+      }
+    ];
+
+    const classifierCsv = [
+      {
+        DayTime: date,
+        Subject: subjectId,
+        ExperimentType: experimentType,
+        VideoName: videoName,
+        Question: data.q1.name,
+        Answer: answerQ1
+      },
+      {
+        DayTime: date,
+        Subject: subjectId,
+        ExperimentType: experimentType,
+        VideoName: videoName,
+        Question: data.q2.name,
+        Answer: answerQ2
+      }
+    ];
     const videoSequence = [
       {
         key: 'v1',
@@ -331,15 +473,7 @@ export default class VideoSet extends Component<Props, State> {
               data-tclass="btn"
               type="button"
             >
-              Play
-            </Button>
-            <Button
-              className={styles.btn}
-              onClick={this.pauseVideo}
-              data-tclass="btn"
-              type="button"
-            >
-              Pause
+              Next Video
             </Button>
           </div>
         </div>
@@ -432,45 +566,6 @@ export default class VideoSet extends Component<Props, State> {
             </Modal.Content>
           </div>
         </Modal>
-
-        <div>
-          <div>
-            Subject ID:
-            {subjectId}
-          </div>
-          <div>
-            firstVideo:
-            {firstVideo}
-          </div>
-          <div>
-            firstVideoType:
-            {firstVideoType}
-          </div>
-          <div>
-            secondVideo:
-            {secondVideo}
-          </div>
-          <div>
-            secondVideoType:
-            {secondVideoType}
-          </div>
-          <div>
-            thirdVideo:
-            {thirdVideo}
-          </div>
-          <div>
-            thirdVideoType:
-            {thirdVideoType}
-          </div>
-          <div>
-            fourthVideo:
-            {fourthVideo}
-          </div>
-          <div>
-            fourthVideoType:
-            {fourthVideoType}
-          </div>
-        </div>
       </div>
     );
   }

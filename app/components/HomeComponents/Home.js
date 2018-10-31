@@ -331,8 +331,8 @@ export default class Home extends Component<Props, State> {
     ];
 
     const experimentOptions = [
-      { key: 'control', value: 'control', text: 'control' },
-      { key: 'experimental', value: 'experimental', text: 'experimental' }
+      { key: 'control', value: 'control', text: 'C' },
+      { key: 'experimental', value: 'experimental', text: 'E' }
     ];
 
     const electrodesChosen = this.electrodesChosen(electrodes);
@@ -892,12 +892,16 @@ export default class Home extends Component<Props, State> {
                     pathname: routes.VIDEOSET,
                     state: {
                       firstVideo,
+                      firstVideoName,
                       firstVideoType,
                       secondVideo,
+                      secondVideoName,
                       secondVideoType,
                       thirdVideo,
+                      thirdVideoName,
                       thirdVideoType,
                       fourthVideo,
+                      fourthVideoName,
                       fourthVideoType,
                       subjectId,
                       rawEEGObservable,
