@@ -74,7 +74,7 @@ export default class VideoSet extends Component<Props, State> {
     console.log('tests', this.props.location.props.electrodesChosen);
 
     this.state = {
-      isRunning: 'false',
+      isRunning: false,
       question1AlreadyShown: 'false',
       question2AlreadyShown: 'false',
       questionNumber: '',
@@ -318,6 +318,7 @@ export default class VideoSet extends Component<Props, State> {
             src={currentVideo}
             width="60%"
             height="60%"
+            poster="../app/components/VideoComponents/bkbx.jpg"
             controls
             onTimeUpdate={this.onTimeUpdate}
             onEnded={() => this.generateCsvs(videoSequence)}
