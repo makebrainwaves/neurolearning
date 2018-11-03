@@ -1,4 +1,5 @@
 // @flow
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["getQuestionSet"] }] */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Modal } from 'semantic-ui-react';
@@ -17,7 +18,7 @@ interface State {
   subjectId: string;
   firstVideo: string;
   firstVideoType: string;
-  seocondVideo: string;
+  secondVideo: string;
   secondVideoType: string;
   thirdVideo: string;
   thirdVideoType: string;
@@ -44,6 +45,10 @@ interface Props {
 const controlPauseTime = 4;
 
 const questionsArray = require('../../questions/questionsArray');
+const nichesQ = require('../../questions/NichesQuestions.js');
+const bipQ = require('../../questions/BipQuestions.js');
+const lipidQ = require('../../questions/LipidQuestions.js');
+const insulinQ = require('../../questions/InsulinQuestions.js');
 
 export default class VideoSet extends Component<Props, State> {
   props: Props;
@@ -75,8 +80,8 @@ export default class VideoSet extends Component<Props, State> {
 
     this.state = {
       isRunning: false,
-      question1AlreadyShown: 'false',
-      question2AlreadyShown: 'false',
+      question1AlreadyShown: false,
+      question2AlreadyShown: false,
       questionNumber: '',
       questionText: '',
       firstOption: '',
@@ -134,6 +139,27 @@ export default class VideoSet extends Component<Props, State> {
     this.setState({ isRunning: false });
   };
 
+  newNextQuestion = key => {
+    const videoQuestions = this.getQuestionSet(this.state.currentVideo);
+    this.pauseVideo();
+    console.log('videoQuestions', videoQuestions);
+
+    for (let i = 0; i < videoQuestions.length; i++) {
+      if (videoQuestions[i].key === key) {
+        console.log('videoQuestions ey', videoQuestions[i].key);
+        console.log('videoQuestions value', videoQuestions[i].value);
+        this.setState({
+          questionNumber: videoQuestions[i].key,
+          questionText: videoQuestions[i].value.question,
+          firstOption: videoQuestions[i].value.option1,
+          secondOption: videoQuestions[i].value.option2,
+          thirdOption: videoQuestions[i].value.option3,
+          modalIsOpen: true
+        });
+      }
+    }
+  };
+
   nextQuestion = key => {
     this.pauseVideo();
     this.setState({ modalIsOpen: true });
@@ -152,6 +178,34 @@ export default class VideoSet extends Component<Props, State> {
       }
     }
   };
+
+  getQuestionSet(video) {
+    let questionSet = [];
+    if (
+      video ===
+      'http://localhost:1212/dist/0aaa1f67050e199bf65b346ed1e6bddf.mp4'
+    ) {
+      questionSet = nichesQ;
+    } else if (
+      video ===
+      'http://localhost:1212/dist/2ab8ce87a09d1d6b7303006753ca0251.mp4'
+    ) {
+      questionSet = lipidQ;
+    } else if (
+      video ===
+      'http://localhost:1212/dist/0b30e12cf7d23e654b6d6c306bd13618.mp4'
+    ) {
+      questionSet = bipQ;
+    } else if (
+      video ===
+      'http://localhost:1212/dist/a6e5c47df7b77a974f47cce5b094f90c.mp4'
+    ) {
+      questionSet = insulinQ;
+    } else {
+      questionSet = null;
+    }
+    return questionSet;
+  }
 
   onTimeUpdate = () => {
     const {
@@ -181,17 +235,21 @@ export default class VideoSet extends Component<Props, State> {
       }
     } else {
       // control:
-      if (question1AlreadyShown) {
-        if (vidCurrTime >= controlPauseTime) {
-          this.setState({ question1AlreadyShown: !question1AlreadyShown });
-          this.nextQuestion('q1');
-        }
-      }
-      if (question2AlreadyShown) {
-        if (vidCurrTime >= controlPauseTime * 2) {
-          this.setState({ question2AlreadyShown: !question2AlreadyShown });
-          this.nextQuestion('q2');
-        }
+      switch (true) {
+        case 4 <= vidCurrTime && vidCurrTime < 8:
+          this.newNextQuestion(1);
+          break;
+        case 8 <= vidCurrTime && vidCurrTime < 10:
+          this.newNextQuestion(2);
+          break;
+        case 100 <= vidCurrTime && vidCurrTime < 120:
+          this.newNextQuestion(3);
+          break;
+        case 120 <= vidCurrTime && vidCurrTime < 140:
+          this.newNextQuestion(4);
+          break;
+        default:
+          break;
       }
     }
   };
@@ -226,11 +284,11 @@ export default class VideoSet extends Component<Props, State> {
     );
     console.log('you have chosen Q2', e.target.value);
 
-    if (q.questionNumber === 'Question 1:') {
+    if (q.questionNumber === 1) {
       this.setState({ answerQ1: e.target.value });
     }
 
-    if (q.questionNumber === 'Question 2:') {
+    if (q.questionNumber === 2) {
       this.setState({ answerQ2: e.target.value });
     }
   }
@@ -345,133 +403,69 @@ export default class VideoSet extends Component<Props, State> {
           </div>
         </div>
 
-        <Modal
-          open={modalIsOpen}
-          className={styles.modal}
-          closeOnEscape={false}
-          closeOnDimmerClick={false}
-          onClose={this.closeModal}
-        >
-          <div className={styles.inner}>
-            <Modal.Header>{questionNumber}</Modal.Header>
-            <Modal.Content className={styles.content}>
-              <Modal.Description>
-                <p>{questionText}</p>
+        {modalIsOpen && (
+          <Modal
+            open={modalIsOpen}
+            className={styles.modal}
+            closeOnEscape={false}
+            closeOnDimmerClick={false}
+          >
+            <div className={styles.inner}>
+              <Modal.Header>{questionNumber}</Modal.Header>
+              <Modal.Content className={styles.content}>
+                <Modal.Description>
+                  <p>{questionText}</p>
 
-                <div>
-                  <div className="radio">
-                    <label htmlFor={firstOption}>
-                      <input
-                        name="option"
-                        type="radio"
-                        value="option1"
-                        onChange={e =>
-                          this.handleQuestion({ questionNumber }, e)
-                        }
-                      />
-                      {firstOption}
-                    </label>
+                  <div>
+                    <div className="radio">
+                      <label htmlFor={firstOption}>
+                        <input
+                          name="option"
+                          type="radio"
+                          value="option1"
+                          onChange={e =>
+                            this.handleQuestion({ questionNumber }, e)
+                          }
+                        />
+                        {firstOption}
+                      </label>
+                    </div>
+                    <div className="radio">
+                      <label htmlFor={secondOption}>
+                        <input
+                          name="option"
+                          type="radio"
+                          value="option2"
+                          onChange={e =>
+                            this.handleQuestion({ questionNumber }, e)
+                          }
+                        />
+                        {secondOption}
+                      </label>
+                    </div>
+                    <div className="radio">
+                      <label htmlFor={thirdOption}>
+                        <input
+                          name="option"
+                          type="radio"
+                          value="option3"
+                          onChange={e =>
+                            this.handleQuestion({ questionNumber }, e)
+                          }
+                        />
+                        {thirdOption}
+                      </label>
+                    </div>
+                    <br />
+                    <Button onClick={this.closeModal} type="submit">
+                      Submit
+                    </Button>
                   </div>
-                  <div className="radio">
-                    <label htmlFor={secondOption}>
-                      <input
-                        name="option"
-                        type="radio"
-                        value="option2"
-                        onChange={e =>
-                          this.handleQuestion({ questionNumber }, e)
-                        }
-                      />
-                      {secondOption}
-                    </label>
-                  </div>
-                  <div className="radio">
-                    <label htmlFor={thirdOption}>
-                      <input
-                        name="option"
-                        type="radio"
-                        value="option3"
-                        onChange={e =>
-                          this.handleQuestion({ questionNumber }, e)
-                        }
-                      />
-                      {thirdOption}
-                    </label>
-                  </div>
-                  <div className="radio">
-                    <label htmlFor={fourthOption}>
-                      <input
-                        name="option"
-                        type="radio"
-                        value="option4"
-                        onChange={e =>
-                          this.handleQuestion({ questionNumber }, e)
-                        }
-                      />
-                      {fourthOption}
-                    </label>
-                  </div>
-                  <div className="radio">
-                    <label htmlFor={fifthOption}>
-                      <input
-                        name="option"
-                        type="radio"
-                        value="option5"
-                        onChange={e =>
-                          this.handleQuestion({ questionNumber }, e)
-                        }
-                      />
-                      {fifthOption}
-                    </label>
-                  </div>
-                  <br />
-                  <Button onClick={this.closeModal} type="submit">
-                    Submit
-                  </Button>
-                </div>
-              </Modal.Description>
-            </Modal.Content>
-          </div>
-        </Modal>
-
-        <div>
-          <div>
-            Subject ID:
-            {subjectId}
-          </div>
-          <div>
-            firstVideo:
-            {firstVideo}
-          </div>
-          <div>
-            firstVideoType:
-            {firstVideoType}
-          </div>
-          <div>
-            secondVideo:
-            {secondVideo}
-          </div>
-          <div>
-            secondVideoType:
-            {secondVideoType}
-          </div>
-          <div>
-            thirdVideo:
-            {thirdVideo}
-          </div>
-          <div>
-            thirdVideoType:
-            {thirdVideoType}
-          </div>
-          <div>
-            fourthVideo:
-            {fourthVideo}
-          </div>
-          <div>
-            fourthVideoType:
-            {fourthVideoType}
-          </div>
-        </div>
+                </Modal.Description>
+              </Modal.Content>
+            </div>
+          </Modal>
+        )}
       </div>
     );
   }
