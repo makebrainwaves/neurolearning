@@ -312,6 +312,30 @@ export default class VideoSet extends Component<Props, State> {
     }
   };
 
+  handleEngagement(q, e) {
+    console.log(
+      'this is the question you have just answered: ',
+      q.questionNumber
+    );
+    console.log('you have chosen Q2', e.target.value);
+
+    if (q.questionNumber === 1) {
+      this.setState({ answerQ1: e.target.value });
+    }
+
+    if (q.questionNumber === 2) {
+      this.setState({ answerQ2: e.target.value });
+    }
+
+    if (q.questionNumber === 3) {
+      this.setState({ answerQ3: e.target.value });
+    }
+
+    if (q.questionNumber === 4) {
+      this.setState({ answerQ4: e.target.value });
+    }
+  }
+
   handleQuestion(q, e) {
     this.setState({ obscureButton: false });
     console.log(
@@ -458,13 +482,91 @@ export default class VideoSet extends Component<Props, State> {
           closeOnDimmerClick={false}
         >
           <div className={styles.inner}>
-            <Modal.Header>{this.state.questionNumber}</Modal.Header>
+            <Modal.Header />
             <Modal.Content className={styles.content}>
               <Modal.Description>
-                <p>{this.state.questionText}</p>
-                <p>
-                  <h5>Please select an answer to continue</h5>
-                </p>
+                <h4>1. On a scale of 1 to 5, how engaged are you right now?</h4>
+                <h5>(1 = not engaged at all, 5 = very engaged)</h5>
+                <div className={styles.engagement}>
+                  <div className="radio">
+                    <label
+                      className={styles.engagementRadio}
+                      htmlFor="something"
+                    >
+                      <input
+                        name="option"
+                        type="radio"
+                        value="e1"
+                        onChange={e =>
+                          this.handleQuestion({ questionNumber }, e)
+                        }
+                      />
+                      1
+                    </label>
+                    <label
+                      className={styles.engagementRadio}
+                      htmlFor="something"
+                    >
+                      <input
+                        name="option"
+                        type="radio"
+                        value="e2"
+                        onChange={e =>
+                          this.handleQuestion({ questionNumber }, e)
+                        }
+                      />
+                      2
+                    </label>
+                    <label
+                      className={styles.engagementRadio}
+                      htmlFor="something"
+                    >
+                      <input
+                        name="option"
+                        type="radio"
+                        value="e3"
+                        onChange={e =>
+                          this.handleQuestion({ questionNumber }, e)
+                        }
+                      />
+                      3
+                    </label>
+                    <label
+                      className={styles.engagementRadio}
+                      htmlFor="something"
+                    >
+                      <input
+                        name="option"
+                        type="radio"
+                        value="e4"
+                        onChange={e =>
+                          this.handleQuestion({ questionNumber }, e)
+                        }
+                      />
+                      4
+                    </label>
+                    <label
+                      className={styles.engagementRadio}
+                      htmlFor="something"
+                    >
+                      <input
+                        name="option"
+                        type="radio"
+                        value="e5"
+                        onChange={e =>
+                          this.handleQuestion({ questionNumber }, e)
+                        }
+                      />
+                      5
+                    </label>
+                  </div>
+                </div>
+                <hr />
+                <h4 className={styles.questions}>
+                  2.
+                  {this.state.questionText}
+                </h4>
+                <h5>Please select an answer to continue</h5>
                 <div>
                   <div className="radio">
                     <label htmlFor={this.state.firstOption}>

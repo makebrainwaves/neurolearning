@@ -41,11 +41,24 @@ h3 {
   background-color: #fff;
   color: #000;
   height: 40%;
-  width: 40%;
+  width: 60%;
   padding: 30px;
-  margin-left: 25%;
+  margin-left: 20%;
   margin-top: 12%;
   border-radius: 15px;
+}
+
+.engagement {
+  margin-bottom: 2rem;
+}
+
+.engagementRadio {
+  margin-right: 1rem;
+  margin-top: 1rem;
+}
+
+.questions {
+  margin-top: 1rem;
 }
 
 form {
