@@ -63,14 +63,8 @@ export default class Home extends Component<Props, State> {
   state: State;
   handleSubjectId: Object => void;
   handleExperimenterId: Object => void;
-  handleFirstVideo: Object => void;
-  handleFirstVideoType: Object => void;
-  handleSecondVideo: Object => void;
-  handleSecondVideoType: Object => void;
-  handleThirdVideo: Object => void;
-  handleThirdVideoType: Object => void;
-  handleFourthVideo: Object => void;
-  handleFourthVideoType: Object => void;
+  handleVideo: Object => void;
+  handleExperimentType: Object => void;
   handleConnectEEG: () => void;
   handleClassiferType: (Object, Object) => void;
   selectAllElectrodes: Object => void;
@@ -135,17 +129,10 @@ export default class Home extends Component<Props, State> {
         { id: 32, value: 'PO3', checked: true }
       ]
     };
-
     this.handleSubjectId = this.handleSubjectId.bind(this);
     this.handleExperimenterId = this.handleExperimenterId.bind(this);
-    this.handleFirstVideo = this.handleFirstVideo.bind(this);
-    this.handleFirstVideoType = this.handleFirstVideoType.bind(this);
-    this.handleSecondVideo = this.handleSecondVideo.bind(this);
-    this.handleSecondVideoType = this.handleSecondVideoType.bind(this);
-    this.handleThirdVideo = this.handleThirdVideo.bind(this);
-    this.handleThirdVideoType = this.handleThirdVideoType.bind(this);
-    this.handleFourthVideo = this.handleFourthVideo.bind(this);
-    this.handleFourthVideoType = this.handleFourthVideoType.bind(this);
+    this.handleVideo = this.handleVideo.bind(this);
+    this.handleExperimentType = this.handleExperimentType.bind(this);
     this.handleConnectEEG = this.handleConnectEEG.bind(this);
     this.handleClassiferType = this.handleClassiferType.bind(this);
     this.selectAllElectrodes = this.selectAllElectrodes.bind(this);
@@ -180,48 +167,15 @@ export default class Home extends Component<Props, State> {
     return videoName;
   };
 
-  handleFirstVideo(event: Object, data) {
+  handleVideo(event: Object, data) {
     this.setState({
-      firstVideo: data.value,
-      firstVideoName: this.getVideoName(data.value)
+      [data.name.slice(0, -4)]: data.value,
+      [data.name]: this.getVideoName(data.value)
     });
   }
 
-  handleFirstVideoType(event: Object, data) {
-    this.setState({ firstVideoType: data.value });
-  }
-
-  handleSecondVideo(event: Object, data) {
-    this.setState({
-      secondVideo: data.value,
-      secondVideoName: this.getVideoName(data.value)
-    });
-  }
-
-  handleSecondVideoType(event: Object, data) {
-    this.setState({ secondVideoType: data.value });
-  }
-
-  handleThirdVideo(event: Object, data) {
-    this.setState({
-      thirdVideo: data.value,
-      thirdVideoName: this.getVideoName(data.value)
-    });
-  }
-
-  handleThirdVideoType(event: Object, data) {
-    this.setState({ thirdVideoType: data.value });
-  }
-
-  handleFourthVideo(event: Object, data) {
-    this.setState({
-      fourthVideo: data.value,
-      fourthVideoName: this.getVideoName(data.value)
-    });
-  }
-
-  handleFourthVideoType(event: Object, data) {
-    this.setState({ fourthVideoType: data.value });
+  handleExperimentType(event: Object, data) {
+    this.setState({ [data.name]: data.value });
   }
 
   handleSubjectId(event: Object) {
@@ -394,7 +348,8 @@ export default class Home extends Component<Props, State> {
                   1.
                   <Dropdown
                     placeholder="Select First Video"
-                    onChange={this.handleFirstVideo}
+                    name="firstVideoName"
+                    onChange={this.handleVideo}
                     selection
                     options={videoOptions}
                   />
@@ -402,8 +357,9 @@ export default class Home extends Component<Props, State> {
                 <Grid.Column>
                   <Dropdown
                     placeholder="Select Experiment Type"
+                    name="firstVideoType"
                     value={firstVideoType}
-                    onChange={this.handleFirstVideoType}
+                    onChange={this.handleExperimentType}
                     selection
                     options={experimentOptions}
                   />
@@ -415,7 +371,8 @@ export default class Home extends Component<Props, State> {
                   2.
                   <Dropdown
                     placeholder="Select Second Video"
-                    onChange={this.handleSecondVideo}
+                    name="secondVideoName"
+                    onChange={this.handleVideo}
                     selection
                     options={videoOptions}
                   />
@@ -423,8 +380,9 @@ export default class Home extends Component<Props, State> {
                 <Grid.Column>
                   <Dropdown
                     placeholder="Select Experiment Type"
+                    name="secondVideoType"
                     value={secondVideoType}
-                    onChange={this.handleSecondVideoType}
+                    onChange={this.handleExperimentType}
                     selection
                     options={experimentOptions}
                   />
@@ -436,7 +394,8 @@ export default class Home extends Component<Props, State> {
                   3.
                   <Dropdown
                     placeholder="Select Third Video"
-                    onChange={this.handleThirdVideo}
+                    name="thirdVideoName"
+                    onChange={this.handleVideo}
                     selection
                     options={videoOptions}
                   />
@@ -444,8 +403,9 @@ export default class Home extends Component<Props, State> {
                 <Grid.Column>
                   <Dropdown
                     placeholder="Select Experiment Type"
+                    name="thirdVideoType"
                     value={thirdVideoType}
-                    onChange={this.handleThirdVideoType}
+                    onChange={this.handleExperimentType}
                     selection
                     options={experimentOptions}
                   />
@@ -457,7 +417,8 @@ export default class Home extends Component<Props, State> {
                   4.
                   <Dropdown
                     placeholder="Select Fourth Video"
-                    onChange={this.handleFourthVideo}
+                    name="fourthVideoName"
+                    onChange={this.handleVideo}
                     selection
                     options={videoOptions}
                   />
@@ -466,7 +427,7 @@ export default class Home extends Component<Props, State> {
                   <Dropdown
                     placeholder="Select Experiment Type"
                     value={fourthVideoType}
-                    onChange={this.handleFourthVideoType}
+                    onChange={this.handleExperimentType}
                     selection
                     options={experimentOptions}
                   />
