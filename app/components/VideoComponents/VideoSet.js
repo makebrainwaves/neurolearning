@@ -32,10 +32,6 @@ interface State {
   firstOption: string;
   secondOption: string;
   thirdOption: string;
-  answerQ1: string;
-  answerQ2: string;
-  answerQ3: string;
-  answerQ4: string;
   obscureButton: boolean;
 }
 
@@ -89,36 +85,115 @@ export default class VideoSet extends Component<Props, State> {
       firstOption: '',
       secondOption: '',
       thirdOption: '',
-      answers: {
-        niches: {
-          q1: '',
-          q2: '',
-          q3: '',
-          q4: ''
-        },
-        lipid: {
-          q1: '',
-          q2: '',
-          q3: '',
-          q4: ''
-        },
-        bip: {
-          q1: '',
-          q2: '',
-          q3: '',
-          q4: ''
-        },
-        insulin: {
-          q1: '',
-          q2: '',
-          q3: '',
-          q4: ''
+      videoName: '',
+      answers: [
+        {
+          niches: {
+            q1: {
+              experimentType: '',
+              timestamp: '',
+              engagement: '',
+              answer: ''
+            },
+            q2: {
+              experimentType: '',
+              timestamp: '',
+              engagement: '',
+              answer: ''
+            },
+            q3: {
+              experimentType: '',
+              timestamp: '',
+              engagement: '',
+              answer: ''
+            },
+            q4: {
+              experimentType: '',
+              timestamp: '',
+              engagement: '',
+              answer: ''
+            }
+          },
+          lipid: {
+            q1: {
+              experimentType: '',
+              timestamp: '',
+              engagement: '',
+              answer: ''
+            },
+            q2: {
+              experimentType: '',
+              timestamp: '',
+              engagement: '',
+              answer: ''
+            },
+            q3: {
+              experimentType: '',
+              timestamp: '',
+              engagement: '',
+              answer: ''
+            },
+            q4: {
+              experimentType: '',
+              timestamp: '',
+              engagement: '',
+              answer: ''
+            }
+          },
+          bip: {
+            q1: {
+              experimentType: '',
+              timestamp: '',
+              engagement: '',
+              answer: ''
+            },
+            q2: {
+              experimentType: '',
+              timestamp: '',
+              engagement: '',
+              answer: ''
+            },
+            q3: {
+              experimentType: '',
+              timestamp: '',
+              engagement: '',
+              answer: ''
+            },
+            q4: {
+              experimentType: '',
+              timestamp: '',
+              engagement: '',
+              answer: ''
+            }
+          },
+          insulin: {
+            q1: {
+              experimentType: '',
+              timestamp: '',
+              engagement: '',
+              answer: ''
+            },
+            q2: {
+              experimentType: '',
+              timestamp: '',
+              engagement: '',
+              answer: ''
+            },
+            q3: {
+              experimentType: '',
+              timestamp: '',
+              engagement: '',
+              answer: ''
+            },
+            q4: {
+              experimentType: '',
+              timestamp: '',
+              engagement: '',
+              answer: ''
+            }
+          }
         }
-      },
-      answerQ1: '',
-      answerQ2: '',
-      answerQ3: '',
-      answerQ4: '',
+      ],
       classifierEEGObservable,
       classifierScore: 0,
       classifierThreshold: 1.1,
@@ -136,7 +211,8 @@ export default class VideoSet extends Component<Props, State> {
   componentWillMount() {
     this.setState({
       currentVideo: this.props.location.state.firstVideo,
-      questionSet: this.state.questionSet
+      questionSet: this.state.questionSet,
+      videoName: this.getVideoName(this.props.location.state.firstVideo)
     });
   }
   componentDidMount() {
@@ -207,32 +283,72 @@ export default class VideoSet extends Component<Props, State> {
     }
   };
 
+  getVideoName(video) {
+    let videoNameTemp = '';
+    if (
+      video ===
+      'http://localhost:1212/dist/0aaa1f67050e199bf65b346ed1e6bddf.mp4'
+    ) {
+      videoNameTemp = 'niches';
+    } else if (
+      video ===
+      'http://localhost:1212/dist/2ab8ce87a09d1d6b7303006753ca0251.mp4'
+    ) {
+      videoNameTemp = 'lipid';
+    } else if (
+      video ===
+      'http://localhost:1212/dist/0b30e12cf7d23e654b6d6c306bd13618.mp4'
+    ) {
+      videoNameTemp = 'bip';
+    } else if (
+      video ===
+      'http://localhost:1212/dist/a6e5c47df7b77a974f47cce5b094f90c.mp4'
+    ) {
+      videoNameTemp = 'insulin';
+    } else {
+      videoNameTemp = '';
+    }
+    this.setState({
+      videoName: videoNameTemp
+    });
+
+    return videoNameTemp;
+  }
+
   getQuestionSet(video) {
     let questionSetTemp = [];
+    let videoNameTemp = '';
     if (
       video ===
       'http://localhost:1212/dist/0aaa1f67050e199bf65b346ed1e6bddf.mp4'
     ) {
       questionSetTemp = nichesQ;
+      videoNameTemp = 'niches';
     } else if (
       video ===
       'http://localhost:1212/dist/2ab8ce87a09d1d6b7303006753ca0251.mp4'
     ) {
       questionSetTemp = lipidQ;
+      videoNameTemp = 'lipid';
     } else if (
       video ===
       'http://localhost:1212/dist/0b30e12cf7d23e654b6d6c306bd13618.mp4'
     ) {
       questionSetTemp = bipQ;
+      videoNameTemp = 'bip';
     } else if (
       video ===
       'http://localhost:1212/dist/a6e5c47df7b77a974f47cce5b094f90c.mp4'
     ) {
       questionSetTemp = insulinQ;
+      videoNameTemp = 'insulin';
     } else {
       questionSetTemp = null;
     }
-    this.setState({ questionSet: questionSetTemp });
+    this.setState({
+      questionSet: questionSetTemp,
+      videoName: videoNameTemp
+    });
 
     return questionSetTemp;
   }
@@ -241,11 +357,7 @@ export default class VideoSet extends Component<Props, State> {
     const {
       question1AlreadyShown,
       question2AlreadyShown,
-      isRunning,
-      answerQ1,
-      answerQ2,
-      answerQ3,
-      answerQ4
+      isRunning
     } = this.state;
 
     const vidCurrTime = document.getElementById('vidID').currentTime;
@@ -269,18 +381,46 @@ export default class VideoSet extends Component<Props, State> {
       }
     } else {
       // control:
-
       switch (true) {
-        case 4 <= vidCurrTime && vidCurrTime < 8 && answerQ1 === '':
+        case this.state.videoName === 'niches' &&
+          (4 <= vidCurrTime && vidCurrTime < 8) &&
+          this.state.answers[0].niches.q1.answer === '':
           this.newNextQuestion(1);
           break;
-        case 8 <= vidCurrTime && vidCurrTime < 10 && answerQ2 === '':
+        case this.state.videoName === 'niches' &&
+          (8 <= vidCurrTime && vidCurrTime < 10) &&
+          this.state.answers[0].niches.q2.answer === '':
           this.newNextQuestion(2);
           break;
-        case 10 <= vidCurrTime && vidCurrTime < 12 && answerQ3 === '':
+        case this.state.videoName === 'niches' &&
+          (10 <= vidCurrTime && vidCurrTime < 12) &&
+          this.state.answers[0].niches.q3.answer === '':
           this.newNextQuestion(3);
           break;
-        case 12 <= vidCurrTime && vidCurrTime < 14 && answerQ4 === '':
+        case this.state.videoName === 'niches' &&
+          (12 <= vidCurrTime && vidCurrTime < 14) &&
+          this.state.answers[0].niches.q4.answer === '':
+          this.newNextQuestion(4);
+          break;
+
+        case this.state.videoName === 'lipid' &&
+          (4 <= vidCurrTime && vidCurrTime < 8) &&
+          this.state.answers[0].lipid.q1.answer === '':
+          this.newNextQuestion(1);
+          break;
+        case this.state.videoName === 'lipid' &&
+          (8 <= vidCurrTime && vidCurrTime < 10) &&
+          this.state.answers[0].lipid.q2.answer === '':
+          this.newNextQuestion(2);
+          break;
+        case this.state.videoName === 'lipid' &&
+          (10 <= vidCurrTime && vidCurrTime < 12) &&
+          this.state.answers[0].lipid.q3.answer === '':
+          this.newNextQuestion(3);
+          break;
+        case this.state.videoName === 'lipid' &&
+          (12 <= vidCurrTime && vidCurrTime < 14) &&
+          this.state.answers[0].lipid.q4.answer === '':
           this.newNextQuestion(4);
           break;
         default:
@@ -313,52 +453,106 @@ export default class VideoSet extends Component<Props, State> {
   };
 
   handleEngagement(q, e) {
-    console.log(
-      'this is the question you have just answered: ',
-      q.questionNumber
-    );
-    console.log('you have chosen Q2', e.target.value);
+    const answers = this.state.answers;
 
-    if (q.questionNumber === 1) {
-      this.setState({ answerQ1: e.target.value });
-    }
+    answers.forEach(answer => {
+      if (this.state.videoName === 'niches') {
+        if (q.questionNumber === 1) {
+          answer.niches.q1.engagement = e.target.value;
+        }
+        if (q.questionNumber === 2) {
+          answer.niches.q2.engagement = e.target.value;
+        }
+        if (q.questionNumber === 3) {
+          answer.niches.q3.engagement = e.target.value;
+        }
+        if (q.questionNumber === 4) {
+          answer.niches.q4.engagement = e.target.value;
+        }
+      }
+      if (this.state.videoName === 'lipid') {
+        if (q.questionNumber === 1) {
+          answer.lipid.q1.engagement = e.target.value;
+        }
+        if (q.questionNumber === 2) {
+          answer.lipid.q2.engagement = e.target.value;
+        }
+        if (q.questionNumber === 3) {
+          answer.lipid.q3.engagement = e.target.value;
+        }
+        if (q.questionNumber === 4) {
+          answer.lipid.q4.engagement = e.target.value;
+        }
+      }
+    });
 
-    if (q.questionNumber === 2) {
-      this.setState({ answerQ2: e.target.value });
-    }
-
-    if (q.questionNumber === 3) {
-      this.setState({ answerQ3: e.target.value });
-    }
-
-    if (q.questionNumber === 4) {
-      this.setState({ answerQ4: e.target.value });
-    }
+    this.setState({ answers });
   }
 
   handleQuestion(q, e) {
     this.setState({ obscureButton: false });
-    console.log(
-      'this is the question you have just answered: ',
-      q.questionNumber
-    );
-    console.log('you have chosen Q2', e.target.value);
+    const answers = this.state.answers;
+    const time = new Date().getTime();
+    const date = new Date(time).toString();
 
-    if (q.questionNumber === 1) {
-      this.setState({ answerQ1: e.target.value });
-    }
+    answers.forEach(answer => {
+      if (this.state.videoName === 'niches') {
+        answer.niches.value = this.state.videoName;
+        if (q.questionNumber === 1) {
+          answer.niches.q1.experimentType = 'control';
+          answer.niches.q1.timestamp = date;
+          answer.niches.q1.value = q.questionNumber;
+          answer.niches.q1.answer = e.target.value;
+        }
+        if (q.questionNumber === 2) {
+          answer.niches.q2.experimentType = 'control';
+          answer.niches.q2.timestamp = date;
+          answer.niches.q2.value = q.questionNumber;
+          answer.niches.q2.answer = e.target.value;
+        }
+        if (q.questionNumber === 3) {
+          answer.niches.q3.experimentType = 'control';
+          answer.niches.q3.timestamp = date;
+          answer.niches.q3.value = q.questionNumber;
+          answer.niches.q3.answer = e.target.value;
+        }
+        if (q.questionNumber === 4) {
+          answer.niches.q4.experimentType = 'control';
+          answer.niches.q4.timestamp = date;
+          answer.niches.q4.value = q.questionNumber;
+          answer.niches.q4.answer = e.target.value;
+        }
+      }
+      if (this.state.videoName === 'lipid') {
+        answer.lipid.value = this.state.videoName;
+        if (q.questionNumber === 1) {
+          answer.lipid.q1.experimentType = 'control';
+          answer.lipid.q1.timestamp = date;
+          answer.lipid.q1.value = q.questionNumber;
+          answer.lipid.q1.answer = e.target.value;
+        }
+        if (q.questionNumber === 2) {
+          answer.lipid.q2.experimentType = 'control';
+          answer.lipid.q2.timestamp = date;
+          answer.lipid.q2.value = q.questionNumber;
+          answer.lipid.q2.answer = e.target.value;
+        }
+        if (q.questionNumber === 3) {
+          answer.lipid.q3.experimentType = 'control';
+          answer.lipid.q3.timestamp = date;
+          answer.lipid.q3.value = q.questionNumber;
+          answer.lipid.q3.answer = e.target.value;
+        }
+        if (q.questionNumber === 4) {
+          answer.lipid.q4.experimentType = 'control';
+          answer.lipid.q4.timestamp = date;
+          answer.lipid.q4.value = q.questionNumber;
+          answer.lipid.q4.answer = e.target.value;
+        }
+      }
+    });
 
-    if (q.questionNumber === 2) {
-      this.setState({ answerQ2: e.target.value });
-    }
-
-    if (q.questionNumber === 3) {
-      this.setState({ answerQ3: e.target.value });
-    }
-
-    if (q.questionNumber === 4) {
-      this.setState({ answerQ4: e.target.value });
-    }
+    this.setState({ answers });
   }
 
   render() {
@@ -366,10 +560,6 @@ export default class VideoSet extends Component<Props, State> {
       modalIsOpen,
       questionSet,
       answers,
-      answerQ1,
-      answerQ2,
-      answerQ3,
-      answerQ4,
       questionNumber,
       questionText,
       firstOption,
@@ -377,7 +567,8 @@ export default class VideoSet extends Component<Props, State> {
       thirdOption,
       fourthOption,
       fifthOption,
-      currentVideo
+      currentVideo,
+      videoName
     } = this.state;
     const { location } = this.props;
     const { state } = location;
@@ -396,13 +587,75 @@ export default class VideoSet extends Component<Props, State> {
     const answersCsv = [
       {
         Subject: subjectId,
-        Question: data.q1.name,
-        Answer: answerQ1
+        VideoName: answers[0].niches.value,
+        ExperimentType: answers[0].niches.q1.experimentType,
+        TimeStamp: answers[0].niches.q1.timestamp,
+        QuestionNo: answers[0].niches.q1.value,
+        Engagement: answers[0].niches.q1.engagement,
+        Answer: answers[0].niches.q1.answer
       },
       {
         Subject: subjectId,
-        Question: data.q2.name,
-        Answer: answerQ2
+        VideoName: answers[0].niches.value,
+        ExperimentType: answers[0].niches.q2.experimentType,
+        TimeStamp: answers[0].niches.q2.timestamp,
+        QuestionNo: answers[0].niches.q2.value,
+        Engagement: answers[0].niches.q2.engagement,
+        Answer: answers[0].niches.q2.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].niches.value,
+        ExperimentType: answers[0].niches.q1.experimentType,
+        TimeStamp: answers[0].niches.q3.timestamp,
+        QuestionNo: answers[0].niches.q3.value,
+        Engagement: answers[0].niches.q3.engagement,
+        Answer: answers[0].niches.q3.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].niches.value,
+        ExperimentType: answers[0].niches.q1.experimentType,
+        TimeStamp: answers[0].niches.q4.timestamp,
+        QuestionNo: answers[0].niches.q4.value,
+        Engagement: answers[0].niches.q4.engagement,
+        Answer: answers[0].niches.q4.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].lipid.value,
+        ExperimentType: answers[0].lipid.q1.experimentType,
+        TimeStamp: answers[0].lipid.q1.timestamp,
+        QuestionNo: answers[0].lipid.q1.value,
+        Engagement: answers[0].lipid.q1.engagement,
+        Answer: answers[0].lipid.q1.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].lipid.value,
+        ExperimentType: answers[0].lipid.q2.experimentType,
+        TimeStamp: answers[0].lipid.q2.timestamp,
+        QuestionNo: answers[0].lipid.q2.value,
+        Engagement: answers[0].lipid.q2.engagement,
+        Answer: answers[0].lipid.q2.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].lipid.value,
+        ExperimentType: answers[0].lipid.q1.experimentType,
+        TimeStamp: answers[0].lipid.q3.timestamp,
+        QuestionNo: answers[0].lipid.q3.value,
+        Engagement: answers[0].lipid.q3.engagement,
+        Answer: answers[0].lipid.q3.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].lipid.value,
+        ExperimentType: answers[0].lipid.q1.experimentType,
+        TimeStamp: answers[0].lipid.q4.timestamp,
+        QuestionNo: answers[0].lipid.q4.value,
+        Engagement: answers[0].lipid.q4.engagement,
+        Answer: answers[0].lipid.q4.answer
       }
     ];
 
@@ -494,11 +747,11 @@ export default class VideoSet extends Component<Props, State> {
                       htmlFor="something"
                     >
                       <input
-                        name="option"
+                        name="engagement"
                         type="radio"
                         value="e1"
                         onChange={e =>
-                          this.handleQuestion({ questionNumber }, e)
+                          this.handleEngagement({ questionNumber }, e)
                         }
                       />
                       1
@@ -508,11 +761,11 @@ export default class VideoSet extends Component<Props, State> {
                       htmlFor="something"
                     >
                       <input
-                        name="option"
+                        name="engagement"
                         type="radio"
                         value="e2"
                         onChange={e =>
-                          this.handleQuestion({ questionNumber }, e)
+                          this.handleEngagement({ questionNumber }, e)
                         }
                       />
                       2
@@ -522,11 +775,11 @@ export default class VideoSet extends Component<Props, State> {
                       htmlFor="something"
                     >
                       <input
-                        name="option"
+                        name="engagement"
                         type="radio"
                         value="e3"
                         onChange={e =>
-                          this.handleQuestion({ questionNumber }, e)
+                          this.handleEngagement({ questionNumber }, e)
                         }
                       />
                       3
@@ -536,11 +789,11 @@ export default class VideoSet extends Component<Props, State> {
                       htmlFor="something"
                     >
                       <input
-                        name="option"
+                        name="engagement"
                         type="radio"
                         value="e4"
                         onChange={e =>
-                          this.handleQuestion({ questionNumber }, e)
+                          this.handleEngagement({ questionNumber }, e)
                         }
                       />
                       4
@@ -550,11 +803,11 @@ export default class VideoSet extends Component<Props, State> {
                       htmlFor="something"
                     >
                       <input
-                        name="option"
+                        name="engagement"
                         type="radio"
                         value="e5"
                         onChange={e =>
-                          this.handleQuestion({ questionNumber }, e)
+                          this.handleEngagement({ questionNumber }, e)
                         }
                       />
                       5
