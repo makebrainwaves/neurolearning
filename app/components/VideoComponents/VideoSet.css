@@ -48,6 +48,17 @@ h3 {
   border-radius: 15px;
 }
 
+.finalInner {
+  display: block;
+  background-color: #fff;
+  color: #000;
+  height: 40%;
+  width: 60%;
+  padding: 30px;
+  margin-left: 10%;
+  margin-top: 12%;
+  border-radius: 15px;
+}
 .engagement {
   margin-bottom: 2rem;
 }
@@ -78,4 +89,9 @@ form {
 }
 button.ui.button {
   margin-bottom: 60px;
+}
+
+.surveyLink {
+  color: black;
+  width: 60%;
 }
