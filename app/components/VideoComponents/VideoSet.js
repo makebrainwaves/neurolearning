@@ -48,6 +48,15 @@ const bipQ = require('../../questions/BipQuestions.js');
 const lipidQ = require('../../questions/LipidQuestions.js');
 const insulinQ = require('../../questions/InsulinQuestions.js');
 
+const nichesVideo =
+  'http://localhost:1212/dist/0aaa1f67050e199bf65b346ed1e6bddf.mp4';
+const lipidVideo =
+  'http://localhost:1212/dist/2ab8ce87a09d1d6b7303006753ca0251.mp4';
+const bipVideo =
+  'http://localhost:1212/dist/a6e5c47df7b77a974f47cce5b094f90c.mp4';
+const insulinVideo =
+  'http://localhost:1212/dist/a6e5c47df7b77a974f47cce5b094f90c.mp4';
+
 export default class VideoSet extends Component<Props, State> {
   props: Props;
   classifierEEGSubscription: ?Subscription;
@@ -79,6 +88,7 @@ export default class VideoSet extends Component<Props, State> {
     this.state = {
       isRunning: false,
       modalIsOpen: false,
+      finalModalIsOpen: false,
       question1AlreadyShown: false,
       question2AlreadyShown: false,
       questionNumber: '',
@@ -235,6 +245,30 @@ export default class VideoSet extends Component<Props, State> {
     });
   };
 
+  closeFinalModal = () => {
+    if (this.state.currentVideo === this.props.location.state.firstVideo) {
+      this.setState({
+        currentVideo: this.props.location.state.secondVideo,
+        questionSet: this.getQuestionSet(this.props.location.state.secondVideo)
+      });
+    } else if (
+      this.state.currentVideo === this.props.location.state.secondVideo
+    ) {
+      this.setState({
+        currentVideo: this.props.location.state.thirdVideo,
+        questionSet: this.getQuestionSet(this.props.location.state.thirdVideo)
+      });
+    } else if (
+      this.state.currentVideo === this.props.location.state.thirdVideo
+    ) {
+      this.setState({
+        currentVideo: this.props.location.state.fourthVideo,
+        questionSet: this.getQuestionSet(this.props.location.state.fourthVideo)
+      });
+    }
+    this.setState({ finalModalIsOpen: false });
+  };
+
   playVideo = videoSequence => {
     const videoRef = this.getVideoRef;
     videoRef.play();
@@ -287,25 +321,13 @@ export default class VideoSet extends Component<Props, State> {
 
   getVideoName(video) {
     let videoNameTemp = '';
-    if (
-      video ===
-      'http://localhost:1212/dist/0aaa1f67050e199bf65b346ed1e6bddf.mp4'
-    ) {
+    if (video === nichesVideo) {
       videoNameTemp = 'niches';
-    } else if (
-      video ===
-      'http://localhost:1212/dist/2ab8ce87a09d1d6b7303006753ca0251.mp4'
-    ) {
+    } else if (video === lipidVideo) {
       videoNameTemp = 'lipid';
-    } else if (
-      video ===
-      'http://localhost:1212/dist/0b30e12cf7d23e654b6d6c306bd13618.mp4'
-    ) {
+    } else if (video === bipVideo) {
       videoNameTemp = 'bip';
-    } else if (
-      video ===
-      'http://localhost:1212/dist/a6e5c47df7b77a974f47cce5b094f90c.mp4'
-    ) {
+    } else if (video === insulinVideo) {
       videoNameTemp = 'insulin';
     } else {
       videoNameTemp = '';
@@ -320,28 +342,16 @@ export default class VideoSet extends Component<Props, State> {
   getQuestionSet(video) {
     let questionSetTemp = [];
     let videoNameTemp = '';
-    if (
-      video ===
-      'http://localhost:1212/dist/0aaa1f67050e199bf65b346ed1e6bddf.mp4'
-    ) {
+    if (video === nichesVideo) {
       questionSetTemp = nichesQ;
       videoNameTemp = 'niches';
-    } else if (
-      video ===
-      'http://localhost:1212/dist/2ab8ce87a09d1d6b7303006753ca0251.mp4'
-    ) {
+    } else if (video === lipidVideo) {
       questionSetTemp = lipidQ;
       videoNameTemp = 'lipid';
-    } else if (
-      video ===
-      'http://localhost:1212/dist/0b30e12cf7d23e654b6d6c306bd13618.mp4'
-    ) {
+    } else if (video === bipVideo) {
       questionSetTemp = bipQ;
       videoNameTemp = 'bip';
-    } else if (
-      video ===
-      'http://localhost:1212/dist/a6e5c47df7b77a974f47cce5b094f90c.mp4'
-    ) {
+    } else if (video === insulinVideo) {
       questionSetTemp = insulinQ;
       videoNameTemp = 'insulin';
     } else {
@@ -474,26 +484,7 @@ export default class VideoSet extends Component<Props, State> {
   };
 
   generateCsvs = videoSequence => {
-    if (this.state.currentVideo === this.props.location.state.firstVideo) {
-      this.setState({
-        currentVideo: this.props.location.state.secondVideo,
-        questionSet: this.getQuestionSet(this.props.location.state.secondVideo)
-      });
-    } else if (
-      this.state.currentVideo === this.props.location.state.secondVideo
-    ) {
-      this.setState({
-        currentVideo: this.props.location.state.thirdVideo,
-        questionSet: this.getQuestionSet(this.props.location.state.thirdVideo)
-      });
-    } else if (
-      this.state.currentVideo === this.props.location.state.thirdVideo
-    ) {
-      this.setState({
-        currentVideo: this.props.location.state.fourthVideo,
-        questionSet: this.getQuestionSet(this.props.location.state.fourthVideo)
-      });
-    }
+    this.setState({ finalModalIsOpen: true });
   };
 
   handleEngagement(q, e) {
@@ -1067,6 +1058,85 @@ export default class VideoSet extends Component<Props, State> {
                     </Button>
                   )}
                 </div>
+              </Modal.Description>
+            </Modal.Content>
+          </div>
+        </Modal>
+
+        <Modal
+          open={this.state.finalModalIsOpen}
+          className={styles.modal}
+          closeOnEscape={false}
+          closeOnDimmerClick={false}
+        >
+          <div className={styles.finalInner}>
+            <Modal.Header />
+            <Modal.Content className={styles.content}>
+              <Modal.Description>
+                <h4>
+                  Please click on the following link to take a survey, then
+                  click to continue:
+                </h4>
+
+                {currentVideo === nichesVideo && (
+                  <h5>
+                    <a
+                      className={styles.surveyLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href="https://docs.google.com/forms/d/1CGDZeZKCKTXQ4fstQ8ahbDp1gvvsPBC74_GZUchNClM/"
+                    >
+                      https://docs.google.com/forms/d/1CGDZeZKCKTXQ4fstQ8ahbDp1gvvsPBC74_GZUchNClM/
+                    </a>
+                  </h5>
+                )}
+
+                {currentVideo === lipidVideo && (
+                  <h5>
+                    <a
+                      className={styles.surveyLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href="https://docs.google.com/forms/d/1KG2Dby7SubhQTlKByzwNjsGPgcbEoD8L_dRajKIrJ_o/"
+                    >
+                      https://docs.google.com/forms/d/1KG2Dby7SubhQTlKByzwNjsGPgcbEoD8L_dRajKIrJ_o/
+                    </a>
+                  </h5>
+                )}
+
+                {currentVideo === bipVideo && (
+                  <h5>
+                    <a
+                      className={styles.surveyLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href="https://docs.google.com/forms/d/1TCT2shE1hY24WkNQs9eEhmkS7lBRPg9Z-gt0I6UUU2U/"
+                    >
+                      https://docs.google.com/forms/d/1TCT2shE1hY24WkNQs9eEhmkS7lBRPg9Z-gt0I6UUU2U/
+                    </a>
+                  </h5>
+                )}
+
+                {currentVideo === insulinVideo && (
+                  <h5>
+                    <a
+                      className={styles.surveyLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href="https://docs.google.com/forms/d/10fahrtOU9nHBVUqQB-WTSciiXveIOafEfxROktz11P4/"
+                    >
+                      https://docs.google.com/forms/d/10fahrtOU9nHBVUqQB-WTSciiXveIOafEfxROktz11P4/
+                    </a>
+                  </h5>
+                )}
+
+                <br />
+                <br />
+                <br />
+
+                <Button onClick={this.closeFinalModal} type="submit">
+                  Continue
+                </Button>
               </Modal.Description>
             </Modal.Content>
           </div>
