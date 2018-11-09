@@ -40,6 +40,7 @@ interface Props {
 }
 
 const controlPauseTime = 4;
+const rollBackTime = 2;
 
 const questionsArray = require('../../questions/questionsArray');
 const nichesQ = require('../../questions/NichesQuestions.js');
@@ -243,6 +244,7 @@ export default class VideoSet extends Component<Props, State> {
   pauseVideo = () => {
     const videoRef = this.getVideoRef;
     videoRef.pause();
+    videoRef.currentTime -= rollBackTime;
     this.setState({ isRunning: false });
   };
 
