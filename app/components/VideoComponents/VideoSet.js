@@ -423,6 +423,48 @@ export default class VideoSet extends Component<Props, State> {
           this.state.answers[0].lipid.q4.answer === '':
           this.newNextQuestion(4);
           break;
+
+        case this.state.videoName === 'bip' &&
+          (4 <= vidCurrTime && vidCurrTime < 8) &&
+          this.state.answers[0].bip.q1.answer === '':
+          this.newNextQuestion(1);
+          break;
+        case this.state.videoName === 'bip' &&
+          (8 <= vidCurrTime && vidCurrTime < 10) &&
+          this.state.answers[0].bip.q2.answer === '':
+          this.newNextQuestion(2);
+          break;
+        case this.state.videoName === 'bip' &&
+          (10 <= vidCurrTime && vidCurrTime < 12) &&
+          this.state.answers[0].bip.q3.answer === '':
+          this.newNextQuestion(3);
+          break;
+        case this.state.videoName === 'bip' &&
+          (12 <= vidCurrTime && vidCurrTime < 14) &&
+          this.state.answers[0].bip.q4.answer === '':
+          this.newNextQuestion(4);
+          break;
+
+        case this.state.videoName === 'insulin' &&
+          (4 <= vidCurrTime && vidCurrTime < 8) &&
+          this.state.answers[0].insulin.q1.answer === '':
+          this.newNextQuestion(1);
+          break;
+        case this.state.videoName === 'insulin' &&
+          (8 <= vidCurrTime && vidCurrTime < 10) &&
+          this.state.answers[0].insulin.q2.answer === '':
+          this.newNextQuestion(2);
+          break;
+        case this.state.videoName === 'insulin' &&
+          (10 <= vidCurrTime && vidCurrTime < 12) &&
+          this.state.answers[0].insulin.q3.answer === '':
+          this.newNextQuestion(3);
+          break;
+        case this.state.videoName === 'insulin' &&
+          (12 <= vidCurrTime && vidCurrTime < 14) &&
+          this.state.answers[0].insulin.q4.answer === '':
+          this.newNextQuestion(4);
+          break;
         default:
           break;
       }
@@ -482,6 +524,34 @@ export default class VideoSet extends Component<Props, State> {
         }
         if (q.questionNumber === 4) {
           answer.lipid.q4.engagement = e.target.value;
+        }
+      }
+      if (this.state.videoName === 'bip') {
+        if (q.questionNumber === 1) {
+          answer.bip.q1.engagement = e.target.value;
+        }
+        if (q.questionNumber === 2) {
+          answer.bip.q2.engagement = e.target.value;
+        }
+        if (q.questionNumber === 3) {
+          answer.bip.q3.engagement = e.target.value;
+        }
+        if (q.questionNumber === 4) {
+          answer.bip.q4.engagement = e.target.value;
+        }
+      }
+      if (this.state.videoName === 'insulin') {
+        if (q.questionNumber === 1) {
+          answer.insulin.q1.engagement = e.target.value;
+        }
+        if (q.questionNumber === 2) {
+          answer.insulin.q2.engagement = e.target.value;
+        }
+        if (q.questionNumber === 3) {
+          answer.insulin.q3.engagement = e.target.value;
+        }
+        if (q.questionNumber === 4) {
+          answer.insulin.q4.engagement = e.target.value;
         }
       }
     });
@@ -548,6 +618,62 @@ export default class VideoSet extends Component<Props, State> {
           answer.lipid.q4.timestamp = date;
           answer.lipid.q4.value = q.questionNumber;
           answer.lipid.q4.answer = e.target.value;
+        }
+      }
+
+      if (this.state.videoName === 'bip') {
+        answer.bip.value = this.state.videoName;
+        if (q.questionNumber === 1) {
+          answer.bip.q1.experimentType = 'control';
+          answer.bip.q1.timestamp = date;
+          answer.bip.q1.value = q.questionNumber;
+          answer.bip.q1.answer = e.target.value;
+        }
+        if (q.questionNumber === 2) {
+          answer.bip.q2.experimentType = 'control';
+          answer.bip.q2.timestamp = date;
+          answer.bip.q2.value = q.questionNumber;
+          answer.bip.q2.answer = e.target.value;
+        }
+        if (q.questionNumber === 3) {
+          answer.bip.q3.experimentType = 'control';
+          answer.bip.q3.timestamp = date;
+          answer.bip.q3.value = q.questionNumber;
+          answer.bip.q3.answer = e.target.value;
+        }
+        if (q.questionNumber === 4) {
+          answer.bip.q4.experimentType = 'control';
+          answer.bip.q4.timestamp = date;
+          answer.bip.q4.value = q.questionNumber;
+          answer.bip.q4.answer = e.target.value;
+        }
+      }
+
+      if (this.state.videoName === 'insulin') {
+        answer.insulin.value = this.state.videoName;
+        if (q.questionNumber === 1) {
+          answer.insulin.q1.experimentType = 'control';
+          answer.insulin.q1.timestamp = date;
+          answer.insulin.q1.value = q.questionNumber;
+          answer.insulin.q1.answer = e.target.value;
+        }
+        if (q.questionNumber === 2) {
+          answer.insulin.q2.experimentType = 'control';
+          answer.insulin.q2.timestamp = date;
+          answer.insulin.q2.value = q.questionNumber;
+          answer.insulin.q2.answer = e.target.value;
+        }
+        if (q.questionNumber === 3) {
+          answer.insulin.q3.experimentType = 'control';
+          answer.insulin.q3.timestamp = date;
+          answer.insulin.q3.value = q.questionNumber;
+          answer.insulin.q3.answer = e.target.value;
+        }
+        if (q.questionNumber === 4) {
+          answer.insulin.q4.experimentType = 'control';
+          answer.insulin.q4.timestamp = date;
+          answer.insulin.q4.value = q.questionNumber;
+          answer.insulin.q4.answer = e.target.value;
         }
       }
     });
@@ -656,6 +782,78 @@ export default class VideoSet extends Component<Props, State> {
         QuestionNo: answers[0].lipid.q4.value,
         Engagement: answers[0].lipid.q4.engagement,
         Answer: answers[0].lipid.q4.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].bip.value,
+        ExperimentType: answers[0].bip.q1.experimentType,
+        TimeStamp: answers[0].bip.q1.timestamp,
+        QuestionNo: answers[0].bip.q1.value,
+        Engagement: answers[0].bip.q1.engagement,
+        Answer: answers[0].bip.q1.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].bip.value,
+        ExperimentType: answers[0].bip.q2.experimentType,
+        TimeStamp: answers[0].bip.q2.timestamp,
+        QuestionNo: answers[0].bip.q2.value,
+        Engagement: answers[0].bip.q2.engagement,
+        Answer: answers[0].bip.q2.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].bip.value,
+        ExperimentType: answers[0].bip.q1.experimentType,
+        TimeStamp: answers[0].bip.q3.timestamp,
+        QuestionNo: answers[0].bip.q3.value,
+        Engagement: answers[0].bip.q3.engagement,
+        Answer: answers[0].bip.q3.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].bip.value,
+        ExperimentType: answers[0].bip.q1.experimentType,
+        TimeStamp: answers[0].bip.q4.timestamp,
+        QuestionNo: answers[0].bip.q4.value,
+        Engagement: answers[0].bip.q4.engagement,
+        Answer: answers[0].bip.q4.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].insulin.value,
+        ExperimentType: answers[0].insulin.q1.experimentType,
+        TimeStamp: answers[0].insulin.q1.timestamp,
+        QuestionNo: answers[0].insulin.q1.value,
+        Engagement: answers[0].insulin.q1.engagement,
+        Answer: answers[0].insulin.q1.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].insulin.value,
+        ExperimentType: answers[0].insulin.q2.experimentType,
+        TimeStamp: answers[0].insulin.q2.timestamp,
+        QuestionNo: answers[0].insulin.q2.value,
+        Engagement: answers[0].insulin.q2.engagement,
+        Answer: answers[0].insulin.q2.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].insulin.value,
+        ExperimentType: answers[0].insulin.q1.experimentType,
+        TimeStamp: answers[0].insulin.q3.timestamp,
+        QuestionNo: answers[0].insulin.q3.value,
+        Engagement: answers[0].insulin.q3.engagement,
+        Answer: answers[0].insulin.q3.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].insulin.value,
+        ExperimentType: answers[0].insulin.q1.experimentType,
+        TimeStamp: answers[0].insulin.q4.timestamp,
+        QuestionNo: answers[0].insulin.q4.value,
+        Engagement: answers[0].insulin.q4.engagement,
+        Answer: answers[0].insulin.q4.answer
       }
     ];
 
