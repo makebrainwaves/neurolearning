@@ -48,6 +48,15 @@ const bipQ = require('../../questions/BipQuestions.js');
 const lipidQ = require('../../questions/LipidQuestions.js');
 const insulinQ = require('../../questions/InsulinQuestions.js');
 
+const nichesVideo =
+  'http://localhost:1212/dist/0aaa1f67050e199bf65b346ed1e6bddf.mp4';
+const lipidVideo =
+  'http://localhost:1212/dist/2ab8ce87a09d1d6b7303006753ca0251.mp4';
+const bipVideo =
+  'http://localhost:1212/dist/a6e5c47df7b77a974f47cce5b094f90c.mp4';
+const insulinVideo =
+  'http://localhost:1212/dist/a6e5c47df7b77a974f47cce5b094f90c.mp4';
+
 export default class VideoSet extends Component<Props, State> {
   props: Props;
   classifierEEGSubscription: ?Subscription;
@@ -312,25 +321,13 @@ export default class VideoSet extends Component<Props, State> {
 
   getVideoName(video) {
     let videoNameTemp = '';
-    if (
-      video ===
-      'http://localhost:1212/dist/0aaa1f67050e199bf65b346ed1e6bddf.mp4'
-    ) {
+    if (video === nichesVideo) {
       videoNameTemp = 'niches';
-    } else if (
-      video ===
-      'http://localhost:1212/dist/2ab8ce87a09d1d6b7303006753ca0251.mp4'
-    ) {
+    } else if (video === lipidVideo) {
       videoNameTemp = 'lipid';
-    } else if (
-      video ===
-      'http://localhost:1212/dist/0b30e12cf7d23e654b6d6c306bd13618.mp4'
-    ) {
+    } else if (video === bipVideo) {
       videoNameTemp = 'bip';
-    } else if (
-      video ===
-      'http://localhost:1212/dist/a6e5c47df7b77a974f47cce5b094f90c.mp4'
-    ) {
+    } else if (video === insulinVideo) {
       videoNameTemp = 'insulin';
     } else {
       videoNameTemp = '';
@@ -345,28 +342,16 @@ export default class VideoSet extends Component<Props, State> {
   getQuestionSet(video) {
     let questionSetTemp = [];
     let videoNameTemp = '';
-    if (
-      video ===
-      'http://localhost:1212/dist/0aaa1f67050e199bf65b346ed1e6bddf.mp4'
-    ) {
+    if (video === nichesVideo) {
       questionSetTemp = nichesQ;
       videoNameTemp = 'niches';
-    } else if (
-      video ===
-      'http://localhost:1212/dist/2ab8ce87a09d1d6b7303006753ca0251.mp4'
-    ) {
+    } else if (video === lipidVideo) {
       questionSetTemp = lipidQ;
       videoNameTemp = 'lipid';
-    } else if (
-      video ===
-      'http://localhost:1212/dist/0b30e12cf7d23e654b6d6c306bd13618.mp4'
-    ) {
+    } else if (video === bipVideo) {
       questionSetTemp = bipQ;
       videoNameTemp = 'bip';
-    } else if (
-      video ===
-      'http://localhost:1212/dist/a6e5c47df7b77a974f47cce5b094f90c.mp4'
-    ) {
+    } else if (video === insulinVideo) {
       questionSetTemp = insulinQ;
       videoNameTemp = 'insulin';
     } else {
@@ -1093,8 +1078,7 @@ export default class VideoSet extends Component<Props, State> {
                   click to continue:
                 </h4>
 
-                {currentVideo ===
-                  'http://localhost:1212/dist/0aaa1f67050e199bf65b346ed1e6bddf.mp4' && (
+                {currentVideo === nichesVideo && (
                   <h5>
                     <a
                       className={styles.surveyLink}
@@ -1107,8 +1091,7 @@ export default class VideoSet extends Component<Props, State> {
                   </h5>
                 )}
 
-                {currentVideo ===
-                  'http://localhost:1212/dist/2ab8ce87a09d1d6b7303006753ca0251.mp4' && (
+                {currentVideo === lipidVideo && (
                   <h5>
                     <a
                       className={styles.surveyLink}
@@ -1121,8 +1104,7 @@ export default class VideoSet extends Component<Props, State> {
                   </h5>
                 )}
 
-                {currentVideo ===
-                  'http://localhost:1212/dist/0b30e12cf7d23e654b6d6c306bd13618.mp4' && (
+                {currentVideo === bipVideo && (
                   <h5>
                     <a
                       className={styles.surveyLink}
@@ -1135,8 +1117,7 @@ export default class VideoSet extends Component<Props, State> {
                   </h5>
                 )}
 
-                {currentVideo ===
-                  'http://localhost:1212/dist/a6e5c47df7b77a974f47cce5b094f90c.mp4' && (
+                {currentVideo === insulinVideo && (
                   <h5>
                     <a
                       className={styles.surveyLink}
