@@ -285,8 +285,8 @@ export default class Home extends Component<Props, State> {
     ];
 
     const experimentOptions = [
-      { key: 'control', value: 'control', text: 'control' },
-      { key: 'experimental', value: 'experimental', text: 'experimental' }
+      { key: 'control', value: 'control', text: 'C' },
+      { key: 'experimental', value: 'experimental', text: 'E' }
     ];
 
     const electrodesChosen = this.electrodesChosen(electrodes);
