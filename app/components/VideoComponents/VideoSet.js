@@ -102,7 +102,6 @@ export default class VideoSet extends Component<Props, State> {
           niches: {
             q1: {
               experimentType: '',
-              timestamp: '',
               modalPopupTOD: '',
               modalPopupTOV: '',
               submitTimeTOD: '',
@@ -111,7 +110,6 @@ export default class VideoSet extends Component<Props, State> {
             },
             q2: {
               experimentType: '',
-              timestamp: '',
               modalPopupTOD: '',
               modalPopupTOV: '',
               submitTimeTOD: '',
@@ -120,7 +118,6 @@ export default class VideoSet extends Component<Props, State> {
             },
             q3: {
               experimentType: '',
-              timestamp: '',
               modalPopupTOD: '',
               modalPopupTOV: '',
               submitTimeTOD: '',
@@ -129,7 +126,6 @@ export default class VideoSet extends Component<Props, State> {
             },
             q4: {
               experimentType: '',
-              timestamp: '',
               modalPopupTOD: '',
               modalPopupTOV: '',
               submitTimeTOD: '',
@@ -140,7 +136,6 @@ export default class VideoSet extends Component<Props, State> {
           lipid: {
             q1: {
               experimentType: '',
-              timestamp: '',
               modalPopupTOD: '',
               modalPopupTOV: '',
               submitTimeTOD: '',
@@ -149,7 +144,6 @@ export default class VideoSet extends Component<Props, State> {
             },
             q2: {
               experimentType: '',
-              timestamp: '',
               modalPopupTOD: '',
               modalPopupTOV: '',
               submitTimeTOD: '',
@@ -158,7 +152,6 @@ export default class VideoSet extends Component<Props, State> {
             },
             q3: {
               experimentType: '',
-              timestamp: '',
               modalPopupTOD: '',
               modalPopupTOV: '',
               submitTimeTOD: '',
@@ -167,7 +160,6 @@ export default class VideoSet extends Component<Props, State> {
             },
             q4: {
               experimentType: '',
-              timestamp: '',
               modalPopupTOD: '',
               modalPopupTOV: '',
               submitTimeTOD: '',
@@ -178,7 +170,6 @@ export default class VideoSet extends Component<Props, State> {
           bip: {
             q1: {
               experimentType: '',
-              timestamp: '',
               modalPopupTOD: '',
               modalPopupTOV: '',
               submitTimeTOD: '',
@@ -187,7 +178,6 @@ export default class VideoSet extends Component<Props, State> {
             },
             q2: {
               experimentType: '',
-              timestamp: '',
               modalPopupTOD: '',
               modalPopupTOV: '',
               submitTimeTOD: '',
@@ -196,7 +186,6 @@ export default class VideoSet extends Component<Props, State> {
             },
             q3: {
               experimentType: '',
-              timestamp: '',
               modalPopupTOD: '',
               modalPopupTOV: '',
               submitTimeTOD: '',
@@ -205,7 +194,6 @@ export default class VideoSet extends Component<Props, State> {
             },
             q4: {
               experimentType: '',
-              timestamp: '',
               modalPopupTOD: '',
               modalPopupTOV: '',
               submitTimeTOD: '',
@@ -216,7 +204,6 @@ export default class VideoSet extends Component<Props, State> {
           insulin: {
             q1: {
               experimentType: '',
-              timestamp: '',
               modalPopupTOD: '',
               modalPopupTOV: '',
               submitTimeTOD: '',
@@ -225,7 +212,6 @@ export default class VideoSet extends Component<Props, State> {
             },
             q2: {
               experimentType: '',
-              timestamp: '',
               modalPopupTOD: '',
               modalPopupTOV: '',
               submitTimeTOD: '',
@@ -234,7 +220,6 @@ export default class VideoSet extends Component<Props, State> {
             },
             q3: {
               experimentType: '',
-              timestamp: '',
               modalPopupTOD: '',
               modalPopupTOV: '',
               submitTimeTOD: '',
@@ -243,7 +228,6 @@ export default class VideoSet extends Component<Props, State> {
             },
             q4: {
               experimentType: '',
-              timestamp: '',
               modalPopupTOD: '',
               modalPopupTOV: '',
               submitTimeTOD: '',
@@ -740,33 +724,27 @@ export default class VideoSet extends Component<Props, State> {
   handleQuestion(q, e) {
     this.setState({ obscureButton: false });
     const answers = this.state.answers;
-    const time = new Date().getTime();
-    const date = new Date(time).toString();
 
     answers.forEach(answer => {
       if (this.state.videoName === 'niches') {
         answer.niches.value = this.state.videoName;
         if (q.questionNumber === 1) {
           answer.niches.q1.experimentType = 'control';
-          answer.niches.q1.timestamp = date;
           answer.niches.q1.value = q.questionNumber;
           answer.niches.q1.answer = e.target.value;
         }
         if (q.questionNumber === 2) {
           answer.niches.q2.experimentType = 'control';
-          answer.niches.q2.timestamp = date;
           answer.niches.q2.value = q.questionNumber;
           answer.niches.q2.answer = e.target.value;
         }
         if (q.questionNumber === 3) {
           answer.niches.q3.experimentType = 'control';
-          answer.niches.q3.timestamp = date;
           answer.niches.q3.value = q.questionNumber;
           answer.niches.q3.answer = e.target.value;
         }
         if (q.questionNumber === 4) {
           answer.niches.q4.experimentType = 'control';
-          answer.niches.q4.timestamp = date;
           answer.niches.q4.value = q.questionNumber;
           answer.niches.q4.answer = e.target.value;
         }
@@ -775,25 +753,21 @@ export default class VideoSet extends Component<Props, State> {
         answer.lipid.value = this.state.videoName;
         if (q.questionNumber === 1) {
           answer.lipid.q1.experimentType = 'control';
-          answer.lipid.q1.timestamp = date;
           answer.lipid.q1.value = q.questionNumber;
           answer.lipid.q1.answer = e.target.value;
         }
         if (q.questionNumber === 2) {
           answer.lipid.q2.experimentType = 'control';
-          answer.lipid.q2.timestamp = date;
           answer.lipid.q2.value = q.questionNumber;
           answer.lipid.q2.answer = e.target.value;
         }
         if (q.questionNumber === 3) {
           answer.lipid.q3.experimentType = 'control';
-          answer.lipid.q3.timestamp = date;
           answer.lipid.q3.value = q.questionNumber;
           answer.lipid.q3.answer = e.target.value;
         }
         if (q.questionNumber === 4) {
           answer.lipid.q4.experimentType = 'control';
-          answer.lipid.q4.timestamp = date;
           answer.lipid.q4.value = q.questionNumber;
           answer.lipid.q4.answer = e.target.value;
         }
@@ -803,25 +777,21 @@ export default class VideoSet extends Component<Props, State> {
         answer.bip.value = this.state.videoName;
         if (q.questionNumber === 1) {
           answer.bip.q1.experimentType = 'control';
-          answer.bip.q1.timestamp = date;
           answer.bip.q1.value = q.questionNumber;
           answer.bip.q1.answer = e.target.value;
         }
         if (q.questionNumber === 2) {
           answer.bip.q2.experimentType = 'control';
-          answer.bip.q2.timestamp = date;
           answer.bip.q2.value = q.questionNumber;
           answer.bip.q2.answer = e.target.value;
         }
         if (q.questionNumber === 3) {
           answer.bip.q3.experimentType = 'control';
-          answer.bip.q3.timestamp = date;
           answer.bip.q3.value = q.questionNumber;
           answer.bip.q3.answer = e.target.value;
         }
         if (q.questionNumber === 4) {
           answer.bip.q4.experimentType = 'control';
-          answer.bip.q4.timestamp = date;
           answer.bip.q4.value = q.questionNumber;
           answer.bip.q4.answer = e.target.value;
         }
@@ -831,25 +801,21 @@ export default class VideoSet extends Component<Props, State> {
         answer.insulin.value = this.state.videoName;
         if (q.questionNumber === 1) {
           answer.insulin.q1.experimentType = 'control';
-          answer.insulin.q1.timestamp = date;
           answer.insulin.q1.value = q.questionNumber;
           answer.insulin.q1.answer = e.target.value;
         }
         if (q.questionNumber === 2) {
           answer.insulin.q2.experimentType = 'control';
-          answer.insulin.q2.timestamp = date;
           answer.insulin.q2.value = q.questionNumber;
           answer.insulin.q2.answer = e.target.value;
         }
         if (q.questionNumber === 3) {
           answer.insulin.q3.experimentType = 'control';
-          answer.insulin.q3.timestamp = date;
           answer.insulin.q3.value = q.questionNumber;
           answer.insulin.q3.answer = e.target.value;
         }
         if (q.questionNumber === 4) {
           answer.insulin.q4.experimentType = 'control';
-          answer.insulin.q4.timestamp = date;
           answer.insulin.q4.value = q.questionNumber;
           answer.insulin.q4.answer = e.target.value;
         }
@@ -893,7 +859,6 @@ export default class VideoSet extends Component<Props, State> {
         Subject: subjectId,
         VideoName: answers[0].niches.value,
         ExperimentType: answers[0].niches.q1.experimentType,
-        TimeStamp: answers[0].niches.q1.timestamp,
         ModalPopupTOD: answers[0].niches.q1.modalPopupTOD,
         ModalPopupTOV: answers[0].niches.q1.modalPopupTOV,
         SubmitTimeTOD: answers[0].niches.q1.submitTimeTOD,
@@ -905,7 +870,6 @@ export default class VideoSet extends Component<Props, State> {
         Subject: subjectId,
         VideoName: answers[0].niches.value,
         ExperimentType: answers[0].niches.q2.experimentType,
-        TimeStamp: answers[0].niches.q2.timestamp,
         ModalPopupTOD: answers[0].niches.q2.modalPopupTOD,
         ModalPopupTOV: answers[0].niches.q2.modalPopupTOV,
         SubmitTimeTOD: answers[0].niches.q2.submitTimeTOD,
@@ -917,7 +881,6 @@ export default class VideoSet extends Component<Props, State> {
         Subject: subjectId,
         VideoName: answers[0].niches.value,
         ExperimentType: answers[0].niches.q1.experimentType,
-        TimeStamp: answers[0].niches.q3.timestamp,
         ModalPopupTOD: answers[0].niches.q3.modalPopupTOD,
         ModalPopupTOV: answers[0].niches.q3.modalPopupTOV,
         SubmitTimeTOD: answers[0].niches.q3.submitTimeTOD,
@@ -929,7 +892,6 @@ export default class VideoSet extends Component<Props, State> {
         Subject: subjectId,
         VideoName: answers[0].niches.value,
         ExperimentType: answers[0].niches.q1.experimentType,
-        TimeStamp: answers[0].niches.q4.timestamp,
         ModalPopupTOD: answers[0].niches.q4.modalPopupTOD,
         ModalPopupTOV: answers[0].niches.q4.modalPopupTOV,
         SubmitTimeTOD: answers[0].niches.q4.submitTimeTOD,
@@ -941,7 +903,6 @@ export default class VideoSet extends Component<Props, State> {
         Subject: subjectId,
         VideoName: answers[0].lipid.value,
         ExperimentType: answers[0].lipid.q1.experimentType,
-        TimeStamp: answers[0].lipid.q1.timestamp,
         ModalPopupTOD: answers[0].lipid.q1.modalPopupTOD,
         ModalPopupTOV: answers[0].lipid.q1.modalPopupTOV,
         SubmitTimeTOD: answers[0].lipid.q1.submitTimeTOD,
@@ -953,7 +914,6 @@ export default class VideoSet extends Component<Props, State> {
         Subject: subjectId,
         VideoName: answers[0].lipid.value,
         ExperimentType: answers[0].lipid.q2.experimentType,
-        TimeStamp: answers[0].lipid.q2.timestamp,
         ModalPopupTOD: answers[0].lipid.q2.modalPopupTOD,
         ModalPopupTOV: answers[0].lipid.q2.modalPopupTOV,
         SubmitTimeTOD: answers[0].lipid.q2.submitTimeTOD,
@@ -965,7 +925,6 @@ export default class VideoSet extends Component<Props, State> {
         Subject: subjectId,
         VideoName: answers[0].lipid.value,
         ExperimentType: answers[0].lipid.q1.experimentType,
-        TimeStamp: answers[0].lipid.q3.timestamp,
         ModalPopupTOD: answers[0].lipid.q3.modalPopupTOD,
         ModalPopupTOV: answers[0].lipid.q3.modalPopupTOV,
         SubmitTimeTOD: answers[0].lipid.q3.submitTimeTOD,
@@ -977,7 +936,6 @@ export default class VideoSet extends Component<Props, State> {
         Subject: subjectId,
         VideoName: answers[0].lipid.value,
         ExperimentType: answers[0].lipid.q1.experimentType,
-        TimeStamp: answers[0].lipid.q4.timestamp,
         ModalPopupTOD: answers[0].lipid.q4.modalPopupTOD,
         ModalPopupTOV: answers[0].lipid.q4.modalPopupTOV,
         SubmitTimeTOD: answers[0].lipid.q4.submitTimeTOD,
@@ -989,7 +947,6 @@ export default class VideoSet extends Component<Props, State> {
         Subject: subjectId,
         VideoName: answers[0].bip.value,
         ExperimentType: answers[0].bip.q1.experimentType,
-        TimeStamp: answers[0].bip.q1.timestamp,
         ModalPopupTOD: answers[0].bip.q1.modalPopupTOD,
         ModalPopupTOV: answers[0].bip.q1.modalPopupTOV,
         SubmitTimeTOD: answers[0].bip.q1.submitTimeTOD,
@@ -1001,7 +958,6 @@ export default class VideoSet extends Component<Props, State> {
         Subject: subjectId,
         VideoName: answers[0].bip.value,
         ExperimentType: answers[0].bip.q2.experimentType,
-        TimeStamp: answers[0].bip.q2.timestamp,
         ModalPopupTOD: answers[0].bip.q2.modalPopupTOD,
         ModalPopupTOV: answers[0].bip.q2.modalPopupTOV,
         SubmitTimeTOD: answers[0].bip.q2.submitTimeTOD,
@@ -1013,7 +969,6 @@ export default class VideoSet extends Component<Props, State> {
         Subject: subjectId,
         VideoName: answers[0].bip.value,
         ExperimentType: answers[0].bip.q1.experimentType,
-        TimeStamp: answers[0].bip.q3.timestamp,
         ModalPopupTOD: answers[0].bip.q3.modalPopupTOD,
         ModalPopupTOV: answers[0].bip.q3.modalPopupTOV,
         SubmitTimeTOD: answers[0].bip.q3.submitTimeTOD,
@@ -1025,7 +980,6 @@ export default class VideoSet extends Component<Props, State> {
         Subject: subjectId,
         VideoName: answers[0].bip.value,
         ExperimentType: answers[0].bip.q1.experimentType,
-        TimeStamp: answers[0].bip.q4.timestamp,
         ModalPopupTOD: answers[0].bip.q4.modalPopupTOD,
         ModalPopupTOV: answers[0].bip.q4.modalPopupTOV,
         SubmitTimeTOD: answers[0].bip.q4.submitTimeTOD,
@@ -1037,7 +991,6 @@ export default class VideoSet extends Component<Props, State> {
         Subject: subjectId,
         VideoName: answers[0].insulin.value,
         ExperimentType: answers[0].insulin.q1.experimentType,
-        TimeStamp: answers[0].insulin.q1.timestamp,
         ModalPopupTOD: answers[0].insulin.q1.modalPopupTOD,
         ModalPopupTOV: answers[0].insulin.q1.modalPopupTOV,
         SubmitTimeTOD: answers[0].insulin.q1.submitTimeTOD,
@@ -1049,7 +1002,6 @@ export default class VideoSet extends Component<Props, State> {
         Subject: subjectId,
         VideoName: answers[0].insulin.value,
         ExperimentType: answers[0].insulin.q2.experimentType,
-        TimeStamp: answers[0].insulin.q2.timestamp,
         ModalPopupTOD: answers[0].insulin.q2.modalPopupTOD,
         ModalPopupTOV: answers[0].insulin.q2.modalPopupTOV,
         SubmitTimeTOD: answers[0].insulin.q2.submitTimeTOD,
@@ -1061,7 +1013,6 @@ export default class VideoSet extends Component<Props, State> {
         Subject: subjectId,
         VideoName: answers[0].insulin.value,
         ExperimentType: answers[0].insulin.q1.experimentType,
-        TimeStamp: answers[0].insulin.q3.timestamp,
         ModalPopupTOD: answers[0].insulin.q3.modalPopupTOD,
         ModalPopupTOV: answers[0].insulin.q3.modalPopupTOV,
         SubmitTimeTOD: answers[0].insulin.q3.submitTimeTOD,
@@ -1073,7 +1024,6 @@ export default class VideoSet extends Component<Props, State> {
         Subject: subjectId,
         VideoName: answers[0].insulin.value,
         ExperimentType: answers[0].insulin.q1.experimentType,
-        TimeStamp: answers[0].insulin.q4.timestamp,
         ModalPopupTOD: answers[0].insulin.q4.modalPopupTOD,
         ModalPopupTOV: answers[0].insulin.q4.modalPopupTOV,
         SubmitTimeTOD: answers[0].insulin.q4.submitTimeTOD,
