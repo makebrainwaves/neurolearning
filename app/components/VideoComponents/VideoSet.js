@@ -42,7 +42,6 @@ interface Props {
 const controlPauseTime = 4;
 const rollBackTime = 2;
 
-const questionsArray = require('../../questions/questionsArray');
 const nichesQ = require('../../questions/NichesQuestions.js');
 const bipQ = require('../../questions/BipQuestions.js');
 const lipidQ = require('../../questions/LipidQuestions.js');
@@ -53,7 +52,7 @@ const nichesVideo =
 const lipidVideo =
   'http://localhost:1212/dist/2ab8ce87a09d1d6b7303006753ca0251.mp4';
 const bipVideo =
-  'http://localhost:1212/dist/a6e5c47df7b77a974f47cce5b094f90c.mp4';
+  'http://localhost:1212/dist/0b30e12cf7d23e654b6d6c306bd13618.mp4';
 const insulinVideo =
   'http://localhost:1212/dist/a6e5c47df7b77a974f47cce5b094f90c.mp4';
 
@@ -65,12 +64,14 @@ export default class VideoSet extends Component<Props, State> {
   constructor(props) {
     super(props);
     let classifierEEGObservable = null;
+    /*
     console.log('check varrrr', this.props.location.state.firstVideo);
-    console.log('your eeg osevabe', props.location.state.classifierType);
+    console.log('your eeg observable', props.location.state.classifierType);
     console.log(
       'you rawEEGObservable state',
       props.location.state.rawEEGObservable
     );
+    */
     if (props.location.state.classifierType === 'alpha') {
       classifierEEGObservable = createAlphaClassifierObservable(
         props.location.state.rawEEGObservable
@@ -96,7 +97,6 @@ export default class VideoSet extends Component<Props, State> {
       firstOption: '',
       secondOption: '',
       thirdOption: '',
-      videoName: '',
       answers: [
         {
           niches: {
@@ -226,6 +226,7 @@ export default class VideoSet extends Component<Props, State> {
       videoName: this.getVideoName(this.props.location.state.firstVideo)
     });
   }
+
   componentDidMount() {
     // Might be able to subscribe to these guys in constructor, but I've always done it in componentDidMount
     if (this.props.location.state.firstVideoType === 'experimental') {
@@ -243,33 +244,15 @@ export default class VideoSet extends Component<Props, State> {
       modalIsOpen: false,
       obscureButton: true
     });
+    this.playVideo();
   };
 
   closeFinalModal = () => {
-    if (this.state.currentVideo === this.props.location.state.firstVideo) {
-      this.setState({
-        currentVideo: this.props.location.state.secondVideo,
-        questionSet: this.getQuestionSet(this.props.location.state.secondVideo)
-      });
-    } else if (
-      this.state.currentVideo === this.props.location.state.secondVideo
-    ) {
-      this.setState({
-        currentVideo: this.props.location.state.thirdVideo,
-        questionSet: this.getQuestionSet(this.props.location.state.thirdVideo)
-      });
-    } else if (
-      this.state.currentVideo === this.props.location.state.thirdVideo
-    ) {
-      this.setState({
-        currentVideo: this.props.location.state.fourthVideo,
-        questionSet: this.getQuestionSet(this.props.location.state.fourthVideo)
-      });
-    }
+    this.moveAlongVideoSequence();
     this.setState({ finalModalIsOpen: false });
   };
 
-  playVideo = videoSequence => {
+  playVideo = () => {
     const videoRef = this.getVideoRef;
     videoRef.play();
     this.setState({ isRunning: true });
@@ -300,34 +283,15 @@ export default class VideoSet extends Component<Props, State> {
     }
   };
 
-  nextQuestion = key => {
-    this.pauseVideo();
-    this.setState({ modalIsOpen: true });
-
-    for (let i = 0; i < questionsArray.length; i++) {
-      if (questionsArray[i].key === key) {
-        this.setState({
-          questionNumber: questionsArray[i].name,
-          questionText: questionsArray[i].question,
-          firstOption: questionsArray[i].option1,
-          secondOption: questionsArray[i].option2,
-          thirdOption: questionsArray[i].option3,
-          fourthOption: questionsArray[i].option4,
-          fifthOption: questionsArray[i].option5
-        });
-      }
-    }
-  };
-
-  getVideoName(video) {
+  getVideoName(currentVideo) {
     let videoNameTemp = '';
-    if (video === nichesVideo) {
+    if (currentVideo === nichesVideo) {
       videoNameTemp = 'niches';
-    } else if (video === lipidVideo) {
+    } else if (currentVideo === lipidVideo) {
       videoNameTemp = 'lipid';
-    } else if (video === bipVideo) {
+    } else if (currentVideo === bipVideo) {
       videoNameTemp = 'bip';
-    } else if (video === insulinVideo) {
+    } else if (currentVideo === insulinVideo) {
       videoNameTemp = 'insulin';
     } else {
       videoNameTemp = '';
@@ -341,25 +305,19 @@ export default class VideoSet extends Component<Props, State> {
 
   getQuestionSet(video) {
     let questionSetTemp = [];
-    let videoNameTemp = '';
     if (video === nichesVideo) {
       questionSetTemp = nichesQ;
-      videoNameTemp = 'niches';
     } else if (video === lipidVideo) {
       questionSetTemp = lipidQ;
-      videoNameTemp = 'lipid';
     } else if (video === bipVideo) {
       questionSetTemp = bipQ;
-      videoNameTemp = 'bip';
     } else if (video === insulinVideo) {
       questionSetTemp = insulinQ;
-      videoNameTemp = 'insulin';
     } else {
       questionSetTemp = null;
     }
     this.setState({
-      questionSet: questionSetTemp,
-      videoName: videoNameTemp
+      questionSet: questionSetTemp
     });
 
     return questionSetTemp;
@@ -369,7 +327,9 @@ export default class VideoSet extends Component<Props, State> {
     const {
       question1AlreadyShown,
       question2AlreadyShown,
-      isRunning
+      isRunning,
+      currentVideo,
+      videoName
     } = this.state;
 
     const vidCurrTime = document.getElementById('vidID').currentTime;
@@ -394,85 +354,85 @@ export default class VideoSet extends Component<Props, State> {
     } else {
       // control:
       switch (true) {
-        case this.state.videoName === 'niches' &&
+        case videoName === 'niches' &&
           (4 <= vidCurrTime && vidCurrTime < 8) &&
           this.state.answers[0].niches.q1.answer === '':
           this.newNextQuestion(1);
           break;
-        case this.state.videoName === 'niches' &&
+        case videoName === 'niches' &&
           (8 <= vidCurrTime && vidCurrTime < 10) &&
           this.state.answers[0].niches.q2.answer === '':
           this.newNextQuestion(2);
           break;
-        case this.state.videoName === 'niches' &&
+        case videoName === 'niches' &&
           (10 <= vidCurrTime && vidCurrTime < 12) &&
           this.state.answers[0].niches.q3.answer === '':
           this.newNextQuestion(3);
           break;
-        case this.state.videoName === 'niches' &&
+        case videoName === 'niches' &&
           (12 <= vidCurrTime && vidCurrTime < 14) &&
           this.state.answers[0].niches.q4.answer === '':
           this.newNextQuestion(4);
           break;
 
-        case this.state.videoName === 'lipid' &&
+        case videoName === 'lipid' &&
           (4 <= vidCurrTime && vidCurrTime < 8) &&
           this.state.answers[0].lipid.q1.answer === '':
           this.newNextQuestion(1);
           break;
-        case this.state.videoName === 'lipid' &&
+        case videoName === 'lipid' &&
           (8 <= vidCurrTime && vidCurrTime < 10) &&
           this.state.answers[0].lipid.q2.answer === '':
           this.newNextQuestion(2);
           break;
-        case this.state.videoName === 'lipid' &&
+        case videoName === 'lipid' &&
           (10 <= vidCurrTime && vidCurrTime < 12) &&
           this.state.answers[0].lipid.q3.answer === '':
           this.newNextQuestion(3);
           break;
-        case this.state.videoName === 'lipid' &&
+        case videoName === 'lipid' &&
           (12 <= vidCurrTime && vidCurrTime < 14) &&
           this.state.answers[0].lipid.q4.answer === '':
           this.newNextQuestion(4);
           break;
 
-        case this.state.videoName === 'bip' &&
+        case videoName === 'bip' &&
           (4 <= vidCurrTime && vidCurrTime < 8) &&
           this.state.answers[0].bip.q1.answer === '':
           this.newNextQuestion(1);
           break;
-        case this.state.videoName === 'bip' &&
+        case videoName === 'bip' &&
           (8 <= vidCurrTime && vidCurrTime < 10) &&
           this.state.answers[0].bip.q2.answer === '':
           this.newNextQuestion(2);
           break;
-        case this.state.videoName === 'bip' &&
+        case videoName === 'bip' &&
           (10 <= vidCurrTime && vidCurrTime < 12) &&
           this.state.answers[0].bip.q3.answer === '':
           this.newNextQuestion(3);
           break;
-        case this.state.videoName === 'bip' &&
+        case videoName === 'bip' &&
           (12 <= vidCurrTime && vidCurrTime < 14) &&
           this.state.answers[0].bip.q4.answer === '':
           this.newNextQuestion(4);
           break;
 
-        case this.state.videoName === 'insulin' &&
+        case videoName === 'insulin' &&
           (4 <= vidCurrTime && vidCurrTime < 8) &&
           this.state.answers[0].insulin.q1.answer === '':
           this.newNextQuestion(1);
           break;
-        case this.state.videoName === 'insulin' &&
+        case videoName === 'insulin' &&
           (8 <= vidCurrTime && vidCurrTime < 10) &&
           this.state.answers[0].insulin.q2.answer === '':
           this.newNextQuestion(2);
           break;
-        case this.state.videoName === 'insulin' &&
+        case videoName === 'insulin' &&
           (10 <= vidCurrTime && vidCurrTime < 12) &&
           this.state.answers[0].insulin.q3.answer === '':
           this.newNextQuestion(3);
           break;
-        case this.state.videoName === 'insulin' &&
+        case videoName === 'insulin' &&
           (12 <= vidCurrTime && vidCurrTime < 14) &&
           this.state.answers[0].insulin.q4.answer === '':
           this.newNextQuestion(4);
@@ -483,7 +443,33 @@ export default class VideoSet extends Component<Props, State> {
     }
   };
 
-  generateCsvs = videoSequence => {
+  moveAlongVideoSequence() {
+    if (this.state.currentVideo === this.props.location.state.firstVideo) {
+      this.setState({
+        currentVideo: this.props.location.state.secondVideo,
+        questionSet: this.getQuestionSet(this.props.location.state.secondVideo),
+        videoName: this.getVideoName(this.props.location.state.secondVideo)
+      });
+    } else if (
+      this.state.currentVideo === this.props.location.state.secondVideo
+    ) {
+      this.setState({
+        currentVideo: this.props.location.state.thirdVideo,
+        questionSet: this.getQuestionSet(this.props.location.state.thirdVideo),
+        videoName: this.getVideoName(this.props.location.state.thirdVideo)
+      });
+    } else if (
+      this.state.currentVideo === this.props.location.state.thirdVideo
+    ) {
+      this.setState({
+        currentVideo: this.props.location.state.fourthVideo,
+        questionSet: this.getQuestionSet(this.props.location.state.fourthVideo),
+        videoName: this.getVideoName(this.props.location.state.fourthVideo)
+      });
+    }
+  }
+
+  endOfVideo = () => {
     this.setState({ finalModalIsOpen: true });
   };
 
@@ -895,14 +881,14 @@ export default class VideoSet extends Component<Props, State> {
             poster="../app/components/VideoComponents/bkbx.jpg"
             controls
             onTimeUpdate={this.onTimeUpdate}
-            onEnded={() => this.generateCsvs(videoSequence)}
+            onEnded={() => this.endOfVideo()}
           >
             <track kind="captions" />
           </video>
           <div className={styles.btnGroup}>
             <Button
               className={styles.btn}
-              onClick={() => this.playVideo(videoSequence)}
+              onClick={() => this.playVideo()}
               data-tclass="btn"
               type="button"
             >
