@@ -897,25 +897,6 @@ export default class VideoSet extends Component<Props, State> {
       fourthVideoType
     } = state;
 
-    const videoSequence = [
-      {
-        key: 'v1',
-        value: firstVideo
-      },
-      {
-        key: 'v2',
-        value: secondVideo
-      },
-      {
-        key: 'v3',
-        value: thirdVideo
-      },
-      {
-        key: 'v4',
-        value: fourthVideo
-      }
-    ];
-
     const answersCsv = [
       {
         Subject: subjectId,
