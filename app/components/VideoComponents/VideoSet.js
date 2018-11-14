@@ -275,66 +275,65 @@ export default class VideoSet extends Component<Props, State> {
     const { questionNumber } = this.state;
     const answers = this.state.answers;
     const time = new Date().getTime();
-    const date = new Date(time).toString();
 
     answers.forEach(answer => {
       if (this.state.videoName === 'niches') {
         if (questionNumber === 1) {
-          answer.niches.q1.submitTimeTOD = date;
+          answer.niches.q1.submitTimeTOD = time;
         }
         if (questionNumber === 2) {
-          answer.niches.q2.submitTimeTOD = date;
+          answer.niches.q2.submitTimeTOD = time;
         }
         if (questionNumber === 3) {
-          answer.niches.q3.submitTimeTOD = date;
+          answer.niches.q3.submitTimeTOD = time;
         }
         if (questionNumber === 4) {
-          answer.niches.q4.submitTimeTOD = date;
+          answer.niches.q4.submitTimeTOD = time;
         }
       }
 
       if (this.state.videoName === 'lipid') {
         if (questionNumber === 1) {
-          answer.lipid.q1.submitTimeTOD = date;
+          answer.lipid.q1.submitTimeTOD = time;
         }
         if (questionNumber === 2) {
-          answer.lipid.q2.submitTimeTOD = date;
+          answer.lipid.q2.submitTimeTOD = time;
         }
         if (questionNumber === 3) {
-          answer.lipid.q3.submitTimeTOD = date;
+          answer.lipid.q3.submitTimeTOD = time;
         }
         if (questionNumber === 4) {
-          answer.lipid.q4.submitTimeTOD = date;
+          answer.lipid.q4.submitTimeTOD = time;
         }
       }
 
       if (this.state.videoName === 'bip') {
         if (questionNumber === 1) {
-          answer.bip.q1.submitTimeTOD = date;
+          answer.bip.q1.submitTimeTOD = time;
         }
         if (questionNumber === 2) {
-          answer.bip.q2.submitTimeTOD = date;
+          answer.bip.q2.submitTimeTOD = time;
         }
         if (questionNumber === 3) {
-          answer.bip.q3.submitTimeTOD = date;
+          answer.bip.q3.submitTimeTOD = time;
         }
         if (questionNumber === 4) {
-          answer.bip.q4.submitTimeTOD = date;
+          answer.bip.q4.submitTimeTOD = time;
         }
       }
 
       if (this.state.videoName === 'insulin') {
         if (questionNumber === 1) {
-          answer.insulin.q1.submitTimeTOD = date;
+          answer.insulin.q1.submitTimeTOD = time;
         }
         if (questionNumber === 2) {
-          answer.insulin.q2.submitTimeTOD = date;
+          answer.insulin.q2.submitTimeTOD = time;
         }
         if (questionNumber === 3) {
-          answer.insulin.q3.submitTimeTOD = date;
+          answer.insulin.q3.submitTimeTOD = time;
         }
         if (questionNumber === 4) {
-          answer.insulin.q4.submitTimeTOD = date;
+          answer.insulin.q4.submitTimeTOD = time;
         }
       }
     });
@@ -368,77 +367,77 @@ export default class VideoSet extends Component<Props, State> {
   setModalTimes = (questionNumber, vidCurrTime) => {
     const answers = this.state.answers;
     const time = new Date().getTime();
-    const date = new Date(time).toString();
+
     answers.forEach(answer => {
       if (this.state.videoName === 'niches') {
         if (questionNumber === 1) {
-          answer.niches.q1.modalPopupTOD = date;
+          answer.niches.q1.modalPopupTOD = time;
           answer.niches.q1.modalPopupTOV = vidCurrTime;
         }
         if (questionNumber === 2) {
-          answer.niches.q2.modalPopupTOD = date;
+          answer.niches.q2.modalPopupTOD = time;
           answer.niches.q2.modalPopupTOV = vidCurrTime;
         }
         if (questionNumber === 3) {
-          answer.niches.q3.modalPopupTOD = date;
+          answer.niches.q3.modalPopupTOD = time;
           answer.niches.q3.modalPopupTOV = vidCurrTime;
         }
         if (questionNumber === 4) {
-          answer.niches.q4.modalPopupTOD = date;
+          answer.niches.q4.modalPopupTOD = time;
           answer.niches.q4.modalPopupTOV = vidCurrTime;
         }
       }
       if (this.state.videoName === 'lipid') {
         if (questionNumber === 1) {
-          answer.lipid.q1.modalPopupTOD = date;
+          answer.lipid.q1.modalPopupTOD = time;
           answer.lipid.q1.modalPopupTOV = vidCurrTime;
         }
         if (questionNumber === 2) {
-          answer.lipid.q2.modalPopupTOD = date;
+          answer.lipid.q2.modalPopupTOD = time;
           answer.lipid.q2.modalPopupTOV = vidCurrTime;
         }
         if (questionNumber === 3) {
-          answer.lipid.q3.modalPopupTOD = date;
+          answer.lipid.q3.modalPopupTOD = time;
           answer.lipid.q3.modalPopupTOV = vidCurrTime;
         }
         if (questionNumber === 4) {
-          answer.lipid.q4.modalPopupTOD = date;
+          answer.lipid.q4.modalPopupTOD = time;
           answer.lipid.q4.modalPopupTOV = vidCurrTime;
         }
       }
       if (this.state.videoName === 'bip') {
         if (questionNumber === 1) {
-          answer.bip.q1.modalPopupTOD = date;
+          answer.bip.q1.modalPopupTOD = time;
           answer.bip.q1.modalPopupTOV = vidCurrTime;
         }
         if (questionNumber === 2) {
-          answer.bip.q2.modalPopupTOD = date;
+          answer.bip.q2.modalPopupTOD = time;
           answer.bip.q2.modalPopupTOV = vidCurrTime;
         }
         if (questionNumber === 3) {
-          answer.bip.q3.modalPopupTOD = date;
+          answer.bip.q3.modalPopupTOD = time;
           answer.bip.q3.modalPopupTOV = vidCurrTime;
         }
         if (questionNumber === 4) {
-          answer.bip.q4.modalPopupTOD = date;
+          answer.bip.q4.modalPopupTOD = time;
           answer.bip.q4.modalPopupTOV = vidCurrTime;
         }
       }
       if (this.state.videoName === 'insulin') {
         if (questionNumber === 1) {
-          answer.insulin.q1.modalPopupTOD = date;
+          answer.insulin.q1.modalPopupTOD = time;
           answer.insulin.q1.modalPopupTOV = vidCurrTime;
         }
         if (questionNumber === 2) {
-          answer.insulin.q2.modalPopupTOD = date;
+          answer.insulin.q2.modalPopupTOD = time;
           answer.insulin.q2.modalPopupTOV = vidCurrTime;
         }
         if (questionNumber === 3) {
-          answer.insulin.q3.modalPopupTOD = date;
+          answer.insulin.q3.modalPopupTOD = time;
           answer.insulin.q3.modalPopupTOV = vidCurrTime;
         }
         if (questionNumber === 4) {
-          answer.insulin.q4.modalPopupTOD = date;
+          answer.insulin.q4.modalPopupTOD = time;
           answer.insulin.q4.modalPopupTOV = vidCurrTime;
         }
       }
