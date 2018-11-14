@@ -47,14 +47,10 @@ const bipQ = require('../../questions/BipQuestions.js');
 const lipidQ = require('../../questions/LipidQuestions.js');
 const insulinQ = require('../../questions/InsulinQuestions.js');
 
-const nichesVideo =
-  'http://localhost:1212/dist/0aaa1f67050e199bf65b346ed1e6bddf.mp4';
-const lipidVideo =
-  'http://localhost:1212/dist/2ab8ce87a09d1d6b7303006753ca0251.mp4';
-const bipVideo =
-  'http://localhost:1212/dist/0b30e12cf7d23e654b6d6c306bd13618.mp4';
-const insulinVideo =
-  'http://localhost:1212/dist/a6e5c47df7b77a974f47cce5b094f90c.mp4';
+const nichesVideo = './dist/0aaa1f67050e199bf65b346ed1e6bddf.mp4';
+const lipidVideo = './dist/2ab8ce87a09d1d6b7303006753ca0251.mp4';
+const bipVideo = './dist/0b30e12cf7d23e654b6d6c306bd13618.mp4';
+const insulinVideo = './dist/a6e5c47df7b77a974f47cce5b094f90c.mp4';
 
 export default class VideoSet extends Component<Props, State> {
   props: Props;
