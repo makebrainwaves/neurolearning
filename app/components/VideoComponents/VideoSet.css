@@ -24,10 +24,8 @@ h3 {
   will-change: transform, opacity;
 }
 
-.video {
-}
-
 .modal {
+  max-height: 540px;
   height: 100%;
   width: 100%;
   margin: 0;

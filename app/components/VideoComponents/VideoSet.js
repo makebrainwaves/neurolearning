@@ -1100,12 +1100,6 @@ export default class VideoSet extends Component<Props, State> {
             <i className="fa fa-arrow-left fa-2x" />
           </Link>
         </div>
-        <h3>Video Container</h3>
-        <Button>
-          <CSVLink data={answersCsv} filename="answers.csv">
-            Download Subject Answers
-          </CSVLink>
-        </Button>
         <div>
           <video
             id="vidID"
@@ -1114,8 +1108,8 @@ export default class VideoSet extends Component<Props, State> {
             }}
             className={styles.video}
             src={currentVideo}
-            width="60%"
-            height="60%"
+            width="85%"
+            height="65%"
             poster="../app/components/VideoComponents/bkbx.jpg"
             controls
             onTimeUpdate={this.onTimeUpdate}
@@ -1142,7 +1136,11 @@ export default class VideoSet extends Component<Props, State> {
             </Button>
           </div>
         </div>
-
+        <Button>
+          <CSVLink data={answersCsv} filename="answers.csv">
+            Download Subject Answers
+          </CSVLink>
+        </Button>
         <Modal
           open={this.state.modalIsOpen}
           className={styles.modal}
