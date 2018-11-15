@@ -48,7 +48,7 @@ const lipidQ = require('../../questions/LipidQuestions.js');
 const insulinQ = require('../../questions/InsulinQuestions.js');
 
 const nichesVideo =
-  'http://localhost:1212/dist/0aaa1f67050e199bf65b346ed1e6bddf.mp4';
+  'http://localhost:1212/dist/67182cb1e21cc5fd95d19a30c3c43001.mp4';
 const lipidVideo =
   'http://localhost:1212/dist/2ab8ce87a09d1d6b7303006753ca0251.mp4';
 const bipVideo =
@@ -475,6 +475,7 @@ export default class VideoSet extends Component<Props, State> {
   };
 
   getVideoName(currentVideo) {
+    console.log('getVideoName currentVideo', currentVideo);
     let videoNameTemp = '';
     if (currentVideo === nichesVideo) {
       videoNameTemp = 'niches';

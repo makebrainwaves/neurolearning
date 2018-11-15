@@ -21,7 +21,7 @@ import routes from '../../constants/routes.json';
 import styles from './Home.css';
 import { createEEGObservable } from '../../utils/eeg';
 
-import videoSrc1 from '../Bip_KC_Trim.mp4';
+import videoSrc1 from '../Niches_KC.mp4';
 import videoSrc2 from '../Lipid_KZ.mp4';
 import videoSrc3 from '../Bip_KC.mp4';
 import videoSrc4 from '../Insulin_KZ.mp4';
