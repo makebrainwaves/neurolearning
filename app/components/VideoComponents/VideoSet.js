@@ -46,19 +46,23 @@ const firstRandomTimePeriod = Math.floor(Math.random() * 40) + 80;
 const secondRandomTimePeriod = Math.floor(Math.random() * 60) + 120;
 const thirdRandomTimePeriod = Math.floor(Math.random() * 60) + 180;
 const fourthRandomTimePeriod = Math.floor(Math.random() * 60) + 240;
+const fifthRandomTimePeriod = Math.floor(Math.random() * 60) + 300;
+const sixthRandomTimePeriod = Math.floor(Math.random() * 60) + 360;
+const seventhRandomTimePeriod = Math.floor(Math.random() * 60) + 420;
 
 console.log('firstRandomTimePeriod', firstRandomTimePeriod);
-
 console.log('secondRandomTimePeriod', secondRandomTimePeriod);
-
 console.log('thirdRandomTimePeriod', thirdRandomTimePeriod);
-
 console.log('fourthRandomTimePeriod', fourthRandomTimePeriod);
+console.log('fifthRandomTimePeriod', fifthRandomTimePeriod);
+console.log('sixthRandomTimePeriod', sixthRandomTimePeriod);
 
 const nichesQ = require('../../questions/NichesQuestions.js');
 const bipQ = require('../../questions/BipQuestions.js');
 const lipidQ = require('../../questions/LipidQuestions.js');
 const insulinQ = require('../../questions/InsulinQuestions.js');
+
+const answersArray = require('../../constants/Answers.js');
 
 const nichesVideo =
   'http://localhost:1212/dist/67182cb1e21cc5fd95d19a30c3c43001.mp4';
@@ -109,6 +113,8 @@ export default class VideoSet extends Component<Props, State> {
       nichesSecondMinuteAnswered: false,
       nichesThirdMinuteAnswered: false,
       nichesFourthMinuteAnswered: false,
+      nichesFifthMinuteAnswered: false,
+      nichesSixthMinuteAnswered: false,
       nichesSequenceNumber: 1,
       lipidSequenceNumber: 2,
       bipSequenceNumber: 3,
@@ -118,146 +124,7 @@ export default class VideoSet extends Component<Props, State> {
       firstOption: '',
       secondOption: '',
       thirdOption: '',
-      answers: [
-        {
-          niches: {
-            q1: {
-              experimentType: '',
-              modalPopupTOD: '',
-              modalPopupTOV: '',
-              submitTimeTOD: '',
-              engagement: '',
-              answer: ''
-            },
-            q2: {
-              experimentType: '',
-              modalPopupTOD: '',
-              modalPopupTOV: '',
-              submitTimeTOD: '',
-              engagement: '',
-              answer: ''
-            },
-            q3: {
-              experimentType: '',
-              modalPopupTOD: '',
-              modalPopupTOV: '',
-              submitTimeTOD: '',
-              engagement: '',
-              answer: ''
-            },
-            q4: {
-              experimentType: '',
-              modalPopupTOD: '',
-              modalPopupTOV: '',
-              submitTimeTOD: '',
-              engagement: '',
-              answer: ''
-            }
-          },
-          lipid: {
-            q1: {
-              experimentType: '',
-              modalPopupTOD: '',
-              modalPopupTOV: '',
-              submitTimeTOD: '',
-              engagement: '',
-              answer: ''
-            },
-            q2: {
-              experimentType: '',
-              modalPopupTOD: '',
-              modalPopupTOV: '',
-              submitTimeTOD: '',
-              engagement: '',
-              answer: ''
-            },
-            q3: {
-              experimentType: '',
-              modalPopupTOD: '',
-              modalPopupTOV: '',
-              submitTimeTOD: '',
-              engagement: '',
-              answer: ''
-            },
-            q4: {
-              experimentType: '',
-              modalPopupTOD: '',
-              modalPopupTOV: '',
-              submitTimeTOD: '',
-              engagement: '',
-              answer: ''
-            }
-          },
-          bip: {
-            q1: {
-              experimentType: '',
-              modalPopupTOD: '',
-              modalPopupTOV: '',
-              submitTimeTOD: '',
-              engagement: '',
-              answer: ''
-            },
-            q2: {
-              experimentType: '',
-              modalPopupTOD: '',
-              modalPopupTOV: '',
-              submitTimeTOD: '',
-              engagement: '',
-              answer: ''
-            },
-            q3: {
-              experimentType: '',
-              modalPopupTOD: '',
-              modalPopupTOV: '',
-              submitTimeTOD: '',
-              engagement: '',
-              answer: ''
-            },
-            q4: {
-              experimentType: '',
-              modalPopupTOD: '',
-              modalPopupTOV: '',
-              submitTimeTOD: '',
-              engagement: '',
-              answer: ''
-            }
-          },
-          insulin: {
-            q1: {
-              experimentType: '',
-              modalPopupTOD: '',
-              modalPopupTOV: '',
-              submitTimeTOD: '',
-              engagement: '',
-              answer: ''
-            },
-            q2: {
-              experimentType: '',
-              modalPopupTOD: '',
-              modalPopupTOV: '',
-              submitTimeTOD: '',
-              engagement: '',
-              answer: ''
-            },
-            q3: {
-              experimentType: '',
-              modalPopupTOD: '',
-              modalPopupTOV: '',
-              submitTimeTOD: '',
-              engagement: '',
-              answer: ''
-            },
-            q4: {
-              experimentType: '',
-              modalPopupTOD: '',
-              modalPopupTOV: '',
-              submitTimeTOD: '',
-              engagement: '',
-              answer: ''
-            }
-          }
-        }
-      ],
+      answers: answersArray,
       classifierEEGObservable,
       classifierScore: 0,
       classifierThreshold: 1.1,
@@ -301,67 +168,10 @@ export default class VideoSet extends Component<Props, State> {
     const { questionNumber } = this.state;
     const answers = this.state.answers;
     const time = new Date().getTime();
+    const qNumber = `q${questionNumber}`;
 
     answers.forEach(answer => {
-      if (this.state.videoName === 'niches') {
-        if (questionNumber === 1) {
-          answer.niches.q1.submitTimeTOD = time;
-        }
-        if (questionNumber === 2) {
-          answer.niches.q2.submitTimeTOD = time;
-        }
-        if (questionNumber === 3) {
-          answer.niches.q3.submitTimeTOD = time;
-        }
-        if (questionNumber === 4) {
-          answer.niches.q4.submitTimeTOD = time;
-        }
-      }
-
-      if (this.state.videoName === 'lipid') {
-        if (questionNumber === 1) {
-          answer.lipid.q1.submitTimeTOD = time;
-        }
-        if (questionNumber === 2) {
-          answer.lipid.q2.submitTimeTOD = time;
-        }
-        if (questionNumber === 3) {
-          answer.lipid.q3.submitTimeTOD = time;
-        }
-        if (questionNumber === 4) {
-          answer.lipid.q4.submitTimeTOD = time;
-        }
-      }
-
-      if (this.state.videoName === 'bip') {
-        if (questionNumber === 1) {
-          answer.bip.q1.submitTimeTOD = time;
-        }
-        if (questionNumber === 2) {
-          answer.bip.q2.submitTimeTOD = time;
-        }
-        if (questionNumber === 3) {
-          answer.bip.q3.submitTimeTOD = time;
-        }
-        if (questionNumber === 4) {
-          answer.bip.q4.submitTimeTOD = time;
-        }
-      }
-
-      if (this.state.videoName === 'insulin') {
-        if (questionNumber === 1) {
-          answer.insulin.q1.submitTimeTOD = time;
-        }
-        if (questionNumber === 2) {
-          answer.insulin.q2.submitTimeTOD = time;
-        }
-        if (questionNumber === 3) {
-          answer.insulin.q3.submitTimeTOD = time;
-        }
-        if (questionNumber === 4) {
-          answer.insulin.q4.submitTimeTOD = time;
-        }
-      }
+      answer[this.state.videoName][qNumber].submitTimeTOD = time;
     });
 
     this.setState({
@@ -393,80 +203,11 @@ export default class VideoSet extends Component<Props, State> {
   setModalTimes = (questionNumber, vidCurrTime) => {
     const answers = this.state.answers;
     const time = new Date().getTime();
+    const qNumberForModal = `q${questionNumber}`;
 
     answers.forEach(answer => {
-      if (this.state.videoName === 'niches') {
-        if (questionNumber === 1) {
-          answer.niches.q1.modalPopupTOD = time;
-          answer.niches.q1.modalPopupTOV = vidCurrTime;
-        }
-        if (questionNumber === 2) {
-          answer.niches.q2.modalPopupTOD = time;
-          answer.niches.q2.modalPopupTOV = vidCurrTime;
-        }
-        if (questionNumber === 3) {
-          answer.niches.q3.modalPopupTOD = time;
-          answer.niches.q3.modalPopupTOV = vidCurrTime;
-        }
-        if (questionNumber === 4) {
-          answer.niches.q4.modalPopupTOD = time;
-          answer.niches.q4.modalPopupTOV = vidCurrTime;
-        }
-      }
-      if (this.state.videoName === 'lipid') {
-        if (questionNumber === 1) {
-          answer.lipid.q1.modalPopupTOD = time;
-          answer.lipid.q1.modalPopupTOV = vidCurrTime;
-        }
-        if (questionNumber === 2) {
-          answer.lipid.q2.modalPopupTOD = time;
-          answer.lipid.q2.modalPopupTOV = vidCurrTime;
-        }
-        if (questionNumber === 3) {
-          answer.lipid.q3.modalPopupTOD = time;
-          answer.lipid.q3.modalPopupTOV = vidCurrTime;
-        }
-        if (questionNumber === 4) {
-          answer.lipid.q4.modalPopupTOD = time;
-          answer.lipid.q4.modalPopupTOV = vidCurrTime;
-        }
-      }
-      if (this.state.videoName === 'bip') {
-        if (questionNumber === 1) {
-          answer.bip.q1.modalPopupTOD = time;
-          answer.bip.q1.modalPopupTOV = vidCurrTime;
-        }
-        if (questionNumber === 2) {
-          answer.bip.q2.modalPopupTOD = time;
-          answer.bip.q2.modalPopupTOV = vidCurrTime;
-        }
-        if (questionNumber === 3) {
-          answer.bip.q3.modalPopupTOD = time;
-          answer.bip.q3.modalPopupTOV = vidCurrTime;
-        }
-        if (questionNumber === 4) {
-          answer.bip.q4.modalPopupTOD = time;
-          answer.bip.q4.modalPopupTOV = vidCurrTime;
-        }
-      }
-      if (this.state.videoName === 'insulin') {
-        if (questionNumber === 1) {
-          answer.insulin.q1.modalPopupTOD = time;
-          answer.insulin.q1.modalPopupTOV = vidCurrTime;
-        }
-        if (questionNumber === 2) {
-          answer.insulin.q2.modalPopupTOD = time;
-          answer.insulin.q2.modalPopupTOV = vidCurrTime;
-        }
-        if (questionNumber === 3) {
-          answer.insulin.q3.modalPopupTOD = time;
-          answer.insulin.q3.modalPopupTOV = vidCurrTime;
-        }
-        if (questionNumber === 4) {
-          answer.insulin.q4.modalPopupTOD = time;
-          answer.insulin.q4.modalPopupTOV = vidCurrTime;
-        }
-      }
+      answer[this.state.videoName][qNumberForModal].modalPopupTOD = time;
+      answer[this.state.videoName][qNumberForModal].modalPopupTOV = vidCurrTime;
     });
 
     this.setState({ answers });
@@ -543,6 +284,15 @@ export default class VideoSet extends Component<Props, State> {
 
     const vidCurrTime = document.getElementById('vidID').currentTime;
 
+    // Niches: 7:18 total time
+    // Lipid: 6:21 total time
+    // Bipedalism: 6:00 total time
+    // Insulin: 6:29 total time
+
+    // no questions for first 1 minute 20 seconds, 2 options
+    // returns a random integer between 1 and 3:
+    // Math.floor(Math.random() * 3) + 1;
+
     if (this.props.location.state.firstVideoType === 'experimental') {
       if (question1AlreadyShown) {
         if (this.state.classifierScore >= this.state.classifierThreshold) {
@@ -562,76 +312,114 @@ export default class VideoSet extends Component<Props, State> {
       }
     } else {
       // control:
+      console.log('vidCurrTime', vidCurrTime);
       switch (true) {
         case videoName === 'niches' &&
-          // Niches: 7:18 total time
-          // Lipid: 6:21 total time
-          // Bipedalism: 6:00 total time
-          // Insulin: 6:29 total time
-
-          // no questions for first 1 minute 20 seconds, 2 options
-          // returns a random integer between 1 and 3:
-          // Math.floor(Math.random() * 3) + 1;
-          // question for 1:20-2minutes:
+          // question for 1:20-2minutes: Check to see that vidCurrTime has surpassed random time selected
           firstRandomTimePeriod <= vidCurrTime &&
-          // this.state.answers[0].niches.q1.answer === '':
           !this.state.nichesFirstMinuteAnswered:
-          // returns either 1 or 2
-          console.log('vidCurrTime', vidCurrTime);
-          // let randomTimePeriod = (Math.floor(Math.random() * 40) + 80);
-          console.log('firstRandomTimePeriod', firstRandomTimePeriod);
-          // first = (Math.floor(Math.random() * 2) + 1);
-          // console.log("key first", first);
-          this.nextQuestion(Math.floor(Math.random() * 2) + 1, vidCurrTime);
-
+          if (80 <= firstRandomTimePeriod && firstRandomTimePeriod < 100) {
+            this.nextQuestion(1, vidCurrTime);
+          } else if (
+            100 <= firstRandomTimePeriod &&
+            firstRandomTimePeriod < 120
+          )
+            this.nextQuestion(2, vidCurrTime);
           break;
+
         case videoName === 'niches' &&
           // question for 2-3minutes:
           secondRandomTimePeriod <= vidCurrTime &&
           !this.state.nichesSecondMinuteAnswered:
-          console.log('vidCurrTime2', vidCurrTime);
-
-          console.log('secondRandomTimePeriod', secondRandomTimePeriod);
-
-          // second = (Math.floor(Math.random() * 3) + 3);
-          // console.log("key second", second);
-          // this.nextQuestion(first, vidCurrTime);
-          this.nextQuestion(Math.floor(Math.random() * 3) + 3, vidCurrTime);
-
+          if (120 <= secondRandomTimePeriod && secondRandomTimePeriod < 140) {
+            this.nextQuestion(3, vidCurrTime);
+          } else if (
+            140 <= secondRandomTimePeriod &&
+            secondRandomTimePeriod < 160
+          ) {
+            this.nextQuestion(4, vidCurrTime);
+          } else if (
+            160 <= secondRandomTimePeriod &&
+            secondRandomTimePeriod < 180
+          ) {
+            this.nextQuestion(5, vidCurrTime);
+          }
           break;
+
         case videoName === 'niches' &&
-          // question for 3-4minutes:
-          // (180 <= vidCurrTime && vidCurrTime < 240) &&
           // question for 3-4minutes:
           thirdRandomTimePeriod <= vidCurrTime &&
           !this.state.nichesThirdMinuteAnswered:
-          // returns 6 <= x <= 8
-          // third = (Math.floor(Math.random() * 3) + 6);
-          // console.log("key third", third);
-          this.nextQuestion(Math.floor(Math.random() * 3) + 6, vidCurrTime);
+          if (180 <= thirdRandomTimePeriod && thirdRandomTimePeriod < 200) {
+            this.nextQuestion(6, vidCurrTime);
+          } else if (
+            200 <= thirdRandomTimePeriod &&
+            thirdRandomTimePeriod < 220
+          ) {
+            this.nextQuestion(7, vidCurrTime);
+          } else if (
+            220 <= thirdRandomTimePeriod &&
+            thirdRandomTimePeriod < 240
+          ) {
+            this.nextQuestion(8, vidCurrTime);
+          }
           break;
+
         case videoName === 'niches' &&
-          // question for 4-5minutes:
-          // (240 <= vidCurrTime && vidCurrTime < 300) &&
           // question for 4-5minutes:
           fourthRandomTimePeriod <= vidCurrTime &&
           !this.state.nichesFourthMinuteAnswered:
-          // returns 9 <= x <= 11
-          this.nextQuestion(Math.floor(Math.random() * 3) + 9, vidCurrTime);
+          if (240 <= fourthRandomTimePeriod && fourthRandomTimePeriod < 260) {
+            this.nextQuestion(9, vidCurrTime);
+          } else if (
+            260 <= fourthRandomTimePeriod &&
+            fourthRandomTimePeriod < 280
+          ) {
+            this.nextQuestion(10, vidCurrTime);
+          } else if (
+            280 <= fourthRandomTimePeriod &&
+            fourthRandomTimePeriod < 300
+          ) {
+            this.nextQuestion(11, vidCurrTime);
+          }
           break;
+
         case videoName === 'niches' &&
           // question for 5-6minutes:
-          (300 <= vidCurrTime && vidCurrTime < 360) &&
-          this.state.answers[0].niches.q4.answer === '':
-          // returns 12 <= x <= 14
-          this.nextQuestion(Math.floor(Math.random() * 3) + 12, vidCurrTime);
+          fifthRandomTimePeriod <= vidCurrTime &&
+          !this.state.nichesFifthMinuteAnswered:
+          if (300 <= fifthRandomTimePeriod && fifthRandomTimePeriod < 320) {
+            this.nextQuestion(12, vidCurrTime);
+          } else if (
+            320 <= fifthRandomTimePeriod &&
+            fifthRandomTimePeriod < 340
+          ) {
+            this.nextQuestion(13, vidCurrTime);
+          } else if (
+            340 <= fifthRandomTimePeriod &&
+            fifthRandomTimePeriod < 360
+          ) {
+            this.nextQuestion(14, vidCurrTime);
+          }
           break;
+
         case videoName === 'niches' &&
           // question for 6-7minutes:
-          (360 <= vidCurrTime && vidCurrTime < 420) &&
-          this.state.answers[0].niches.q4.answer === '':
-          // returns 15 <= x <= 17
-          this.nextQuestion(Math.floor(Math.random() * 3) + 15, vidCurrTime);
+          sixthRandomTimePeriod <= vidCurrTime &&
+          !this.state.nichesSixthMinuteAnswered:
+          if (360 <= sixthRandomTimePeriod && sixthRandomTimePeriod < 380) {
+            this.nextQuestion(15, vidCurrTime);
+          } else if (
+            380 <= sixthRandomTimePeriod &&
+            sixthRandomTimePeriod < 400
+          ) {
+            this.nextQuestion(16, vidCurrTime);
+          } else if (
+            400 <= sixthRandomTimePeriod &&
+            sixthRandomTimePeriod < 420
+          ) {
+            this.nextQuestion(17, vidCurrTime);
+          }
           break;
 
         case videoName === 'lipid' &&
@@ -734,64 +522,11 @@ export default class VideoSet extends Component<Props, State> {
 
   handleEngagement(q, e) {
     const answers = this.state.answers;
+    const qNumberForEngagement = `q${q.questionNumber}`;
 
     answers.forEach(answer => {
-      if (this.state.videoName === 'niches') {
-        if (q.questionNumber === 1) {
-          answer.niches.q1.engagement = e.target.value;
-        }
-        if (q.questionNumber === 2) {
-          answer.niches.q2.engagement = e.target.value;
-        }
-        if (q.questionNumber === 3) {
-          answer.niches.q3.engagement = e.target.value;
-        }
-        if (q.questionNumber === 4) {
-          answer.niches.q4.engagement = e.target.value;
-        }
-      }
-      if (this.state.videoName === 'lipid') {
-        if (q.questionNumber === 1) {
-          answer.lipid.q1.engagement = e.target.value;
-        }
-        if (q.questionNumber === 2) {
-          answer.lipid.q2.engagement = e.target.value;
-        }
-        if (q.questionNumber === 3) {
-          answer.lipid.q3.engagement = e.target.value;
-        }
-        if (q.questionNumber === 4) {
-          answer.lipid.q4.engagement = e.target.value;
-        }
-      }
-      if (this.state.videoName === 'bip') {
-        if (q.questionNumber === 1) {
-          answer.bip.q1.engagement = e.target.value;
-        }
-        if (q.questionNumber === 2) {
-          answer.bip.q2.engagement = e.target.value;
-        }
-        if (q.questionNumber === 3) {
-          answer.bip.q3.engagement = e.target.value;
-        }
-        if (q.questionNumber === 4) {
-          answer.bip.q4.engagement = e.target.value;
-        }
-      }
-      if (this.state.videoName === 'insulin') {
-        if (q.questionNumber === 1) {
-          answer.insulin.q1.engagement = e.target.value;
-        }
-        if (q.questionNumber === 2) {
-          answer.insulin.q2.engagement = e.target.value;
-        }
-        if (q.questionNumber === 3) {
-          answer.insulin.q3.engagement = e.target.value;
-        }
-        if (q.questionNumber === 4) {
-          answer.insulin.q4.engagement = e.target.value;
-        }
-      }
+      answer[this.state.videoName][qNumberForEngagement].engagement =
+        e.target.value;
     });
 
     this.setState({ answers });
@@ -800,47 +535,60 @@ export default class VideoSet extends Component<Props, State> {
   handleQuestion(q, e) {
     this.setState({ obscureButton: false });
     const answers = this.state.answers;
+    const testValue = 'niches';
+    const questionNumber = `q${q.questionNumber}`;
 
     answers.forEach(answer => {
+      answer[this.state.videoName].value = this.state.videoName;
+      answer[this.state.videoName][questionNumber].experimentType = 'control';
+      answer[this.state.videoName][questionNumber].value = q.questionNumber;
+      answer[this.state.videoName][questionNumber].answer = e.target.value;
+
+      const variable = `${this.state.videoName}FirstMinuteAnswered`;
+      console.log('variable', variable);
+      console.log('this.state[variable]', this.state[variable]);
+
       if (this.state.videoName === 'niches') {
-        answer.niches.value = this.state.videoName;
-        if (q.questionNumber === 1) {
-          answer.niches.q1.experimentType = 'control';
-          answer.niches.q1.value = q.questionNumber;
-          answer.niches.q1.answer = e.target.value;
+        if (q.questionNumber === 1 || q.questionNumber === 2) {
           this.setState({ nichesFirstMinuteAnswered: true });
         }
-        if (q.questionNumber === 2) {
-          answer.niches.q2.experimentType = 'control';
-          answer.niches.q2.value = q.questionNumber;
-          answer.niches.q2.answer = e.target.value;
-          this.setState({ nichesFirstMinuteAnswered: true });
-        }
-        if (q.questionNumber === 3) {
-          answer.niches.q3.experimentType = 'control';
-          answer.niches.q3.value = q.questionNumber;
-          answer.niches.q3.answer = e.target.value;
+        if (
+          q.questionNumber === 3 ||
+          q.questionNumber === 4 ||
+          q.questionNumber === 5
+        ) {
           this.setState({ nichesSecondMinuteAnswered: true });
         }
-        if (q.questionNumber === 4) {
-          answer.niches.q4.experimentType = 'control';
-          answer.niches.q4.value = q.questionNumber;
-          answer.niches.q4.answer = e.target.value;
-          this.setState({ nichesSecondMinuteAnswered: true });
-        }
-        if (q.questionNumber === 5) {
-          answer.niches.q5.experimentType = 'control';
-          answer.niches.q5.value = q.questionNumber;
-          answer.niches.q5.answer = e.target.value;
-          this.setState({ nichesSecondMinuteAnswered: true });
-        }
-        if (q.questionNumber === 6) {
-          answer.niches.q6.experimentType = 'control';
-          answer.niches.q6.value = q.questionNumber;
-          answer.niches.q6.answer = e.target.value;
+        if (
+          q.questionNumber === 6 ||
+          q.questionNumber === 7 ||
+          q.questionNumber === 8
+        ) {
           this.setState({ nichesThirdMinuteAnswered: true });
         }
+        if (
+          q.questionNumber === 9 ||
+          q.questionNumber === 10 ||
+          q.questionNumber === 11
+        ) {
+          this.setState({ nichesFourthMinuteAnswered: true });
+        }
+        if (
+          q.questionNumber === 12 ||
+          q.questionNumber === 13 ||
+          q.questionNumber === 14
+        ) {
+          this.setState({ nichesFifthMinuteAnswered: true });
+        }
+        if (
+          q.questionNumber === 15 ||
+          q.questionNumber === 16 ||
+          q.questionNumber === 17
+        ) {
+          this.setState({ nichesSixthMinuteAnswered: true });
+        }
       }
+
       if (this.state.videoName === 'lipid') {
         answer.lipid.value = this.state.videoName;
         if (q.questionNumber === 1) {
@@ -1029,6 +777,78 @@ export default class VideoSet extends Component<Props, State> {
         QuestionNo: answers[0].niches.q4.value,
         Engagement: answers[0].niches.q4.engagement,
         Answer: answers[0].niches.q4.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].niches.value,
+        ExperimentType: answers[0].niches.q1.experimentType,
+        SequenceNo: nichesSequenceNumber,
+        ModalPopupTOD: answers[0].niches.q5.modalPopupTOD,
+        ModalPopupTOV: answers[0].niches.q5.modalPopupTOV,
+        SubmitTimeTOD: answers[0].niches.q5.submitTimeTOD,
+        QuestionNo: answers[0].niches.q5.value,
+        Engagement: answers[0].niches.q5.engagement,
+        Answer: answers[0].niches.q5.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].niches.value,
+        ExperimentType: answers[0].niches.q1.experimentType,
+        SequenceNo: nichesSequenceNumber,
+        ModalPopupTOD: answers[0].niches.q6.modalPopupTOD,
+        ModalPopupTOV: answers[0].niches.q6.modalPopupTOV,
+        SubmitTimeTOD: answers[0].niches.q6.submitTimeTOD,
+        QuestionNo: answers[0].niches.q6.value,
+        Engagement: answers[0].niches.q6.engagement,
+        Answer: answers[0].niches.q6.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].niches.value,
+        ExperimentType: answers[0].niches.q1.experimentType,
+        SequenceNo: nichesSequenceNumber,
+        ModalPopupTOD: answers[0].niches.q7.modalPopupTOD,
+        ModalPopupTOV: answers[0].niches.q7.modalPopupTOV,
+        SubmitTimeTOD: answers[0].niches.q7.submitTimeTOD,
+        QuestionNo: answers[0].niches.q7.value,
+        Engagement: answers[0].niches.q7.engagement,
+        Answer: answers[0].niches.q7.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].niches.value,
+        ExperimentType: answers[0].niches.q1.experimentType,
+        SequenceNo: nichesSequenceNumber,
+        ModalPopupTOD: answers[0].niches.q8.modalPopupTOD,
+        ModalPopupTOV: answers[0].niches.q8.modalPopupTOV,
+        SubmitTimeTOD: answers[0].niches.q8.submitTimeTOD,
+        QuestionNo: answers[0].niches.q8.value,
+        Engagement: answers[0].niches.q8.engagement,
+        Answer: answers[0].niches.q8.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].niches.value,
+        ExperimentType: answers[0].niches.q1.experimentType,
+        SequenceNo: nichesSequenceNumber,
+        ModalPopupTOD: answers[0].niches.q9.modalPopupTOD,
+        ModalPopupTOV: answers[0].niches.q9.modalPopupTOV,
+        SubmitTimeTOD: answers[0].niches.q9.submitTimeTOD,
+        QuestionNo: answers[0].niches.q9.value,
+        Engagement: answers[0].niches.q9.engagement,
+        Answer: answers[0].niches.q9.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].niches.value,
+        ExperimentType: answers[0].niches.q1.experimentType,
+        SequenceNo: nichesSequenceNumber,
+        ModalPopupTOD: answers[0].niches.q10.modalPopupTOD,
+        ModalPopupTOV: answers[0].niches.q10.modalPopupTOV,
+        SubmitTimeTOD: answers[0].niches.q10.submitTimeTOD,
+        QuestionNo: answers[0].niches.q10.value,
+        Engagement: answers[0].niches.q10.engagement,
+        Answer: answers[0].niches.q10.answer
       },
       {
         Subject: subjectId,
