@@ -42,6 +42,19 @@ interface Props {
 const controlPauseTime = 4;
 const rollBackTime = 2;
 
+const firstRandomTimePeriod = Math.floor(Math.random() * 40) + 80;
+const secondRandomTimePeriod = Math.floor(Math.random() * 60) + 120;
+const thirdRandomTimePeriod = Math.floor(Math.random() * 60) + 180;
+const fourthRandomTimePeriod = Math.floor(Math.random() * 60) + 240;
+
+console.log('firstRandomTimePeriod', firstRandomTimePeriod);
+
+console.log('secondRandomTimePeriod', secondRandomTimePeriod);
+
+console.log('thirdRandomTimePeriod', thirdRandomTimePeriod);
+
+console.log('fourthRandomTimePeriod', fourthRandomTimePeriod);
+
 const nichesQ = require('../../questions/NichesQuestions.js');
 const bipQ = require('../../questions/BipQuestions.js');
 const lipidQ = require('../../questions/LipidQuestions.js');
@@ -92,6 +105,10 @@ export default class VideoSet extends Component<Props, State> {
       finalModalIsOpen: false,
       question1AlreadyShown: false,
       question2AlreadyShown: false,
+      nichesFirstMinuteAnswered: false,
+      nichesSecondMinuteAnswered: false,
+      nichesThirdMinuteAnswered: false,
+      nichesFourthMinuteAnswered: false,
       nichesSequenceNumber: 1,
       lipidSequenceNumber: 2,
       bipSequenceNumber: 3,
@@ -456,6 +473,7 @@ export default class VideoSet extends Component<Props, State> {
   };
 
   nextQuestion = (key, vidCurrTime) => {
+    console.log('key from next question', key);
     const videoQuestions = this.getQuestionSet(this.state.currentVideo);
 
     for (let i = 0; i < videoQuestions.length; i++) {
@@ -475,7 +493,6 @@ export default class VideoSet extends Component<Props, State> {
   };
 
   getVideoName(currentVideo) {
-    console.log('getVideoName currentVideo', currentVideo);
     let videoNameTemp = '';
     if (currentVideo === nichesVideo) {
       videoNameTemp = 'niches';
@@ -547,24 +564,74 @@ export default class VideoSet extends Component<Props, State> {
       // control:
       switch (true) {
         case videoName === 'niches' &&
-          (4 <= vidCurrTime && vidCurrTime < 8) &&
-          this.state.answers[0].niches.q1.answer === '':
-          this.nextQuestion(1, vidCurrTime);
+          // Niches: 7:18 total time
+          // Lipid: 6:21 total time
+          // Bipedalism: 6:00 total time
+          // Insulin: 6:29 total time
+
+          // no questions for first 1 minute 20 seconds, 2 options
+          // returns a random integer between 1 and 3:
+          // Math.floor(Math.random() * 3) + 1;
+          // question for 1:20-2minutes:
+          firstRandomTimePeriod <= vidCurrTime &&
+          // this.state.answers[0].niches.q1.answer === '':
+          !this.state.nichesFirstMinuteAnswered:
+          // returns either 1 or 2
+          console.log('vidCurrTime', vidCurrTime);
+          // let randomTimePeriod = (Math.floor(Math.random() * 40) + 80);
+          console.log('firstRandomTimePeriod', firstRandomTimePeriod);
+          // first = (Math.floor(Math.random() * 2) + 1);
+          // console.log("key first", first);
+          this.nextQuestion(Math.floor(Math.random() * 2) + 1, vidCurrTime);
+
           break;
         case videoName === 'niches' &&
-          (8 <= vidCurrTime && vidCurrTime < 10) &&
-          this.state.answers[0].niches.q2.answer === '':
-          this.nextQuestion(2, vidCurrTime);
+          // question for 2-3minutes:
+          secondRandomTimePeriod <= vidCurrTime &&
+          !this.state.nichesSecondMinuteAnswered:
+          console.log('vidCurrTime2', vidCurrTime);
+
+          console.log('secondRandomTimePeriod', secondRandomTimePeriod);
+
+          // second = (Math.floor(Math.random() * 3) + 3);
+          // console.log("key second", second);
+          // this.nextQuestion(first, vidCurrTime);
+          this.nextQuestion(Math.floor(Math.random() * 3) + 3, vidCurrTime);
+
           break;
         case videoName === 'niches' &&
-          (10 <= vidCurrTime && vidCurrTime < 12) &&
-          this.state.answers[0].niches.q3.answer === '':
-          this.nextQuestion(3, vidCurrTime);
+          // question for 3-4minutes:
+          // (180 <= vidCurrTime && vidCurrTime < 240) &&
+          // question for 3-4minutes:
+          thirdRandomTimePeriod <= vidCurrTime &&
+          !this.state.nichesThirdMinuteAnswered:
+          // returns 6 <= x <= 8
+          // third = (Math.floor(Math.random() * 3) + 6);
+          // console.log("key third", third);
+          this.nextQuestion(Math.floor(Math.random() * 3) + 6, vidCurrTime);
           break;
         case videoName === 'niches' &&
-          (12 <= vidCurrTime && vidCurrTime < 14) &&
+          // question for 4-5minutes:
+          // (240 <= vidCurrTime && vidCurrTime < 300) &&
+          // question for 4-5minutes:
+          fourthRandomTimePeriod <= vidCurrTime &&
+          !this.state.nichesFourthMinuteAnswered:
+          // returns 9 <= x <= 11
+          this.nextQuestion(Math.floor(Math.random() * 3) + 9, vidCurrTime);
+          break;
+        case videoName === 'niches' &&
+          // question for 5-6minutes:
+          (300 <= vidCurrTime && vidCurrTime < 360) &&
           this.state.answers[0].niches.q4.answer === '':
-          this.nextQuestion(4, vidCurrTime);
+          // returns 12 <= x <= 14
+          this.nextQuestion(Math.floor(Math.random() * 3) + 12, vidCurrTime);
+          break;
+        case videoName === 'niches' &&
+          // question for 6-7minutes:
+          (360 <= vidCurrTime && vidCurrTime < 420) &&
+          this.state.answers[0].niches.q4.answer === '':
+          // returns 15 <= x <= 17
+          this.nextQuestion(Math.floor(Math.random() * 3) + 15, vidCurrTime);
           break;
 
         case videoName === 'lipid' &&
@@ -741,21 +808,37 @@ export default class VideoSet extends Component<Props, State> {
           answer.niches.q1.experimentType = 'control';
           answer.niches.q1.value = q.questionNumber;
           answer.niches.q1.answer = e.target.value;
+          this.setState({ nichesFirstMinuteAnswered: true });
         }
         if (q.questionNumber === 2) {
           answer.niches.q2.experimentType = 'control';
           answer.niches.q2.value = q.questionNumber;
           answer.niches.q2.answer = e.target.value;
+          this.setState({ nichesFirstMinuteAnswered: true });
         }
         if (q.questionNumber === 3) {
           answer.niches.q3.experimentType = 'control';
           answer.niches.q3.value = q.questionNumber;
           answer.niches.q3.answer = e.target.value;
+          this.setState({ nichesSecondMinuteAnswered: true });
         }
         if (q.questionNumber === 4) {
           answer.niches.q4.experimentType = 'control';
           answer.niches.q4.value = q.questionNumber;
           answer.niches.q4.answer = e.target.value;
+          this.setState({ nichesSecondMinuteAnswered: true });
+        }
+        if (q.questionNumber === 5) {
+          answer.niches.q5.experimentType = 'control';
+          answer.niches.q5.value = q.questionNumber;
+          answer.niches.q5.answer = e.target.value;
+          this.setState({ nichesSecondMinuteAnswered: true });
+        }
+        if (q.questionNumber === 6) {
+          answer.niches.q6.experimentType = 'control';
+          answer.niches.q6.value = q.questionNumber;
+          answer.niches.q6.answer = e.target.value;
+          this.setState({ nichesThirdMinuteAnswered: true });
         }
       }
       if (this.state.videoName === 'lipid') {
