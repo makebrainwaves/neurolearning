@@ -41,27 +41,10 @@ interface Props {
 
 const controlPauseTime = 4;
 const rollBackTime = 2;
-
-const firstRandomTimePeriod = Math.floor(Math.random() * 40) + 80;
-const secondRandomTimePeriod = Math.floor(Math.random() * 60) + 120;
-const thirdRandomTimePeriod = Math.floor(Math.random() * 60) + 180;
-const fourthRandomTimePeriod = Math.floor(Math.random() * 60) + 240;
-const fifthRandomTimePeriod = Math.floor(Math.random() * 60) + 300;
-const sixthRandomTimePeriod = Math.floor(Math.random() * 60) + 360;
-const seventhRandomTimePeriod = Math.floor(Math.random() * 60) + 420;
-
-console.log('firstRandomTimePeriod', firstRandomTimePeriod);
-console.log('secondRandomTimePeriod', secondRandomTimePeriod);
-console.log('thirdRandomTimePeriod', thirdRandomTimePeriod);
-console.log('fourthRandomTimePeriod', fourthRandomTimePeriod);
-console.log('fifthRandomTimePeriod', fifthRandomTimePeriod);
-console.log('sixthRandomTimePeriod', sixthRandomTimePeriod);
-
 const nichesQ = require('../../questions/NichesQuestions.js');
-const bipQ = require('../../questions/BipQuestions.js');
 const lipidQ = require('../../questions/LipidQuestions.js');
+const bipQ = require('../../questions/BipQuestions.js');
 const insulinQ = require('../../questions/InsulinQuestions.js');
-
 const answersArray = require('../../constants/Answers.js');
 
 const nichesVideo =
@@ -109,12 +92,12 @@ export default class VideoSet extends Component<Props, State> {
       finalModalIsOpen: false,
       question1AlreadyShown: false,
       question2AlreadyShown: false,
-      nichesFirstMinuteAnswered: false,
-      nichesSecondMinuteAnswered: false,
-      nichesThirdMinuteAnswered: false,
-      nichesFourthMinuteAnswered: false,
-      nichesFifthMinuteAnswered: false,
-      nichesSixthMinuteAnswered: false,
+      questionAnswered1: false,
+      questionAnswered2: false,
+      questionAnswered3: false,
+      questionAnswered4: false,
+      questionAnswered5: false,
+      questionAnswered6: false,
       nichesSequenceNumber: 1,
       lipidSequenceNumber: 2,
       bipSequenceNumber: 3,
@@ -143,7 +126,6 @@ export default class VideoSet extends Component<Props, State> {
   componentWillMount() {
     this.setState({
       currentVideo: this.props.location.state.firstVideo,
-      questionSet: this.state.questionSet,
       videoName: this.getVideoName(this.props.location.state.firstVideo),
       nichesSequenceNumber: this.getSequenceNumber('niches'),
       lipidSequenceNumber: this.getSequenceNumber('lipid'),
@@ -153,6 +135,9 @@ export default class VideoSet extends Component<Props, State> {
   }
 
   componentDidMount() {
+    this.setState({
+      questionSet: this.getRandomQuestionSet()
+    });
     // Might be able to subscribe to these guys in constructor, but I've always done it in componentDidMount
     if (this.props.location.state.firstVideoType === 'experimental') {
       this.classifierEEGSubscription = this.state.classifierEEGObservable.subscribe(
@@ -162,6 +147,42 @@ export default class VideoSet extends Component<Props, State> {
         }
       );
     }
+  }
+
+  getRandomQuestionSet() {
+    console.log('this curr video', this.state.currentVideo);
+    const videoQuestions = this.getQuestionSet(this.state.currentVideo);
+
+    let randomNumbers = [];
+    const arr = [];
+    const newQuestionSet = [];
+
+    // find random values between 1 and questionSet.length
+    while (arr.length < videoQuestions.length / 3) {
+      const r = Math.floor(Math.random() * 18) + 1;
+      if (arr.indexOf(r) === -1) arr.push(r);
+    }
+
+    // sort array of random numbers
+    randomNumbers = arr.sort((a, b) => a - b);
+    console.log('randomrandomNumbers', randomNumbers);
+
+    // copy corresponding questions to new array
+    for (let i = 0; i < randomNumbers.length; i++) {
+      for (let j = 0; j < videoQuestions.length; j++) {
+        if (randomNumbers[i] === videoQuestions[j].key) {
+          newQuestionSet.push(videoQuestions[j]);
+        }
+      }
+    }
+
+    console.log('newQuestionSet', newQuestionSet);
+
+    this.setState({
+      questionSet: newQuestionSet
+    });
+
+    return newQuestionSet;
   }
 
   closeModal = () => {
@@ -214,8 +235,7 @@ export default class VideoSet extends Component<Props, State> {
   };
 
   nextQuestion = (key, vidCurrTime) => {
-    console.log('key from next question', key);
-    const videoQuestions = this.getQuestionSet(this.state.currentVideo);
+    const videoQuestions = this.state.questionSet;
 
     for (let i = 0; i < videoQuestions.length; i++) {
       if (videoQuestions[i].key === key) {
@@ -266,6 +286,7 @@ export default class VideoSet extends Component<Props, State> {
     } else {
       questionSetTemp = null;
     }
+
     this.setState({
       questionSet: questionSetTemp
     });
@@ -279,19 +300,48 @@ export default class VideoSet extends Component<Props, State> {
       question2AlreadyShown,
       isRunning,
       currentVideo,
-      videoName
+      videoName,
+      questionSet
     } = this.state;
 
     const vidCurrTime = document.getElementById('vidID').currentTime;
 
-    // Niches: 7:18 total time
-    // Lipid: 6:21 total time
-    // Bipedalism: 6:00 total time
-    // Insulin: 6:29 total time
-
-    // no questions for first 1 minute 20 seconds, 2 options
-    // returns a random integer between 1 and 3:
-    // Math.floor(Math.random() * 3) + 1;
+    if (
+      questionSet[0].value.period <= vidCurrTime &&
+      !this.state.questionAnswered1
+    ) {
+      this.nextQuestion(questionSet[0].key, vidCurrTime);
+    }
+    if (
+      questionSet[1].value.period <= vidCurrTime &&
+      !this.state.questionAnswered2
+    ) {
+      this.nextQuestion(questionSet[1].key, vidCurrTime);
+    }
+    if (
+      questionSet[2].value.period <= vidCurrTime &&
+      !this.state.questionAnswered3
+    ) {
+      this.nextQuestion(questionSet[2].key, vidCurrTime);
+    }
+    if (
+      questionSet[3].value.period <= vidCurrTime &&
+      !this.state.questionAnswered4
+    ) {
+      this.nextQuestion(questionSet[3].key, vidCurrTime);
+    }
+    if (
+      questionSet[4].value.period <= vidCurrTime &&
+      !this.state.questionAnswered5
+    ) {
+      this.nextQuestion(questionSet[4].key, vidCurrTime);
+    }
+    if (
+      questionSet[5].value.period <= vidCurrTime &&
+      !this.state.questionAnswered6
+    ) {
+      this.nextQuestion(questionSet[5].key, vidCurrTime);
+    }
 
     if (this.props.location.state.firstVideoType === 'experimental') {
       if (question1AlreadyShown) {
@@ -309,183 +359,6 @@ export default class VideoSet extends Component<Props, State> {
           });
           this.pauseVideo();
         }
-      }
-    } else {
-      // control:
-      console.log('vidCurrTime', vidCurrTime);
-      switch (true) {
-        case videoName === 'niches' &&
-          // question for 1:20-2minutes: Check to see that vidCurrTime has surpassed random time selected
-          firstRandomTimePeriod <= vidCurrTime &&
-          !this.state.nichesFirstMinuteAnswered:
-          if (80 <= firstRandomTimePeriod && firstRandomTimePeriod < 100) {
-            this.nextQuestion(1, vidCurrTime);
-          } else if (
-            100 <= firstRandomTimePeriod &&
-            firstRandomTimePeriod < 120
-          )
-            this.nextQuestion(2, vidCurrTime);
-          break;
-
-        case videoName === 'niches' &&
-          // question for 2-3minutes:
-          secondRandomTimePeriod <= vidCurrTime &&
-          !this.state.nichesSecondMinuteAnswered:
-          if (120 <= secondRandomTimePeriod && secondRandomTimePeriod < 140) {
-            this.nextQuestion(3, vidCurrTime);
-          } else if (
-            140 <= secondRandomTimePeriod &&
-            secondRandomTimePeriod < 160
-          ) {
-            this.nextQuestion(4, vidCurrTime);
-          } else if (
-            160 <= secondRandomTimePeriod &&
-            secondRandomTimePeriod < 180
-          ) {
-            this.nextQuestion(5, vidCurrTime);
-          }
-          break;
-
-        case videoName === 'niches' &&
-          // question for 3-4minutes:
-          thirdRandomTimePeriod <= vidCurrTime &&
-          !this.state.nichesThirdMinuteAnswered:
-          if (180 <= thirdRandomTimePeriod && thirdRandomTimePeriod < 200) {
-            this.nextQuestion(6, vidCurrTime);
-          } else if (
-            200 <= thirdRandomTimePeriod &&
-            thirdRandomTimePeriod < 220
-          ) {
-            this.nextQuestion(7, vidCurrTime);
-          } else if (
-            220 <= thirdRandomTimePeriod &&
-            thirdRandomTimePeriod < 240
-          ) {
-            this.nextQuestion(8, vidCurrTime);
-          }
-          break;
-
-        case videoName === 'niches' &&
-          // question for 4-5minutes:
-          fourthRandomTimePeriod <= vidCurrTime &&
-          !this.state.nichesFourthMinuteAnswered:
-          if (240 <= fourthRandomTimePeriod && fourthRandomTimePeriod < 260) {
-            this.nextQuestion(9, vidCurrTime);
-          } else if (
-            260 <= fourthRandomTimePeriod &&
-            fourthRandomTimePeriod < 280
-          ) {
-            this.nextQuestion(10, vidCurrTime);
-          } else if (
-            280 <= fourthRandomTimePeriod &&
-            fourthRandomTimePeriod < 300
-          ) {
-            this.nextQuestion(11, vidCurrTime);
-          }
-          break;
-
-        case videoName === 'niches' &&
-          // question for 5-6minutes:
-          fifthRandomTimePeriod <= vidCurrTime &&
-          !this.state.nichesFifthMinuteAnswered:
-          if (300 <= fifthRandomTimePeriod && fifthRandomTimePeriod < 320) {
-            this.nextQuestion(12, vidCurrTime);
-          } else if (
-            320 <= fifthRandomTimePeriod &&
-            fifthRandomTimePeriod < 340
-          ) {
-            this.nextQuestion(13, vidCurrTime);
-          } else if (
-            340 <= fifthRandomTimePeriod &&
-            fifthRandomTimePeriod < 360
-          ) {
-            this.nextQuestion(14, vidCurrTime);
-          }
-          break;
-
-        case videoName === 'niches' &&
-          // question for 6-7minutes:
-          sixthRandomTimePeriod <= vidCurrTime &&
-          !this.state.nichesSixthMinuteAnswered:
-          if (360 <= sixthRandomTimePeriod && sixthRandomTimePeriod < 380) {
-            this.nextQuestion(15, vidCurrTime);
-          } else if (
-            380 <= sixthRandomTimePeriod &&
-            sixthRandomTimePeriod < 400
-          ) {
-            this.nextQuestion(16, vidCurrTime);
-          } else if (
-            400 <= sixthRandomTimePeriod &&
-            sixthRandomTimePeriod < 420
-          ) {
-            this.nextQuestion(17, vidCurrTime);
-          }
-          break;
-
-        case videoName === 'lipid' &&
-          (4 <= vidCurrTime && vidCurrTime < 8) &&
-          this.state.answers[0].lipid.q1.answer === '':
-          this.nextQuestion(1, vidCurrTime);
-          break;
-        case videoName === 'lipid' &&
-          (8 <= vidCurrTime && vidCurrTime < 10) &&
-          this.state.answers[0].lipid.q2.answer === '':
-          this.nextQuestion(2, vidCurrTime);
-          break;
-        case videoName === 'lipid' &&
-          (10 <= vidCurrTime && vidCurrTime < 12) &&
-          this.state.answers[0].lipid.q3.answer === '':
-          this.nextQuestion(3, vidCurrTime);
-          break;
-        case videoName === 'lipid' &&
-          (12 <= vidCurrTime && vidCurrTime < 14) &&
-          this.state.answers[0].lipid.q4.answer === '':
-          this.nextQuestion(4, vidCurrTime);
-          break;
-
-        case videoName === 'bip' &&
-          (4 <= vidCurrTime && vidCurrTime < 8) &&
-          this.state.answers[0].bip.q1.answer === '':
-          this.nextQuestion(1, vidCurrTime);
-          break;
-        case videoName === 'bip' &&
-          (8 <= vidCurrTime && vidCurrTime < 10) &&
-          this.state.answers[0].bip.q2.answer === '':
-          this.nextQuestion(2, vidCurrTime);
-          break;
-        case videoName === 'bip' &&
-          (10 <= vidCurrTime && vidCurrTime < 12) &&
-          this.state.answers[0].bip.q3.answer === '':
-          this.nextQuestion(3, vidCurrTime);
-          break;
-        case videoName === 'bip' &&
-          (12 <= vidCurrTime && vidCurrTime < 14) &&
-          this.state.answers[0].bip.q4.answer === '':
-          this.nextQuestion(4, vidCurrTime);
-          break;
-
-        case videoName === 'insulin' &&
-          (4 <= vidCurrTime && vidCurrTime < 8) &&
-          this.state.answers[0].insulin.q1.answer === '':
-          this.nextQuestion(1, vidCurrTime);
-          break;
-        case videoName === 'insulin' &&
-          (8 <= vidCurrTime && vidCurrTime < 10) &&
-          this.state.answers[0].insulin.q2.answer === '':
-          this.nextQuestion(2, vidCurrTime);
-          break;
-        case videoName === 'insulin' &&
-          (10 <= vidCurrTime && vidCurrTime < 12) &&
-          this.state.answers[0].insulin.q3.answer === '':
-          this.nextQuestion(3, vidCurrTime);
-          break;
-        case videoName === 'insulin' &&
-          (12 <= vidCurrTime && vidCurrTime < 14) &&
-          this.state.answers[0].insulin.q4.answer === '':
-          this.nextQuestion(4, vidCurrTime);
-          break;
-        default:
-          break;
       }
     }
   };
@@ -535,134 +408,30 @@ export default class VideoSet extends Component<Props, State> {
   handleQuestion(q, e) {
     this.setState({ obscureButton: false });
     const answers = this.state.answers;
-    const testValue = 'niches';
     const questionNumber = `q${q.questionNumber}`;
+    const videoQuestions = this.state.questionSet;
 
     answers.forEach(answer => {
       answer[this.state.videoName].value = this.state.videoName;
       answer[this.state.videoName][questionNumber].experimentType = 'control';
       answer[this.state.videoName][questionNumber].value = q.questionNumber;
       answer[this.state.videoName][questionNumber].answer = e.target.value;
-
-      const variable = `${this.state.videoName}FirstMinuteAnswered`;
-      console.log('variable', variable);
-      console.log('this.state[variable]', this.state[variable]);
-
-      if (this.state.videoName === 'niches') {
-        if (q.questionNumber === 1 || q.questionNumber === 2) {
-          this.setState({ nichesFirstMinuteAnswered: true });
-        }
-        if (
-          q.questionNumber === 3 ||
-          q.questionNumber === 4 ||
-          q.questionNumber === 5
-        ) {
-          this.setState({ nichesSecondMinuteAnswered: true });
-        }
-        if (
-          q.questionNumber === 6 ||
-          q.questionNumber === 7 ||
-          q.questionNumber === 8
-        ) {
-          this.setState({ nichesThirdMinuteAnswered: true });
-        }
-        if (
-          q.questionNumber === 9 ||
-          q.questionNumber === 10 ||
-          q.questionNumber === 11
-        ) {
-          this.setState({ nichesFourthMinuteAnswered: true });
-        }
-        if (
-          q.questionNumber === 12 ||
-          q.questionNumber === 13 ||
-          q.questionNumber === 14
-        ) {
-          this.setState({ nichesFifthMinuteAnswered: true });
-        }
-        if (
-          q.questionNumber === 15 ||
-          q.questionNumber === 16 ||
-          q.questionNumber === 17
-        ) {
-          this.setState({ nichesSixthMinuteAnswered: true });
-        }
-      }
-
-      if (this.state.videoName === 'lipid') {
-        answer.lipid.value = this.state.videoName;
-        if (q.questionNumber === 1) {
-          answer.lipid.q1.experimentType = 'control';
-          answer.lipid.q1.value = q.questionNumber;
-          answer.lipid.q1.answer = e.target.value;
-        }
-        if (q.questionNumber === 2) {
-          answer.lipid.q2.experimentType = 'control';
-          answer.lipid.q2.value = q.questionNumber;
-          answer.lipid.q2.answer = e.target.value;
-        }
-        if (q.questionNumber === 3) {
-          answer.lipid.q3.experimentType = 'control';
-          answer.lipid.q3.value = q.questionNumber;
-          answer.lipid.q3.answer = e.target.value;
-        }
-        if (q.questionNumber === 4) {
-          answer.lipid.q4.experimentType = 'control';
-          answer.lipid.q4.value = q.questionNumber;
-          answer.lipid.q4.answer = e.target.value;
-        }
-      }
-
-      if (this.state.videoName === 'bip') {
-        answer.bip.value = this.state.videoName;
-        if (q.questionNumber === 1) {
-          answer.bip.q1.experimentType = 'control';
-          answer.bip.q1.value = q.questionNumber;
-          answer.bip.q1.answer = e.target.value;
-        }
-        if (q.questionNumber === 2) {
-          answer.bip.q2.experimentType = 'control';
-          answer.bip.q2.value = q.questionNumber;
-          answer.bip.q2.answer = e.target.value;
-        }
-        if (q.questionNumber === 3) {
-          answer.bip.q3.experimentType = 'control';
-          answer.bip.q3.value = q.questionNumber;
-          answer.bip.q3.answer = e.target.value;
-        }
-        if (q.questionNumber === 4) {
-          answer.bip.q4.experimentType = 'control';
-          answer.bip.q4.value = q.questionNumber;
-          answer.bip.q4.answer = e.target.value;
-        }
-      }
-
-      if (this.state.videoName === 'insulin') {
-        answer.insulin.value = this.state.videoName;
-        if (q.questionNumber === 1) {
-          answer.insulin.q1.experimentType = 'control';
-          answer.insulin.q1.value = q.questionNumber;
-          answer.insulin.q1.answer = e.target.value;
-        }
-        if (q.questionNumber === 2) {
-          answer.insulin.q2.experimentType = 'control';
-          answer.insulin.q2.value = q.questionNumber;
-          answer.insulin.q2.answer = e.target.value;
-        }
-        if (q.questionNumber === 3) {
-          answer.insulin.q3.experimentType = 'control';
-          answer.insulin.q3.value = q.questionNumber;
-          answer.insulin.q3.answer = e.target.value;
-        }
-        if (q.questionNumber === 4) {
-          answer.insulin.q4.experimentType = 'control';
-          answer.insulin.q4.value = q.questionNumber;
-          answer.insulin.q4.answer = e.target.value;
-        }
-      }
     });
 
-    this.setState({ answers });
+    for (let i = 0; i < videoQuestions.length; i++) {
+      if (videoQuestions[i].key === q.questionNumber) {
+        const questionAnswered = `questionAnswered${i + 1}`;
+
+        this.setState({
+          [questionAnswered]: true
+        });
+      }
+    }
+
+    this.setState({
+      answers
+    });
+    console.log('this.state.answers', this.state.answers);
   }
 
   getSequenceNumber(videoName) {
