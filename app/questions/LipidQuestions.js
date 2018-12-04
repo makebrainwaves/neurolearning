@@ -174,27 +174,5 @@ module.exports = [
       option2: 'False',
       option3: "I don't know"
     }
-  },
-  {
-    key: 17,
-    value: {
-      name: 'Question 17:',
-      period: 400, // '6:20-6:40' or 380-400
-      question: 'lipid17true or false?',
-      option1: 'True',
-      option2: 'False',
-      option3: "I don't know"
-    }
-  },
-  {
-    key: 18,
-    value: {
-      name: 'Question 18:',
-      period: 420, // '6:40-7:00' or 400-420
-      question: 'lipid18true or false?',
-      option1: 'True',
-      option2: 'False',
-      option3: "I don't know"
-    }
   }
 ];
