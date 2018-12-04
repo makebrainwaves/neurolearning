@@ -136,6 +136,14 @@ module.exports = [
         submitTimeTOD: '',
         engagement: '',
         answer: ''
+      },
+      q18: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
       }
     },
     lipid: {
