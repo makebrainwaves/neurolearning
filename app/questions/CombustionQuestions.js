@@ -3,8 +3,8 @@ module.exports = [
     key: 1,
     value: {
       name: 'Question 1:',
-      period: '1:00-1:20',
-      question: 'combustion1true or false?',
+      period: 80, // '1:00-1:20' or 60-80
+      question: 'fuel1true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -14,8 +14,8 @@ module.exports = [
     key: 2,
     value: {
       name: 'Question 2:',
-      period: '1:20-1:40',
-      question: 'combustion2true or false?',
+      period: 100, // '1:20-1:40' or 80-100
+      question: 'fuel2true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -25,8 +25,8 @@ module.exports = [
     key: 3,
     value: {
       name: 'Question 3:',
-      period: '1:40-2:00',
-      question: 'combustion3true or false?',
+      period: 120, // '1:40-2:00' or 100-120
+      question: 'fuel3true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -36,8 +36,8 @@ module.exports = [
     key: 4,
     value: {
       name: 'Question 4:',
-      period: '2:00-2:20',
-      question: 'combustion4true or false?',
+      period: 140, // '2:00-2:20' or 120-140
+      question: 'fuel4true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -47,8 +47,8 @@ module.exports = [
     key: 5,
     value: {
       name: 'Question 5:',
-      period: '2:20-2:40',
-      question: 'combustion5true or false?',
+      period: 160, // '2:20-2:40' or 140-160
+      question: 'fuel5true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -58,8 +58,8 @@ module.exports = [
     key: 6,
     value: {
       name: 'Question 6:',
-      period: '2:40-3:00',
-      question: 'combustion6true or false?',
+      period: 180, // '2:40-3:00' or 160-180
+      question: 'fuel6true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -69,8 +69,8 @@ module.exports = [
     key: 7,
     value: {
       name: 'Question 7:',
-      period: '3:00-3:20',
-      question: 'combustion7true or false?',
+      period: 200, // '3:00-3:20' or 180-200
+      question: 'fuel7true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -80,8 +80,8 @@ module.exports = [
     key: 8,
     value: {
       name: 'Question 8:',
-      period: '3:20-3:40',
-      question: 'combustions8true or false?',
+      period: 220, // '3:20-3:40' or 200-220
+      question: 'fuel8true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -91,8 +91,8 @@ module.exports = [
     key: 9,
     value: {
       name: 'Question 9:',
-      period: '3:40-4:00',
-      question: 'combustion9true or false?',
+      period: 240, // '3:40-4:00' or 220-240
+      question: 'fuel9true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -102,8 +102,8 @@ module.exports = [
     key: 10,
     value: {
       name: 'Question 10:',
-      period: '4:00-4:20',
-      question: 'combustion10true or false?',
+      period: 260, // '4:00-4:20' or 240-260
+      question: 'fuel10true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -113,8 +113,8 @@ module.exports = [
     key: 11,
     value: {
       name: 'Question 11:',
-      period: '4:20-4:40',
-      question: 'combustion11true or false?',
+      period: 280, // '4:20-4:40' or 260-280
+      question: 'fuel11true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -124,8 +124,8 @@ module.exports = [
     key: 12,
     value: {
       name: 'Question 12:',
-      period: '4:40-5:00',
-      question: 'combustion12true or false?',
+      period: 300, // '4:40-5:00' or 280-300
+      question: 'fuel12true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -135,8 +135,8 @@ module.exports = [
     key: 13,
     value: {
       name: 'Question 13:',
-      period: '5:00-5:20',
-      question: 'combustion13true or false?',
+      period: 320, // '5:00-5:20' or 300-320
+      question: 'fuel13true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -146,8 +146,8 @@ module.exports = [
     key: 14,
     value: {
       name: 'Question 14:',
-      period: '5:20-5:40',
-      question: 'combustion14true or false?',
+      period: 340, // '5:20-5:40' or 320-340
+      question: 'fuel14true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -157,8 +157,8 @@ module.exports = [
     key: 15,
     value: {
       name: 'Question 15:',
-      period: '5:40-6:00',
-      question: 'combustion15true or false?',
+      period: 360, // '5:40-6:00' or 340-360
+      question: 'fuel15true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -168,8 +168,8 @@ module.exports = [
     key: 16,
     value: {
       name: 'Question 16:',
-      period: '6:00-6:20',
-      question: 'combustion16true or false?',
+      period: 380, // '6:00-6:20' or 360-380
+      question: 'fuel16true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -179,8 +179,8 @@ module.exports = [
     key: 17,
     value: {
       name: 'Question 17:',
-      period: '6:20-6:40',
-      question: 'combustion17true or false?',
+      period: 400, // '6:20-6:40' or 380-400
+      question: 'fuel17true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -190,8 +190,8 @@ module.exports = [
     key: 18,
     value: {
       name: 'Question 18:',
-      period: '6:40-7:00',
-      question: 'combustion18true or false?',
+      period: 420, // '6:40-7:00' or 400-420
+      question: 'fuel18true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -201,8 +201,8 @@ module.exports = [
     key: 19,
     value: {
       name: 'Question 19:',
-      period: '7:00-7:20',
-      question: 'combustion19true or false?',
+      period: 440, // '7:00-7:20' or 420-440
+      question: 'fuel19true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -212,8 +212,8 @@ module.exports = [
     key: 20,
     value: {
       name: 'Question 20:',
-      period: '7:20-7:40',
-      question: 'combustion20true or false?',
+      period: 460, // '7:20-7:40' or 440-460
+      question: 'fuel20true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -223,8 +223,8 @@ module.exports = [
     key: 21,
     value: {
       name: 'Question 21:',
-      period: '7:40-8:00',
-      question: 'combustion21true or false?',
+      period: 480, // '7:40-8:00' or 460-480
+      question: 'fuel21true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -234,8 +234,8 @@ module.exports = [
     key: 22,
     value: {
       name: 'Question 22:',
-      period: '8:00-8:20',
-      question: 'combustion22true or false?',
+      period: 500, // '8:00-8:20' or 480-500
+      question: 'fuel22true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -245,19 +245,20 @@ module.exports = [
     key: 23,
     value: {
       name: 'Question 23:',
-      period: '8:20-8:40',
-      question: 'combustion23true or false?',
+      period: 520, // '8:20-8:40' or 500-520
+      question: 'fuel23true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
     }
   },
+
   {
     key: 24,
     value: {
       name: 'Question 24:',
-      period: '8:40-9:00',
-      question: 'combustion24true or false?',
+      period: 540, // '8:40-9:00' or 520-540
+      question: 'fuel24true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -267,8 +268,8 @@ module.exports = [
     key: 25,
     value: {
       name: 'Question 25:',
-      period: '9:00-9:20',
-      question: 'combustion25true or false?',
+      period: 560, // '9:00-9:20' or 540-560
+      question: 'fuel25true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -277,9 +278,9 @@ module.exports = [
   {
     key: 26,
     value: {
-      name: 'Question 236:',
-      period: '9:20-9:40',
-      question: 'combustion26true or false?',
+      name: 'Question 26:',
+      period: 580, // '9:20-9:40' or 560-580
+      question: 'fuel26true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -289,8 +290,8 @@ module.exports = [
     key: 27,
     value: {
       name: 'Question 27:',
-      period: '9:40-10:00',
-      question: 'combustion27true or false?',
+      period: 600, // '9:40-10:00' or 580-600
+      question: 'fuel27true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -300,8 +301,8 @@ module.exports = [
     key: 28,
     value: {
       name: 'Question 28:',
-      period: '10:00-10:20',
-      question: 'combustion28true or false?',
+      period: 620, // '10:00-10:20' or 600-620
+      question: 'fuel28true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -311,8 +312,8 @@ module.exports = [
     key: 29,
     value: {
       name: 'Question 29:',
-      period: '10:20-10:40',
-      question: 'combustion29true or false?',
+      period: 640, // '10:20-10:40' or 620-640
+      question: 'fuel29true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -322,8 +323,8 @@ module.exports = [
     key: 30,
     value: {
       name: 'Question 30:',
-      period: '10:40-11:00',
-      question: 'combustion30true or false?',
+      period: 660, // '10:40-11:00' or 640-660
+      question: 'fuel30true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -333,8 +334,8 @@ module.exports = [
     key: 31,
     value: {
       name: 'Question 31:',
-      period: '11:00-11:20',
-      question: 'combustion31true or false?',
+      period: 680, // '11:00-11:20' or 660-680
+      question: 'fuel31true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -344,8 +345,8 @@ module.exports = [
     key: 32,
     value: {
       name: 'Question 32:',
-      period: '11:20-11:40',
-      question: 'combustion32true or false?',
+      period: 700, // '11:20-11:40' or 680-700
+      question: 'fuel32true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -355,8 +356,8 @@ module.exports = [
     key: 33,
     value: {
       name: 'Question 33:',
-      period: '11:40-12:00',
-      question: 'combustion33true or false?',
+      period: 720, // '11:40-12:00' or 700-720
+      question: 'fuel33true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -366,8 +367,8 @@ module.exports = [
     key: 34,
     value: {
       name: 'Question 34:',
-      period: '12:00-12:20',
-      question: 'combustion34true or false?',
+      period: 740, // '12:00-12:20' or 720-740
+      question: 'fuel34true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -377,8 +378,8 @@ module.exports = [
     key: 35,
     value: {
       name: 'Question 35:',
-      period: '12:20-12:40',
-      question: 'combustion35true or false?',
+      period: 760, // '12:20-12:40' or 740-760
+      question: 'fuel135true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -388,8 +389,8 @@ module.exports = [
     key: 36,
     value: {
       name: 'Question 36:',
-      period: '12:40-13:00',
-      question: 'combustion36true or false?',
+      period: 780, // '12:40-13:00' or 760-780
+      question: 'fuel36true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -399,8 +400,8 @@ module.exports = [
     key: 37,
     value: {
       name: 'Question 37:',
-      period: '13:00-13:20',
-      question: 'combustion37true or false?',
+      period: 800, // '13:00-13:20' or 780-800
+      question: 'fuel37true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -410,8 +411,8 @@ module.exports = [
     key: 38,
     value: {
       name: 'Question 38:',
-      period: '13:20-13:40',
-      question: 'combustion38true or false?',
+      period: 820, // '13:20-13:40' or 800-820
+      question: 'fuel38true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -421,8 +422,8 @@ module.exports = [
     key: 39,
     value: {
       name: 'Question 39:',
-      period: '13:40-14:00',
-      question: 'combustion39true or false?',
+      period: 840, // '13:40-14:00' or 820-840
+      question: 'fuel39true or false?',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"

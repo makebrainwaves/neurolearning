@@ -356,7 +356,7 @@ module.exports = [
         answer: ''
       }
     },
-    bip: {
+    gas: {
       q1: {
         experimentType: '',
         modalPopupTOD: '',
@@ -470,6 +470,198 @@ module.exports = [
         answer: ''
       },
       q15: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q16: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q17: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q18: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q19: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q20: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q21: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q22: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q23: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q24: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q25: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q26: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q27: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q28: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q29: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q30: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q31: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q32: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q33: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q34: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q35: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q36: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q37: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q38: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q39: {
         experimentType: '',
         modalPopupTOD: '',
         modalPopupTOV: '',
