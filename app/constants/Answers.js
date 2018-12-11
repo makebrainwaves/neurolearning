@@ -170,7 +170,7 @@ module.exports = [
         answer: ''
       }
     },
-    lipid: {
+    fuel: {
       q1: {
         experimentType: '',
         modalPopupTOD: '',
@@ -292,6 +292,62 @@ module.exports = [
         answer: ''
       },
       q16: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q17: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q18: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q19: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q20: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q21: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q22: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q23: {
         experimentType: '',
         modalPopupTOD: '',
         modalPopupTOV: '',

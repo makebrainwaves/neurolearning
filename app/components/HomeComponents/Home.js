@@ -22,7 +22,7 @@ import styles from './Home.css';
 import { createEEGObservable } from '../../utils/eeg';
 
 import videoSrc1 from '../Biomass.mp4';
-import videoSrc2 from '../Lipid_KZ.mp4';
+import videoSrc2 from '../Fuel.mp4';
 import videoSrc3 from '../Bip_KC.mp4';
 import videoSrc4 from '../Insulin_KZ.mp4';
 
@@ -85,7 +85,7 @@ export default class Home extends Component<Props, State> {
       thirdVideo: videoSrc3,
       fourthVideo: videoSrc4,
       firstVideoName: 'Biomass',
-      secondVideoName: 'Lipids',
+      secondVideoName: 'Fuel',
       thirdVideoName: 'BIP',
       fourthVideoName: 'Insulin',
       firstVideoType: 'control',
@@ -149,9 +149,9 @@ export default class Home extends Component<Props, State> {
       videoName = 'Biomass';
     } else if (
       value ===
-      'http://localhost:1212/dist/2ab8ce87a09d1d6b7303006753ca0251.mp4'
+      'http://localhost:1212/dist/bcc000d9e3048f485822cc246c74a0e5.mp4'
     ) {
-      videoName = 'Lipids';
+      videoName = 'Fuel';
     } else if (
       value ===
       'http://localhost:1212/dist/0b30e12cf7d23e654b6d6c306bd13618.mp4'
@@ -169,6 +169,7 @@ export default class Home extends Component<Props, State> {
   };
 
   handleVideo(event: Object, data) {
+    console.log('data.value', data.value);
     this.setState({
       [data.name.slice(0, -4)]: data.value,
       [data.name]: this.getVideoName(data.value)
@@ -280,7 +281,7 @@ export default class Home extends Component<Props, State> {
 
     const videoOptions = [
       { key: 'vid1', value: videoSrc1, text: 'Biomass' },
-      { key: 'vid2', value: videoSrc2, text: 'Lipids' },
+      { key: 'vid2', value: videoSrc2, text: 'Fuel' },
       { key: 'vid3', value: videoSrc3, text: 'BIP' },
       { key: 'vid4', value: videoSrc4, text: 'Insulin' }
     ];
