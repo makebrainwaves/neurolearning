@@ -21,10 +21,10 @@ import routes from '../../constants/routes.json';
 import styles from './Home.css';
 import { createEEGObservable } from '../../utils/eeg';
 
-import videoSrc1 from '../Niches_KC.mp4';
-import videoSrc2 from '../Lipid_KZ.mp4';
-import videoSrc3 from '../Bip_KC.mp4';
-import videoSrc4 from '../Insulin_KZ.mp4';
+import videoSrc1 from '../Biomass.mp4';
+import videoSrc2 from '../Fuel.mp4';
+import videoSrc3 from '../Combustion.mp4';
+import videoSrc4 from '../Photosynth.mp4';
 
 type Props = {};
 
@@ -84,10 +84,10 @@ export default class Home extends Component<Props, State> {
       secondVideo: videoSrc2,
       thirdVideo: videoSrc3,
       fourthVideo: videoSrc4,
-      firstVideoName: 'Niches',
-      secondVideoName: 'Lipids',
-      thirdVideoName: 'BIP',
-      fourthVideoName: 'Insulin',
+      firstVideoName: 'Biomass',
+      secondVideoName: 'Fuel',
+      thirdVideoName: 'Gas',
+      fourthVideoName: 'Photosynth',
       firstVideoType: 'control',
       secondVideoType: 'control',
       thirdVideoType: 'control',
@@ -141,26 +141,27 @@ export default class Home extends Component<Props, State> {
 
   getVideoName = value => {
     let videoName = '';
+    console.log('value', value);
     if (
       value ===
-      'http://localhost:1212/dist/0aaa1f67050e199bf65b346ed1e6bddf.mp4'
+      'http://localhost:1212/dist/bab08a1b5e70073aa05bda2923a835f2.mp4'
     ) {
-      videoName = 'Niches';
+      videoName = 'Biomass';
     } else if (
       value ===
-      'http://localhost:1212/dist/2ab8ce87a09d1d6b7303006753ca0251.mp4'
+      'http://localhost:1212/dist/bcc000d9e3048f485822cc246c74a0e5.mp4'
     ) {
-      videoName = 'Lipids';
+      videoName = 'Fuel';
     } else if (
       value ===
-      'http://localhost:1212/dist/0b30e12cf7d23e654b6d6c306bd13618.mp4'
+      'http://localhost:1212/dist/0e6ab5cbc3f80301b4cbf5a6ff8a0db6.mp4'
     ) {
-      videoName = 'BIP';
+      videoName = 'Gas';
     } else if (
       value ===
-      'http://localhost:1212/dist/a6e5c47df7b77a974f47cce5b094f90c.mp4'
+      'http://localhost:1212/dist/adf2b55277c0e5538ff5ba60a1f4a756.mp4'
     ) {
-      videoName = 'Insulin';
+      videoName = 'Photosynth';
     } else {
       videoName = 'Unknown';
     }
@@ -168,6 +169,7 @@ export default class Home extends Component<Props, State> {
   };
 
   handleVideo(event: Object, data) {
+    console.log('data.value', data.value);
     this.setState({
       [data.name.slice(0, -4)]: data.value,
       [data.name]: this.getVideoName(data.value)
@@ -278,10 +280,10 @@ export default class Home extends Component<Props, State> {
     } = this.state;
 
     const videoOptions = [
-      { key: 'vid1', value: videoSrc1, text: 'Niches' },
-      { key: 'vid2', value: videoSrc2, text: 'Lipids' },
-      { key: 'vid3', value: videoSrc3, text: 'BIP' },
-      { key: 'vid4', value: videoSrc4, text: 'Insulin' }
+      { key: 'vid1', value: videoSrc1, text: 'Biomass' },
+      { key: 'vid2', value: videoSrc2, text: 'Fuel' },
+      { key: 'vid3', value: videoSrc3, text: 'Gas' },
+      { key: 'vid4', value: videoSrc4, text: 'Photosynth' }
     ];
 
     const experimentOptions = [
