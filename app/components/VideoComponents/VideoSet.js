@@ -44,7 +44,7 @@ const rollBackTime = 2;
 const biomassQ = require('../../questions/BiomassQuestions.js');
 const fuelQ = require('../../questions/FuelQuestions.js');
 const gasQ = require('../../questions/CombustionQuestions.js');
-const insulinQ = require('../../questions/InsulinQuestions.js');
+const photosynthQ = require('../../questions/PhotosynthQuestions.js');
 const answersArray = require('../../constants/Answers.js');
 
 const biomassVideo =
@@ -53,8 +53,8 @@ const fuelVideo =
   'http://localhost:1212/dist/bcc000d9e3048f485822cc246c74a0e5.mp4';
 const gasVideo =
   'http://localhost:1212/dist/0e6ab5cbc3f80301b4cbf5a6ff8a0db6.mp4';
-const insulinVideo =
-  'http://localhost:1212/dist/a6e5c47df7b77a974f47cce5b094f90c.mp4';
+const photosynthVideo =
+  'http://localhost:1212/dist/adf2b55277c0e5538ff5ba60a1f4a756.mp4';
 
 export default class VideoSet extends Component<Props, State> {
   props: Props;
@@ -108,7 +108,7 @@ export default class VideoSet extends Component<Props, State> {
       biomassSequenceNumber: 1,
       fuelSequenceNumber: 2,
       gasSequenceNumber: 3,
-      insulinSequenceNumber: 4,
+      photosynthSequenceNumber: 4,
       questionNumber: '',
       questionText: '',
       firstOption: '',
@@ -137,7 +137,7 @@ export default class VideoSet extends Component<Props, State> {
       biomassSequenceNumber: this.getSequenceNumber('biomass'),
       fuelSequenceNumber: this.getSequenceNumber('fuel'),
       gasSequenceNumber: this.getSequenceNumber('gas'),
-      insulinSequenceNumber: this.getSequenceNumber('insulin')
+      photosynthSequenceNumber: this.getSequenceNumber('photosynth')
     });
   }
 
@@ -157,9 +157,7 @@ export default class VideoSet extends Component<Props, State> {
   }
 
   getRandomQuestionSet(currVid) {
-    console.log('this curr video', this.state.currentVideo);
     const videoQuestions = this.getQuestionSet(currVid);
-    console.log('videoquestions', videoQuestions);
     let randomNumbers = [];
     const arr = [];
     const newQuestionSet = [];
@@ -268,8 +266,8 @@ export default class VideoSet extends Component<Props, State> {
       videoNameTemp = 'fuel';
     } else if (currentVideo === gasVideo) {
       videoNameTemp = 'gas';
-    } else if (currentVideo === insulinVideo) {
-      videoNameTemp = 'insulin';
+    } else if (currentVideo === photosynthVideo) {
+      videoNameTemp = 'photosynth';
     } else {
       videoNameTemp = '';
     }
@@ -282,15 +280,14 @@ export default class VideoSet extends Component<Props, State> {
 
   getQuestionSet(video) {
     let questionSetTemp = [];
-    console.log('from getQuestionSet', video);
     if (video === biomassVideo) {
       questionSetTemp = biomassQ;
     } else if (video === fuelVideo) {
       questionSetTemp = fuelQ;
     } else if (video === gasVideo) {
       questionSetTemp = gasQ;
-    } else if (video === insulinVideo) {
-      questionSetTemp = insulinQ;
+    } else if (video === photosynthVideo) {
+      questionSetTemp = photosynthQ;
     } else {
       questionSetTemp = null;
     }
@@ -517,7 +514,6 @@ export default class VideoSet extends Component<Props, State> {
     this.setState({
       answers
     });
-    console.log('this.state.answers', this.state.answers);
   }
 
   getSequenceNumber(videoName) {
@@ -568,7 +564,7 @@ export default class VideoSet extends Component<Props, State> {
       biomassSequenceNumber,
       fuelSequenceNumber,
       gasSequenceNumber,
-      insulinSequenceNumber
+      photosynthSequenceNumber
     } = this.state;
     const { location } = this.props;
     const { state } = location;
@@ -1573,195 +1569,327 @@ export default class VideoSet extends Component<Props, State> {
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].insulin.value,
+        VideoName: answers[0].photosynth.value,
         ExperimentType: 'control',
-        SequenceNo: insulinSequenceNumber,
-        ModalPopupTOD: answers[0].insulin.q1.modalPopupTOD,
-        ModalPopupTOV: answers[0].insulin.q1.modalPopupTOV,
-        SubmitTimeTOD: answers[0].insulin.q1.submitTimeTOD,
-        QuestionNo: answers[0].insulin.q1.value,
-        Engagement: answers[0].insulin.q1.engagement,
-        Answer: answers[0].insulin.q1.answer
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q1.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q1.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q1.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q1.value,
+        Engagement: answers[0].photosynth.q1.engagement,
+        Answer: answers[0].photosynth.q1.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].insulin.value,
+        VideoName: answers[0].photosynth.value,
         ExperimentType: 'control',
-        SequenceNo: insulinSequenceNumber,
-        ModalPopupTOD: answers[0].insulin.q2.modalPopupTOD,
-        ModalPopupTOV: answers[0].insulin.q2.modalPopupTOV,
-        SubmitTimeTOD: answers[0].insulin.q2.submitTimeTOD,
-        QuestionNo: answers[0].insulin.q2.value,
-        Engagement: answers[0].insulin.q2.engagement,
-        Answer: answers[0].insulin.q2.answer
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q2.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q2.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q2.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q2.value,
+        Engagement: answers[0].photosynth.q2.engagement,
+        Answer: answers[0].photosynth.q2.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].insulin.value,
+        VideoName: answers[0].photosynth.value,
         ExperimentType: 'control',
-        SequenceNo: insulinSequenceNumber,
-        ModalPopupTOD: answers[0].insulin.q3.modalPopupTOD,
-        ModalPopupTOV: answers[0].insulin.q3.modalPopupTOV,
-        SubmitTimeTOD: answers[0].insulin.q3.submitTimeTOD,
-        QuestionNo: answers[0].insulin.q3.value,
-        Engagement: answers[0].insulin.q3.engagement,
-        Answer: answers[0].insulin.q3.answer
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q3.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q3.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q3.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q3.value,
+        Engagement: answers[0].photosynth.q3.engagement,
+        Answer: answers[0].photosynth.q3.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].insulin.value,
+        VideoName: answers[0].photosynth.value,
         ExperimentType: 'control',
-        SequenceNo: insulinSequenceNumber,
-        ModalPopupTOD: answers[0].insulin.q4.modalPopupTOD,
-        ModalPopupTOV: answers[0].insulin.q4.modalPopupTOV,
-        SubmitTimeTOD: answers[0].insulin.q4.submitTimeTOD,
-        QuestionNo: answers[0].insulin.q4.value,
-        Engagement: answers[0].insulin.q4.engagement,
-        Answer: answers[0].insulin.q4.answer
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q4.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q4.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q4.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q4.value,
+        Engagement: answers[0].photosynth.q4.engagement,
+        Answer: answers[0].photosynth.q4.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].insulin.value,
+        VideoName: answers[0].photosynth.value,
         ExperimentType: 'control',
-        SequenceNo: insulinSequenceNumber,
-        ModalPopupTOD: answers[0].insulin.q5.modalPopupTOD,
-        ModalPopupTOV: answers[0].insulin.q5.modalPopupTOV,
-        SubmitTimeTOD: answers[0].insulin.q5.submitTimeTOD,
-        QuestionNo: answers[0].insulin.q5.value,
-        Engagement: answers[0].insulin.q5.engagement,
-        Answer: answers[0].insulin.q5.answer
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q5.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q5.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q5.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q5.value,
+        Engagement: answers[0].photosynth.q5.engagement,
+        Answer: answers[0].photosynth.q5.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].insulin.value,
+        VideoName: answers[0].photosynth.value,
         ExperimentType: 'control',
-        SequenceNo: insulinSequenceNumber,
-        ModalPopupTOD: answers[0].insulin.q6.modalPopupTOD,
-        ModalPopupTOV: answers[0].insulin.q6.modalPopupTOV,
-        SubmitTimeTOD: answers[0].insulin.q6.submitTimeTOD,
-        QuestionNo: answers[0].insulin.q6.value,
-        Engagement: answers[0].insulin.q6.engagement,
-        Answer: answers[0].insulin.q6.answer
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q6.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q6.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q6.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q6.value,
+        Engagement: answers[0].photosynth.q6.engagement,
+        Answer: answers[0].photosynth.q6.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].insulin.value,
+        VideoName: answers[0].photosynth.value,
         ExperimentType: 'control',
-        SequenceNo: insulinSequenceNumber,
-        ModalPopupTOD: answers[0].insulin.q7.modalPopupTOD,
-        ModalPopupTOV: answers[0].insulin.q7.modalPopupTOV,
-        SubmitTimeTOD: answers[0].insulin.q7.submitTimeTOD,
-        QuestionNo: answers[0].insulin.q7.value,
-        Engagement: answers[0].insulin.q7.engagement,
-        Answer: answers[0].insulin.q7.answer
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q7.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q7.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q7.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q7.value,
+        Engagement: answers[0].photosynth.q7.engagement,
+        Answer: answers[0].photosynth.q7.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].insulin.value,
+        VideoName: answers[0].photosynth.value,
         ExperimentType: 'control',
-        SequenceNo: insulinSequenceNumber,
-        ModalPopupTOD: answers[0].insulin.q8.modalPopupTOD,
-        ModalPopupTOV: answers[0].insulin.q8.modalPopupTOV,
-        SubmitTimeTOD: answers[0].insulin.q8.submitTimeTOD,
-        QuestionNo: answers[0].insulin.q8.value,
-        Engagement: answers[0].insulin.q8.engagement,
-        Answer: answers[0].insulin.q8.answer
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q8.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q8.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q8.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q8.value,
+        Engagement: answers[0].photosynth.q8.engagement,
+        Answer: answers[0].photosynth.q8.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].insulin.value,
+        VideoName: answers[0].photosynth.value,
         ExperimentType: 'control',
-        SequenceNo: insulinSequenceNumber,
-        ModalPopupTOD: answers[0].insulin.q9.modalPopupTOD,
-        ModalPopupTOV: answers[0].insulin.q9.modalPopupTOV,
-        SubmitTimeTOD: answers[0].insulin.q9.submitTimeTOD,
-        QuestionNo: answers[0].insulin.q9.value,
-        Engagement: answers[0].insulin.q9.engagement,
-        Answer: answers[0].insulin.q9.answer
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q9.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q9.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q9.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q9.value,
+        Engagement: answers[0].photosynth.q9.engagement,
+        Answer: answers[0].photosynth.q9.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].insulin.value,
+        VideoName: answers[0].photosynth.value,
         ExperimentType: 'control',
-        SequenceNo: insulinSequenceNumber,
-        ModalPopupTOD: answers[0].insulin.q10.modalPopupTOD,
-        ModalPopupTOV: answers[0].insulin.q10.modalPopupTOV,
-        SubmitTimeTOD: answers[0].insulin.q10.submitTimeTOD,
-        QuestionNo: answers[0].insulin.q10.value,
-        Engagement: answers[0].insulin.q10.engagement,
-        Answer: answers[0].insulin.q10.answer
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q10.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q10.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q10.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q10.value,
+        Engagement: answers[0].photosynth.q10.engagement,
+        Answer: answers[0].photosynth.q10.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].insulin.value,
+        VideoName: answers[0].photosynth.value,
         ExperimentType: 'control',
-        SequenceNo: insulinSequenceNumber,
-        ModalPopupTOD: answers[0].insulin.q11.modalPopupTOD,
-        ModalPopupTOV: answers[0].insulin.q11.modalPopupTOV,
-        SubmitTimeTOD: answers[0].insulin.q11.submitTimeTOD,
-        QuestionNo: answers[0].insulin.q11.value,
-        Engagement: answers[0].insulin.q11.engagement,
-        Answer: answers[0].insulin.q11.answer
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q11.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q11.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q11.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q11.value,
+        Engagement: answers[0].photosynth.q11.engagement,
+        Answer: answers[0].photosynth.q11.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].insulin.value,
+        VideoName: answers[0].photosynth.value,
         ExperimentType: 'control',
-        SequenceNo: insulinSequenceNumber,
-        ModalPopupTOD: answers[0].insulin.q12.modalPopupTOD,
-        ModalPopupTOV: answers[0].insulin.q12.modalPopupTOV,
-        SubmitTimeTOD: answers[0].insulin.q12.submitTimeTOD,
-        QuestionNo: answers[0].insulin.q12.value,
-        Engagement: answers[0].insulin.q12.engagement,
-        Answer: answers[0].insulin.q12.answer
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q12.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q12.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q12.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q12.value,
+        Engagement: answers[0].photosynth.q12.engagement,
+        Answer: answers[0].photosynth.q12.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].insulin.value,
+        VideoName: answers[0].photosynth.value,
         ExperimentType: 'control',
-        SequenceNo: insulinSequenceNumber,
-        ModalPopupTOD: answers[0].insulin.q13.modalPopupTOD,
-        ModalPopupTOV: answers[0].insulin.q13.modalPopupTOV,
-        SubmitTimeTOD: answers[0].insulin.q13.submitTimeTOD,
-        QuestionNo: answers[0].insulin.q13.value,
-        Engagement: answers[0].insulin.q13.engagement,
-        Answer: answers[0].insulin.q13.answer
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q13.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q13.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q13.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q13.value,
+        Engagement: answers[0].photosynth.q13.engagement,
+        Answer: answers[0].photosynth.q13.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].insulin.value,
+        VideoName: answers[0].photosynth.value,
         ExperimentType: 'control',
-        SequenceNo: insulinSequenceNumber,
-        ModalPopupTOD: answers[0].insulin.q14.modalPopupTOD,
-        ModalPopupTOV: answers[0].insulin.q14.modalPopupTOV,
-        SubmitTimeTOD: answers[0].insulin.q14.submitTimeTOD,
-        QuestionNo: answers[0].insulin.q14.value,
-        Engagement: answers[0].insulin.q14.engagement,
-        Answer: answers[0].insulin.q14.answer
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q14.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q14.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q14.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q14.value,
+        Engagement: answers[0].photosynth.q14.engagement,
+        Answer: answers[0].photosynth.q14.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].insulin.value,
+        VideoName: answers[0].photosynth.value,
         ExperimentType: 'control',
-        SequenceNo: insulinSequenceNumber,
-        ModalPopupTOD: answers[0].insulin.q15.modalPopupTOD,
-        ModalPopupTOV: answers[0].insulin.q15.modalPopupTOV,
-        SubmitTimeTOD: answers[0].insulin.q15.submitTimeTOD,
-        QuestionNo: answers[0].insulin.q15.value,
-        Engagement: answers[0].insulin.q15.engagement,
-        Answer: answers[0].insulin.q15.answer
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q15.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q15.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q15.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q15.value,
+        Engagement: answers[0].photosynth.q15.engagement,
+        Answer: answers[0].photosynth.q15.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].insulin.value,
+        VideoName: answers[0].photosynth.value,
         ExperimentType: 'control',
-        SequenceNo: insulinSequenceNumber,
-        ModalPopupTOD: answers[0].insulin.q16.modalPopupTOD,
-        ModalPopupTOV: answers[0].insulin.q16.modalPopupTOV,
-        SubmitTimeTOD: answers[0].insulin.q16.submitTimeTOD,
-        QuestionNo: answers[0].insulin.q16.value,
-        Engagement: answers[0].insulin.q16.engagement,
-        Answer: answers[0].insulin.q16.answer
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q16.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q16.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q16.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q16.value,
+        Engagement: answers[0].photosynth.q16.engagement,
+        Answer: answers[0].photosynth.q16.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q17.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q17.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q17.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q17.value,
+        Engagement: answers[0].photosynth.q17.engagement,
+        Answer: answers[0].photosynth.q17.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q18.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q18.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q18.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q18.value,
+        Engagement: answers[0].photosynth.q18.engagement,
+        Answer: answers[0].photosynth.q18.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q19.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q19.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q19.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q19.value,
+        Engagement: answers[0].photosynth.q19.engagement,
+        Answer: answers[0].photosynth.q19.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q20.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q20.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q20.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q20.value,
+        Engagement: answers[0].photosynth.q20.engagement,
+        Answer: answers[0].photosynth.q20.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q21.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q21.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q21.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q21.value,
+        Engagement: answers[0].photosynth.q21.engagement,
+        Answer: answers[0].photosynth.q21.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q22.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q22.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q22.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q22.value,
+        Engagement: answers[0].photosynth.q22.engagement,
+        Answer: answers[0].photosynth.q22.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q23.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q23.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q23.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q23.value,
+        Engagement: answers[0].photosynth.q23.engagement,
+        Answer: answers[0].photosynth.q23.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q24.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q24.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q24.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q24.value,
+        Engagement: answers[0].photosynth.q24.engagement,
+        Answer: answers[0].photosynth.q24.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q25.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q25.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q25.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q25.value,
+        Engagement: answers[0].photosynth.q25.engagement,
+        Answer: answers[0].photosynth.q25.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q26.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q26.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q26.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q26.value,
+        Engagement: answers[0].photosynth.q26.engagement,
+        Answer: answers[0].photosynth.q26.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q27.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q27.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q27.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q27.value,
+        Engagement: answers[0].photosynth.q27.engagement,
+        Answer: answers[0].photosynth.q27.answer
       }
     ];
 
@@ -2011,7 +2139,7 @@ export default class VideoSet extends Component<Props, State> {
                   </h5>
                 )}
 
-                {currentVideo === insulinVideo && (
+                {currentVideo === photosynthVideo && (
                   <h5>
                     <a
                       className={styles.surveyLink}

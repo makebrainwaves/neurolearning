@@ -24,7 +24,7 @@ import { createEEGObservable } from '../../utils/eeg';
 import videoSrc1 from '../Biomass.mp4';
 import videoSrc2 from '../Fuel.mp4';
 import videoSrc3 from '../Combustion.mp4';
-import videoSrc4 from '../Insulin_KZ.mp4';
+import videoSrc4 from '../Photosynth.mp4';
 
 type Props = {};
 
@@ -87,7 +87,7 @@ export default class Home extends Component<Props, State> {
       firstVideoName: 'Biomass',
       secondVideoName: 'Fuel',
       thirdVideoName: 'Gas',
-      fourthVideoName: 'Insulin',
+      fourthVideoName: 'Photosynth',
       firstVideoType: 'control',
       secondVideoType: 'control',
       thirdVideoType: 'control',
@@ -159,9 +159,9 @@ export default class Home extends Component<Props, State> {
       videoName = 'Gas';
     } else if (
       value ===
-      'http://localhost:1212/dist/a6e5c47df7b77a974f47cce5b094f90c.mp4'
+      'http://localhost:1212/dist/adf2b55277c0e5538ff5ba60a1f4a756.mp4'
     ) {
-      videoName = 'Insulin';
+      videoName = 'Photosynth';
     } else {
       videoName = 'Unknown';
     }
@@ -283,7 +283,7 @@ export default class Home extends Component<Props, State> {
       { key: 'vid1', value: videoSrc1, text: 'Biomass' },
       { key: 'vid2', value: videoSrc2, text: 'Fuel' },
       { key: 'vid3', value: videoSrc3, text: 'Gas' },
-      { key: 'vid4', value: videoSrc4, text: 'Insulin' }
+      { key: 'vid4', value: videoSrc4, text: 'Photosynth' }
     ];
 
     const experimentOptions = [
