@@ -41,14 +41,14 @@ interface Props {
 
 const controlPauseTime = 4;
 const rollBackTime = 2;
-const nichesQ = require('../../questions/NichesQuestions.js');
+const biomassQ = require('../../questions/BiomassQuestions.js');
 const lipidQ = require('../../questions/LipidQuestions.js');
 const bipQ = require('../../questions/BipQuestions.js');
 const insulinQ = require('../../questions/InsulinQuestions.js');
 const answersArray = require('../../constants/Answers.js');
 
-const nichesVideo =
-  'http://localhost:1212/dist/67182cb1e21cc5fd95d19a30c3c43001.mp4';
+const biomassVideo =
+  'http://localhost:1212/dist/bab08a1b5e70073aa05bda2923a835f2.mp4';
 const lipidVideo =
   'http://localhost:1212/dist/2ab8ce87a09d1d6b7303006753ca0251.mp4';
 const bipVideo =
@@ -98,7 +98,7 @@ export default class VideoSet extends Component<Props, State> {
       questionAnswered4: false,
       questionAnswered5: false,
       questionAnswered6: false,
-      nichesSequenceNumber: 1,
+      biomassSequenceNumber: 1,
       lipidSequenceNumber: 2,
       bipSequenceNumber: 3,
       insulinSequenceNumber: 4,
@@ -127,7 +127,7 @@ export default class VideoSet extends Component<Props, State> {
     this.setState({
       currentVideo: this.props.location.state.firstVideo,
       videoName: this.getVideoName(this.props.location.state.firstVideo),
-      nichesSequenceNumber: this.getSequenceNumber('niches'),
+      biomassSequenceNumber: this.getSequenceNumber('biomass'),
       lipidSequenceNumber: this.getSequenceNumber('lipid'),
       bipSequenceNumber: this.getSequenceNumber('bip'),
       insulinSequenceNumber: this.getSequenceNumber('insulin')
@@ -152,7 +152,7 @@ export default class VideoSet extends Component<Props, State> {
   getRandomQuestionSet(currVid) {
     console.log('this curr video', this.state.currentVideo);
     const videoQuestions = this.getQuestionSet(currVid);
-
+    console.log('videoquestions', videoQuestions);
     let randomNumbers = [];
     const arr = [];
     const newQuestionSet = [];
@@ -255,8 +255,8 @@ export default class VideoSet extends Component<Props, State> {
 
   getVideoName(currentVideo) {
     let videoNameTemp = '';
-    if (currentVideo === nichesVideo) {
-      videoNameTemp = 'niches';
+    if (currentVideo === biomassVideo) {
+      videoNameTemp = 'biomass';
     } else if (currentVideo === lipidVideo) {
       videoNameTemp = 'lipid';
     } else if (currentVideo === bipVideo) {
@@ -275,8 +275,9 @@ export default class VideoSet extends Component<Props, State> {
 
   getQuestionSet(video) {
     let questionSetTemp = [];
-    if (video === nichesVideo) {
-      questionSetTemp = nichesQ;
+    console.log('from getQuestionSet', video);
+    if (video === biomassVideo) {
+      questionSetTemp = biomassQ;
     } else if (video === lipidVideo) {
       questionSetTemp = lipidQ;
     } else if (video === bipVideo) {
@@ -501,7 +502,7 @@ export default class VideoSet extends Component<Props, State> {
       fifthOption,
       currentVideo,
       videoName,
-      nichesSequenceNumber,
+      biomassSequenceNumber,
       lipidSequenceNumber,
       bipSequenceNumber,
       insulinSequenceNumber
@@ -525,207 +526,243 @@ export default class VideoSet extends Component<Props, State> {
     const answersCsv = [
       {
         Subject: subjectId,
-        VideoName: answers[0].niches.value,
+        VideoName: answers[0].biomass.value,
         ExperimentType: 'control',
-        SequenceNo: nichesSequenceNumber,
-        ModalPopupTOD: answers[0].niches.q1.modalPopupTOD,
-        ModalPopupTOV: answers[0].niches.q1.modalPopupTOV,
-        SubmitTimeTOD: answers[0].niches.q1.submitTimeTOD,
-        QuestionNo: answers[0].niches.q1.value,
-        Engagement: answers[0].niches.q1.engagement,
-        Answer: answers[0].niches.q1.answer
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q1.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q1.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q1.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q1.value,
+        Engagement: answers[0].biomass.q1.engagement,
+        Answer: answers[0].biomass.q1.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].niches.value,
+        VideoName: answers[0].biomass.value,
         ExperimentType: 'control',
-        SequenceNo: nichesSequenceNumber,
-        ModalPopupTOD: answers[0].niches.q3.modalPopupTOD,
-        ModalPopupTOV: answers[0].niches.q3.modalPopupTOV,
-        SubmitTimeTOD: answers[0].niches.q3.submitTimeTOD,
-        QuestionNo: answers[0].niches.q3.value,
-        Engagement: answers[0].niches.q3.engagement,
-        Answer: answers[0].niches.q3.answer
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q3.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q3.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q3.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q3.value,
+        Engagement: answers[0].biomass.q3.engagement,
+        Answer: answers[0].biomass.q3.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].niches.value,
+        VideoName: answers[0].biomass.value,
         ExperimentType: 'control',
-        SequenceNo: nichesSequenceNumber,
-        ModalPopupTOD: answers[0].niches.q4.modalPopupTOD,
-        ModalPopupTOV: answers[0].niches.q4.modalPopupTOV,
-        SubmitTimeTOD: answers[0].niches.q4.submitTimeTOD,
-        QuestionNo: answers[0].niches.q4.value,
-        Engagement: answers[0].niches.q4.engagement,
-        Answer: answers[0].niches.q4.answer
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q4.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q4.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q4.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q4.value,
+        Engagement: answers[0].biomass.q4.engagement,
+        Answer: answers[0].biomass.q4.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].niches.value,
+        VideoName: answers[0].biomass.value,
         ExperimentType: 'control',
-        SequenceNo: nichesSequenceNumber,
-        ModalPopupTOD: answers[0].niches.q5.modalPopupTOD,
-        ModalPopupTOV: answers[0].niches.q5.modalPopupTOV,
-        SubmitTimeTOD: answers[0].niches.q5.submitTimeTOD,
-        QuestionNo: answers[0].niches.q5.value,
-        Engagement: answers[0].niches.q5.engagement,
-        Answer: answers[0].niches.q5.answer
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q5.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q5.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q5.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q5.value,
+        Engagement: answers[0].biomass.q5.engagement,
+        Answer: answers[0].biomass.q5.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].niches.value,
+        VideoName: answers[0].biomass.value,
         ExperimentType: 'control',
-        SequenceNo: nichesSequenceNumber,
-        ModalPopupTOD: answers[0].niches.q6.modalPopupTOD,
-        ModalPopupTOV: answers[0].niches.q6.modalPopupTOV,
-        SubmitTimeTOD: answers[0].niches.q6.submitTimeTOD,
-        QuestionNo: answers[0].niches.q6.value,
-        Engagement: answers[0].niches.q6.engagement,
-        Answer: answers[0].niches.q6.answer
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q6.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q6.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q6.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q6.value,
+        Engagement: answers[0].biomass.q6.engagement,
+        Answer: answers[0].biomass.q6.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].niches.value,
+        VideoName: answers[0].biomass.value,
         ExperimentType: 'control',
-        SequenceNo: nichesSequenceNumber,
-        ModalPopupTOD: answers[0].niches.q7.modalPopupTOD,
-        ModalPopupTOV: answers[0].niches.q7.modalPopupTOV,
-        SubmitTimeTOD: answers[0].niches.q7.submitTimeTOD,
-        QuestionNo: answers[0].niches.q7.value,
-        Engagement: answers[0].niches.q7.engagement,
-        Answer: answers[0].niches.q7.answer
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q7.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q7.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q7.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q7.value,
+        Engagement: answers[0].biomass.q7.engagement,
+        Answer: answers[0].biomass.q7.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].niches.value,
+        VideoName: answers[0].biomass.value,
         ExperimentType: 'control',
-        SequenceNo: nichesSequenceNumber,
-        ModalPopupTOD: answers[0].niches.q8.modalPopupTOD,
-        ModalPopupTOV: answers[0].niches.q8.modalPopupTOV,
-        SubmitTimeTOD: answers[0].niches.q8.submitTimeTOD,
-        QuestionNo: answers[0].niches.q8.value,
-        Engagement: answers[0].niches.q8.engagement,
-        Answer: answers[0].niches.q8.answer
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q8.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q8.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q8.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q8.value,
+        Engagement: answers[0].biomass.q8.engagement,
+        Answer: answers[0].biomass.q8.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].niches.value,
+        VideoName: answers[0].biomass.value,
         ExperimentType: 'control',
-        SequenceNo: nichesSequenceNumber,
-        ModalPopupTOD: answers[0].niches.q9.modalPopupTOD,
-        ModalPopupTOV: answers[0].niches.q9.modalPopupTOV,
-        SubmitTimeTOD: answers[0].niches.q9.submitTimeTOD,
-        QuestionNo: answers[0].niches.q9.value,
-        Engagement: answers[0].niches.q9.engagement,
-        Answer: answers[0].niches.q9.answer
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q9.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q9.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q9.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q9.value,
+        Engagement: answers[0].biomass.q9.engagement,
+        Answer: answers[0].biomass.q9.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].niches.value,
+        VideoName: answers[0].biomass.value,
         ExperimentType: 'control',
-        SequenceNo: nichesSequenceNumber,
-        ModalPopupTOD: answers[0].niches.q10.modalPopupTOD,
-        ModalPopupTOV: answers[0].niches.q10.modalPopupTOV,
-        SubmitTimeTOD: answers[0].niches.q10.submitTimeTOD,
-        QuestionNo: answers[0].niches.q10.value,
-        Engagement: answers[0].niches.q10.engagement,
-        Answer: answers[0].niches.q10.answer
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q10.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q10.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q10.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q10.value,
+        Engagement: answers[0].biomass.q10.engagement,
+        Answer: answers[0].biomass.q10.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].niches.value,
+        VideoName: answers[0].biomass.value,
         ExperimentType: 'control',
-        SequenceNo: nichesSequenceNumber,
-        ModalPopupTOD: answers[0].niches.q11.modalPopupTOD,
-        ModalPopupTOV: answers[0].niches.q11.modalPopupTOV,
-        SubmitTimeTOD: answers[0].niches.q11.submitTimeTOD,
-        QuestionNo: answers[0].niches.q11.value,
-        Engagement: answers[0].niches.q11.engagement,
-        Answer: answers[0].niches.q11.answer
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q11.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q11.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q11.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q11.value,
+        Engagement: answers[0].biomass.q11.engagement,
+        Answer: answers[0].biomass.q11.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].niches.value,
+        VideoName: answers[0].biomass.value,
         ExperimentType: 'control',
-        SequenceNo: nichesSequenceNumber,
-        ModalPopupTOD: answers[0].niches.q12.modalPopupTOD,
-        ModalPopupTOV: answers[0].niches.q12.modalPopupTOV,
-        SubmitTimeTOD: answers[0].niches.q12.submitTimeTOD,
-        QuestionNo: answers[0].niches.q12.value,
-        Engagement: answers[0].niches.q12.engagement,
-        Answer: answers[0].niches.q12.answer
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q12.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q12.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q12.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q12.value,
+        Engagement: answers[0].biomass.q12.engagement,
+        Answer: answers[0].biomass.q12.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].niches.value,
+        VideoName: answers[0].biomass.value,
         ExperimentType: 'control',
-        SequenceNo: nichesSequenceNumber,
-        ModalPopupTOD: answers[0].niches.q13.modalPopupTOD,
-        ModalPopupTOV: answers[0].niches.q13.modalPopupTOV,
-        SubmitTimeTOD: answers[0].niches.q13.submitTimeTOD,
-        QuestionNo: answers[0].niches.q13.value,
-        Engagement: answers[0].niches.q13.engagement,
-        Answer: answers[0].niches.q13.answer
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q13.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q13.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q13.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q13.value,
+        Engagement: answers[0].biomass.q13.engagement,
+        Answer: answers[0].biomass.q13.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].niches.value,
+        VideoName: answers[0].biomass.value,
         ExperimentType: 'control',
-        SequenceNo: nichesSequenceNumber,
-        ModalPopupTOD: answers[0].niches.q14.modalPopupTOD,
-        ModalPopupTOV: answers[0].niches.q14.modalPopupTOV,
-        SubmitTimeTOD: answers[0].niches.q14.submitTimeTOD,
-        QuestionNo: answers[0].niches.q14.value,
-        Engagement: answers[0].niches.q14.engagement,
-        Answer: answers[0].niches.q14.answer
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q14.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q14.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q14.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q14.value,
+        Engagement: answers[0].biomass.q14.engagement,
+        Answer: answers[0].biomass.q14.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].niches.value,
+        VideoName: answers[0].biomass.value,
         ExperimentType: 'control',
-        SequenceNo: nichesSequenceNumber,
-        ModalPopupTOD: answers[0].niches.q15.modalPopupTOD,
-        ModalPopupTOV: answers[0].niches.q15.modalPopupTOV,
-        SubmitTimeTOD: answers[0].niches.q15.submitTimeTOD,
-        QuestionNo: answers[0].niches.q15.value,
-        Engagement: answers[0].niches.q15.engagement,
-        Answer: answers[0].niches.q15.answer
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q15.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q15.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q15.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q15.value,
+        Engagement: answers[0].biomass.q15.engagement,
+        Answer: answers[0].biomass.q15.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].niches.value,
+        VideoName: answers[0].biomass.value,
         ExperimentType: 'control',
-        SequenceNo: nichesSequenceNumber,
-        ModalPopupTOD: answers[0].niches.q16.modalPopupTOD,
-        ModalPopupTOV: answers[0].niches.q16.modalPopupTOV,
-        SubmitTimeTOD: answers[0].niches.q16.submitTimeTOD,
-        QuestionNo: answers[0].niches.q16.value,
-        Engagement: answers[0].niches.q16.engagement,
-        Answer: answers[0].niches.q16.answer
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q16.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q16.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q16.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q16.value,
+        Engagement: answers[0].biomass.q16.engagement,
+        Answer: answers[0].biomass.q16.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].niches.value,
+        VideoName: answers[0].biomass.value,
         ExperimentType: 'control',
-        SequenceNo: nichesSequenceNumber,
-        ModalPopupTOD: answers[0].niches.q17.modalPopupTOD,
-        ModalPopupTOV: answers[0].niches.q17.modalPopupTOV,
-        SubmitTimeTOD: answers[0].niches.q17.submitTimeTOD,
-        QuestionNo: answers[0].niches.q17.value,
-        Engagement: answers[0].niches.q17.engagement,
-        Answer: answers[0].niches.q17.answer
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q17.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q17.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q17.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q17.value,
+        Engagement: answers[0].biomass.q17.engagement,
+        Answer: answers[0].biomass.q17.answer
       },
       {
         Subject: subjectId,
-        VideoName: answers[0].niches.value,
+        VideoName: answers[0].biomass.value,
         ExperimentType: 'control',
-        SequenceNo: nichesSequenceNumber,
-        ModalPopupTOD: answers[0].niches.q18.modalPopupTOD,
-        ModalPopupTOV: answers[0].niches.q18.modalPopupTOV,
-        SubmitTimeTOD: answers[0].niches.q18.submitTimeTOD,
-        QuestionNo: answers[0].niches.q18.value,
-        Engagement: answers[0].niches.q18.engagement,
-        Answer: answers[0].niches.q18.answer
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q18.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q18.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q18.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q18.value,
+        Engagement: answers[0].biomass.q18.engagement,
+        Answer: answers[0].biomass.q18.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q19.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q19.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q19.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q19.value,
+        Engagement: answers[0].biomass.q19.engagement,
+        Answer: answers[0].biomass.q19.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q20.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q20.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q20.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q20.value,
+        Engagement: answers[0].biomass.q20.engagement,
+        Answer: answers[0].biomass.q20.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q21.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q21.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q21.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q21.value,
+        Engagement: answers[0].biomass.q21.engagement,
+        Answer: answers[0].biomass.q21.answer
       },
       {
         Subject: subjectId,
@@ -1500,7 +1537,7 @@ export default class VideoSet extends Component<Props, State> {
                   click to continue:
                 </h4>
 
-                {currentVideo === nichesVideo && (
+                {currentVideo === biomassVideo && (
                   <h5>
                     <a
                       className={styles.surveyLink}

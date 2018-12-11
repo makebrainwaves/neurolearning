@@ -21,7 +21,7 @@ import routes from '../../constants/routes.json';
 import styles from './Home.css';
 import { createEEGObservable } from '../../utils/eeg';
 
-import videoSrc1 from '../Niches_KC.mp4';
+import videoSrc1 from '../Biomass.mp4';
 import videoSrc2 from '../Lipid_KZ.mp4';
 import videoSrc3 from '../Bip_KC.mp4';
 import videoSrc4 from '../Insulin_KZ.mp4';
@@ -84,7 +84,7 @@ export default class Home extends Component<Props, State> {
       secondVideo: videoSrc2,
       thirdVideo: videoSrc3,
       fourthVideo: videoSrc4,
-      firstVideoName: 'Niches',
+      firstVideoName: 'Biomass',
       secondVideoName: 'Lipids',
       thirdVideoName: 'BIP',
       fourthVideoName: 'Insulin',
@@ -141,11 +141,12 @@ export default class Home extends Component<Props, State> {
 
   getVideoName = value => {
     let videoName = '';
+    console.log('value', value);
     if (
       value ===
-      'http://localhost:1212/dist/0aaa1f67050e199bf65b346ed1e6bddf.mp4'
+      'http://localhost:1212/dist/bab08a1b5e70073aa05bda2923a835f2.mp4'
     ) {
-      videoName = 'Niches';
+      videoName = 'Biomass';
     } else if (
       value ===
       'http://localhost:1212/dist/2ab8ce87a09d1d6b7303006753ca0251.mp4'
@@ -278,7 +279,7 @@ export default class Home extends Component<Props, State> {
     } = this.state;
 
     const videoOptions = [
-      { key: 'vid1', value: videoSrc1, text: 'Niches' },
+      { key: 'vid1', value: videoSrc1, text: 'Biomass' },
       { key: 'vid2', value: videoSrc2, text: 'Lipids' },
       { key: 'vid3', value: videoSrc3, text: 'BIP' },
       { key: 'vid4', value: videoSrc4, text: 'Insulin' }

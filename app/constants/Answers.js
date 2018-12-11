@@ -1,6 +1,6 @@
 module.exports = [
   {
-    niches: {
+    biomass: {
       q1: {
         experimentType: '',
         modalPopupTOD: '',
@@ -138,6 +138,30 @@ module.exports = [
         answer: ''
       },
       q18: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q19: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q20: {
+        experimentType: '',
+        modalPopupTOD: '',
+        modalPopupTOV: '',
+        submitTimeTOD: '',
+        engagement: '',
+        answer: ''
+      },
+      q21: {
         experimentType: '',
         modalPopupTOD: '',
         modalPopupTOV: '',
