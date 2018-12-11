@@ -1908,8 +1908,7 @@ export default class VideoSet extends Component<Props, State> {
             }}
             className={styles.video}
             src={currentVideo}
-            width="85%"
-            height="65%"
+            width="62%"
             poster="../app/components/VideoComponents/bkbx.jpg"
             controls
             onTimeUpdate={this.onTimeUpdate}
