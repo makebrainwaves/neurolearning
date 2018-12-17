@@ -39,8 +39,7 @@ interface Props {
   electrodesChosen: string;
 }
 
-const controlPauseTime = 4;
-const rollBackTime = 2;
+const rollBackTime = 5;
 const biomassQ = require('../../questions/BiomassQuestions.js');
 const fuelQ = require('../../questions/FuelQuestions.js');
 const gasQ = require('../../questions/CombustionQuestions.js');
