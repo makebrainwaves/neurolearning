@@ -45,6 +45,7 @@ const fuelQ = require('../../questions/FuelQuestions.js');
 const gasQ = require('../../questions/CombustionQuestions.js');
 const photosynthQ = require('../../questions/PhotosynthQuestions.js');
 const answersArray = require('../../constants/Answers.js');
+const updatedAnswersArray = require('../../constants/UpdatedAnswers.js');
 
 const biomassVideo =
   'http://localhost:1212/dist/bab08a1b5e70073aa05bda2923a835f2.mp4';
@@ -114,6 +115,7 @@ export default class VideoSet extends Component<Props, State> {
       secondOption: '',
       thirdOption: '',
       answers: answersArray,
+      updatedAnswers: updatedAnswersArray,
       classifierEEGObservable,
       classifierScore: 0,
       classifierThreshold: 1.1,
@@ -546,6 +548,85 @@ export default class VideoSet extends Component<Props, State> {
     return sequenceNumber;
   }
 
+  getAnswerSet() {
+    console.log('AnswerSet', this.state.answers);
+    const newAnswers = this.state.updatedAnswers;
+    const answersTemp = this.state.answers;
+
+    for (const key of Object.keys(newAnswers)) {
+      const questVal = parseInt(key, 10);
+      if (key >= 0 && key < 21) {
+        const questionNum = `q${questVal + 1}`;
+        newAnswers[key].Subject = this.props.location.state.subjectId;
+        newAnswers[key].VideoName = 'biomass';
+        newAnswers[key].ExperimentType = 'control';
+        newAnswers[key].SequenceNo = this.state.biomassSequenceNumber;
+        newAnswers[key].ModalPopupTOD =
+          answersTemp[0].biomass[questionNum].modalPopupTOD;
+        newAnswers[key].ModalPopupTOV =
+          answersTemp[0].biomass[questionNum].modalPopupTOV;
+        newAnswers[key].SubmitTimeTOD =
+          answersTemp[0].biomass[questionNum].submitTimeTOD;
+        newAnswers[key].QuestionNo = questionNum;
+        newAnswers[key].Engagement =
+          answersTemp[0].biomass[questionNum].engagement;
+        newAnswers[key].Answer = answersTemp[0].biomass[questionNum].answer;
+      }
+      if (key >= 21 && key < 44) {
+        const questionNum = `q${questVal - 20}`;
+        newAnswers[key].Subject = this.props.location.state.subjectId;
+        newAnswers[key].VideoName = 'fuel';
+        newAnswers[key].ExperimentType = 'control';
+        newAnswers[key].SequenceNo = this.state.fuelSequenceNumber;
+        newAnswers[key].ModalPopupTOD =
+          answersTemp[0].fuel[questionNum].modalPopupTOD;
+        newAnswers[key].ModalPopupTOV =
+          answersTemp[0].fuel[questionNum].modalPopupTOV;
+        newAnswers[key].SubmitTimeTOD =
+          answersTemp[0].fuel[questionNum].submitTimeTOD;
+        newAnswers[key].QuestionNo = questionNum;
+        newAnswers[key].Engagement =
+          answersTemp[0].fuel[questionNum].engagement;
+        newAnswers[key].Answer = answersTemp[0].fuel[questionNum].answer;
+      }
+      if (key >= 44 && key < 83) {
+        const questionNum = `q${questVal - 43}`;
+        newAnswers[key].Subject = this.props.location.state.subjectId;
+        newAnswers[key].VideoName = 'gas';
+        newAnswers[key].ExperimentType = 'control';
+        newAnswers[key].SequenceNo = this.state.gasSequenceNumber;
+        newAnswers[key].ModalPopupTOD =
+          answersTemp[0].gas[questionNum].modalPopupTOD;
+        newAnswers[key].ModalPopupTOV =
+          answersTemp[0].gas[questionNum].modalPopupTOV;
+        newAnswers[key].SubmitTimeTOD =
+          answersTemp[0].gas[questionNum].submitTimeTOD;
+        newAnswers[key].QuestionNo = questionNum;
+        newAnswers[key].Engagement = answersTemp[0].gas[questionNum].engagement;
+        newAnswers[key].Answer = answersTemp[0].gas[questionNum].answer;
+      }
+      if (key >= 83 && key < 110) {
+        const questionNum = `q${questVal - 82}`;
+        newAnswers[key].Subject = this.props.location.state.subjectId;
+        newAnswers[key].VideoName = 'photosynth';
+        newAnswers[key].ExperimentType = 'control';
+        newAnswers[key].SequenceNo = this.state.photosynthSequenceNumber;
+        newAnswers[key].ModalPopupTOD =
+          answersTemp[0].photosynth[questionNum].modalPopupTOD;
+        newAnswers[key].ModalPopupTOV =
+          answersTemp[0].photosynth[questionNum].modalPopupTOV;
+        newAnswers[key].SubmitTimeTOD =
+          answersTemp[0].photosynth[questionNum].submitTimeTOD;
+        newAnswers[key].QuestionNo = questionNum;
+        newAnswers[key].Engagement =
+          answersTemp[0].photosynth[questionNum].engagement;
+        newAnswers[key].Answer = answersTemp[0].photosynth[questionNum].answer;
+      }
+    }
+
+    return newAnswers;
+  }
+
   render() {
     const {
       modalIsOpen,
@@ -563,7 +644,8 @@ export default class VideoSet extends Component<Props, State> {
       biomassSequenceNumber,
       fuelSequenceNumber,
       gasSequenceNumber,
-      photosynthSequenceNumber
+      photosynthSequenceNumber,
+      updatedAnswers
     } = this.state;
     const { location } = this.props;
     const { state } = location;
@@ -580,7 +662,8 @@ export default class VideoSet extends Component<Props, State> {
     } = state;
 
     // const answersCsv = this.updateAnswers();
-
+    const answersCsv = this.getAnswerSet();
+    /*
     const answersCsv = [
       {
         Subject: subjectId,
@@ -1891,7 +1974,7 @@ export default class VideoSet extends Component<Props, State> {
         Answer: answers[0].photosynth.q27.answer
       }
     ];
-
+*/
     return (
       <div className={styles.videoContainer}>
         <div className={styles.backButton} data-tid="backButton">
