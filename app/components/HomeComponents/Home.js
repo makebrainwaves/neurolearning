@@ -95,38 +95,38 @@ export default class Home extends Component<Props, State> {
       rawEEGObservable: null,
       classifierType: 'alpha',
       electrodes: [
-        { id: 1, value: 'P7', checked: true },
-        { id: 2, value: 'P4', checked: true },
-        { id: 3, value: 'Cz', checked: true },
-        { id: 4, value: 'Pz', checked: true },
-        { id: 5, value: 'P3', checked: true },
-        { id: 6, value: 'P8', checked: true },
-        { id: 7, value: 'O1', checked: true },
-        { id: 8, value: 'O2', checked: true },
-        { id: 9, value: 'T8', checked: true },
-        { id: 10, value: 'F8', checked: true },
-        { id: 11, value: 'C4', checked: true },
-        { id: 12, value: 'F4', checked: true },
-        { id: 13, value: 'Fp2', checked: true },
-        { id: 14, value: 'Fz', checked: true },
-        { id: 15, value: 'C3', checked: true },
-        { id: 16, value: 'F3', checked: true },
-        { id: 17, value: 'Fp1', checked: true },
-        { id: 18, value: 'T7', checked: true },
-        { id: 19, value: 'F7', checked: true },
-        { id: 20, value: 'Oz', checked: true },
-        { id: 21, value: 'PO4', checked: true },
-        { id: 22, value: 'FC6', checked: true },
-        { id: 23, value: 'FC2', checked: true },
-        { id: 24, value: 'AF4', checked: true },
-        { id: 25, value: 'CP6', checked: true },
-        { id: 26, value: 'CP2', checked: true },
-        { id: 27, value: 'CP1', checked: true },
-        { id: 28, value: 'CP5', checked: true },
-        { id: 29, value: 'FC1', checked: true },
-        { id: 30, value: 'FC5', checked: true },
-        { id: 31, value: 'AF3', checked: true },
-        { id: 32, value: 'PO3', checked: true }
+        { id: 0, value: 'P7', checked: true },
+        { id: 1, value: 'P4', checked: true },
+        { id: 2, value: 'Cz', checked: true },
+        { id: 3, value: 'Pz', checked: true },
+        { id: 4, value: 'P3', checked: true },
+        { id: 5, value: 'P8', checked: true },
+        { id: 6, value: 'O1', checked: true },
+        { id: 7, value: 'O2', checked: true },
+        { id: 8, value: 'T8', checked: true },
+        { id: 9, value: 'F8', checked: true },
+        { id: 10, value: 'C4', checked: true },
+        { id: 11, value: 'F4', checked: true },
+        { id: 12, value: 'Fp2', checked: true },
+        { id: 13, value: 'Fz', checked: true },
+        { id: 14, value: 'C3', checked: true },
+        { id: 15, value: 'F3', checked: true },
+        { id: 16, value: 'Fp1', checked: true },
+        { id: 17, value: 'T7', checked: true },
+        { id: 18, value: 'F7', checked: true },
+        { id: 19, value: 'Oz', checked: true },
+        { id: 20, value: 'PO4', checked: true },
+        { id: 21, value: 'FC6', checked: true },
+        { id: 22, value: 'FC2', checked: true },
+        { id: 23, value: 'AF4', checked: true },
+        { id: 24, value: 'CP6', checked: true },
+        { id: 25, value: 'CP2', checked: true },
+        { id: 26, value: 'CP1', checked: true },
+        { id: 27, value: 'CP5', checked: true },
+        { id: 28, value: 'FC1', checked: true },
+        { id: 29, value: 'FC5', checked: true },
+        { id: 30, value: 'AF3', checked: true },
+        { id: 31, value: 'PO3', checked: true }
       ]
     };
     this.handleSubjectId = this.handleSubjectId.bind(this);
@@ -189,7 +189,10 @@ export default class Home extends Component<Props, State> {
   }
 
   handleConnectEEG() {
-    const selectedChannels = [1, 2, 3, 4, 5];
+    const selectedChannels = this.state.electrodes
+      .filter(electrode => electrode.checked)
+      .map(electrode => electrode.id);
+    // console.log('selectedChannels', selectedChannels);
     try {
       const eegObservable = createEEGObservable(250, selectedChannels);
       if (!isNil(eegObservable)) {
