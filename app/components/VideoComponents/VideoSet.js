@@ -9,9 +9,15 @@ import styles from './VideoSet.css';
 import routes from '../../constants/routes.json';
 import * as data from '../../questions/questions.json';
 
+/*
 import {
   createAlphaClassifierObservable,
   createThetaBetaClassifierObservable
+} from '../../utils/eeg';
+*/
+import {
+  createBaselineObservable,
+  createClassifierObservable
 } from '../../utils/eeg';
 
 interface State {
@@ -36,7 +42,7 @@ interface State {
 }
 
 interface Props {
-  electrodesChosen: string;
+  electrodesChosen: [];
 }
 
 const rollBackTime = 5;
@@ -63,7 +69,7 @@ export default class VideoSet extends Component<Props, State> {
 
   constructor(props) {
     super(props);
-    let classifierEEGObservable = null;
+    const classifierEEGObservable = null;
     /*
     console.log('check varrrr', this.props.location.state.firstVideo);
     console.log('your eeg observable', props.location.state.classifierType);
@@ -72,6 +78,26 @@ export default class VideoSet extends Component<Props, State> {
       props.location.state.rawEEGObservable
     );
     */
+
+    const handleStartEEG = () => {
+      // const baselineObs = createBaselineObservable(this.rawEEGObservable);
+      const baselineObs = createBaselineObservable(
+        props.location.state.rawEEGObservable
+      );
+      baselineObs.subscribe(threshold => {
+        this.setState({ threshold });
+        console.log('threshold', this.state.threshold);
+        const classifierObservable = createClassifierObservable(
+          // this.rawEEGObservable,
+          props.location.state.rawEEGObservable,
+          threshold
+        );
+        classifierObservable.subscribe(decision => this.setState({ decision }));
+        console.log('this.state.decision', this.state.decision);
+      });
+    };
+
+    /*
     if (props.location.state.classifierType === 'alpha') {
       classifierEEGObservable = createAlphaClassifierObservable(
         props.location.state.rawEEGObservable
@@ -83,7 +109,7 @@ export default class VideoSet extends Component<Props, State> {
       );
       console.log('your classifierEEGObservable: ', classifierEEGObservable);
     }
-
+  */
     console.log('tests', this.props.location.props.electrodesChosen);
 
     this.state = {
