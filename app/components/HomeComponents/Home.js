@@ -189,8 +189,9 @@ export default class Home extends Component<Props, State> {
   }
 
   handleConnectEEG() {
+    const selectedChannels = [1, 2, 3, 4, 5];
     try {
-      const eegObservable = createEEGObservable();
+      const eegObservable = createEEGObservable(250, selectedChannels);
       if (!isNil(eegObservable)) {
         this.setState({ rawEEGObservable: eegObservable });
       }
