@@ -305,7 +305,6 @@ export default class VideoSet extends Component<Props, State> {
       question1AlreadyShown,
       question2AlreadyShown,
       isRunning,
-      currentVideo,
       videoName,
       questionSet
     } = this.state;
@@ -489,6 +488,34 @@ export default class VideoSet extends Component<Props, State> {
     this.setState({ answers });
   }
 
+  getExperimentType() {
+    const currentVideoName = this.getVideoName(this.state.currentVideo);
+    const seqNo = this.getSequenceNumber(currentVideoName);
+    const {
+      firstVideoType,
+      secondVideoType,
+      thirdVideoType,
+      fourthVideoType
+    } = this.props.location.state;
+
+    let expType = '';
+
+    if (seqNo === 1) {
+      expType = firstVideoType;
+    }
+    if (seqNo === 2) {
+      expType = secondVideoType;
+    }
+    if (seqNo === 3) {
+      expType = thirdVideoType;
+    }
+    if (seqNo === 4) {
+      expType = fourthVideoType;
+    }
+
+    return expType;
+  }
+
   handleQuestion(q, e) {
     this.setState({ obscureButton: false });
     const answers = this.state.answers;
@@ -497,7 +524,9 @@ export default class VideoSet extends Component<Props, State> {
 
     answers.forEach(answer => {
       answer[this.state.videoName].value = this.state.videoName;
-      answer[this.state.videoName][questionNumber].experimentType = 'control';
+      answer[this.state.videoName][
+        questionNumber
+      ].experimentType = this.getExperimentType();
       answer[this.state.videoName][questionNumber].value = q.questionNumber;
       answer[this.state.videoName][questionNumber].answer = e.target.value;
     });
@@ -559,7 +588,8 @@ export default class VideoSet extends Component<Props, State> {
         const questionNum = `q${questVal + 1}`;
         newAnswers[key].Subject = this.props.location.state.subjectId;
         newAnswers[key].VideoName = 'biomass';
-        newAnswers[key].ExperimentType = 'control';
+        newAnswers[key].ExperimentType =
+          answersTemp[0].biomass[questionNum].experimentType;
         newAnswers[key].SequenceNo = this.state.biomassSequenceNumber;
         newAnswers[key].ModalPopupTOD =
           answersTemp[0].biomass[questionNum].modalPopupTOD;
@@ -576,7 +606,8 @@ export default class VideoSet extends Component<Props, State> {
         const questionNum = `q${questVal - 20}`;
         newAnswers[key].Subject = this.props.location.state.subjectId;
         newAnswers[key].VideoName = 'fuel';
-        newAnswers[key].ExperimentType = 'control';
+        newAnswers[key].ExperimentType =
+          answersTemp[0].fuel[questionNum].experimentType;
         newAnswers[key].SequenceNo = this.state.fuelSequenceNumber;
         newAnswers[key].ModalPopupTOD =
           answersTemp[0].fuel[questionNum].modalPopupTOD;
@@ -593,7 +624,8 @@ export default class VideoSet extends Component<Props, State> {
         const questionNum = `q${questVal - 43}`;
         newAnswers[key].Subject = this.props.location.state.subjectId;
         newAnswers[key].VideoName = 'gas';
-        newAnswers[key].ExperimentType = 'control';
+        newAnswers[key].ExperimentType =
+          answersTemp[0].gas[questionNum].experimentType;
         newAnswers[key].SequenceNo = this.state.gasSequenceNumber;
         newAnswers[key].ModalPopupTOD =
           answersTemp[0].gas[questionNum].modalPopupTOD;
@@ -609,7 +641,8 @@ export default class VideoSet extends Component<Props, State> {
         const questionNum = `q${questVal - 82}`;
         newAnswers[key].Subject = this.props.location.state.subjectId;
         newAnswers[key].VideoName = 'photosynth';
-        newAnswers[key].ExperimentType = 'control';
+        newAnswers[key].ExperimentType =
+          answersTemp[0].photosynth[questionNum].experimentType;
         newAnswers[key].SequenceNo = this.state.photosynthSequenceNumber;
         newAnswers[key].ModalPopupTOD =
           answersTemp[0].photosynth[questionNum].modalPopupTOD;
