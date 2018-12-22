@@ -95,38 +95,38 @@ export default class Home extends Component<Props, State> {
       rawEEGObservable: null,
       classifierType: 'alpha',
       electrodes: [
-        { id: 1, value: 'P7', checked: true },
-        { id: 2, value: 'P4', checked: true },
-        { id: 3, value: 'Cz', checked: true },
-        { id: 4, value: 'Pz', checked: true },
-        { id: 5, value: 'P3', checked: true },
-        { id: 6, value: 'P8', checked: true },
-        { id: 7, value: 'O1', checked: true },
-        { id: 8, value: 'O2', checked: true },
-        { id: 9, value: 'T8', checked: true },
-        { id: 10, value: 'F8', checked: true },
-        { id: 11, value: 'C4', checked: true },
-        { id: 12, value: 'F4', checked: true },
-        { id: 13, value: 'Fp2', checked: true },
-        { id: 14, value: 'Fz', checked: true },
-        { id: 15, value: 'C3', checked: true },
-        { id: 16, value: 'F3', checked: true },
-        { id: 17, value: 'Fp1', checked: true },
-        { id: 18, value: 'T7', checked: true },
-        { id: 19, value: 'F7', checked: true },
-        { id: 20, value: 'Oz', checked: true },
-        { id: 21, value: 'PO4', checked: true },
-        { id: 22, value: 'FC6', checked: true },
-        { id: 23, value: 'FC2', checked: true },
-        { id: 24, value: 'AF4', checked: true },
-        { id: 25, value: 'CP6', checked: true },
-        { id: 26, value: 'CP2', checked: true },
-        { id: 27, value: 'CP1', checked: true },
-        { id: 28, value: 'CP5', checked: true },
-        { id: 29, value: 'FC1', checked: true },
-        { id: 30, value: 'FC5', checked: true },
-        { id: 31, value: 'AF3', checked: true },
-        { id: 32, value: 'PO3', checked: true }
+        { id: 0, value: 'P7', checked: false },
+        { id: 1, value: 'P4', checked: false },
+        { id: 2, value: 'Cz', checked: false },
+        { id: 3, value: 'Pz', checked: false },
+        { id: 4, value: 'P3', checked: false },
+        { id: 5, value: 'P8', checked: false },
+        { id: 6, value: 'O1', checked: false },
+        { id: 7, value: 'O2', checked: false },
+        { id: 8, value: 'T8', checked: false },
+        { id: 9, value: 'F8', checked: false },
+        { id: 10, value: 'C4', checked: false },
+        { id: 11, value: 'F4', checked: false },
+        { id: 12, value: 'Fp2', checked: false },
+        { id: 13, value: 'Fz', checked: false },
+        { id: 14, value: 'C3', checked: false },
+        { id: 15, value: 'F3', checked: false },
+        { id: 16, value: 'Fp1', checked: false },
+        { id: 17, value: 'T7', checked: false },
+        { id: 18, value: 'F7', checked: false },
+        { id: 19, value: 'Oz', checked: false },
+        { id: 20, value: 'PO4', checked: false },
+        { id: 21, value: 'FC6', checked: false },
+        { id: 22, value: 'FC2', checked: false },
+        { id: 23, value: 'AF4', checked: false },
+        { id: 24, value: 'CP6', checked: false },
+        { id: 25, value: 'CP2', checked: false },
+        { id: 26, value: 'CP1', checked: false },
+        { id: 27, value: 'CP5', checked: false },
+        { id: 28, value: 'FC1', checked: false },
+        { id: 29, value: 'FC5', checked: false },
+        { id: 30, value: 'AF3', checked: false },
+        { id: 31, value: 'PO3', checked: false }
       ]
     };
     this.handleSubjectId = this.handleSubjectId.bind(this);
@@ -189,11 +189,16 @@ export default class Home extends Component<Props, State> {
   }
 
   handleConnectEEG() {
+    const selectedChannels = this.state.electrodes
+      .filter(electrode => electrode.checked)
+      .map(electrode => electrode.id);
+    // console.log('selectedChannels', selectedChannels);
     try {
-      const eegObservable = createEEGObservable();
+      const eegObservable = createEEGObservable(250, selectedChannels);
       if (!isNil(eegObservable)) {
         this.setState({ rawEEGObservable: eegObservable });
       }
+      // eegObservable.subscribe(console.log);
     } catch (e) {
       console.log('Error in handleConnectEEG: ', e);
     }
@@ -449,7 +454,6 @@ export default class Home extends Component<Props, State> {
                       label="P7"
                       value={!!electrodes.P7}
                       name="P7"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -460,7 +464,6 @@ export default class Home extends Component<Props, State> {
                       label="P4"
                       value={!!electrodes.P4}
                       name="P4"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -471,7 +474,6 @@ export default class Home extends Component<Props, State> {
                       label="Cz"
                       value={!!electrodes.Cz}
                       name="Cz"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -482,7 +484,6 @@ export default class Home extends Component<Props, State> {
                       label="Pz"
                       value={!!electrodes.Pz}
                       name="Pz"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -493,7 +494,6 @@ export default class Home extends Component<Props, State> {
                       label="P3"
                       value={!!electrodes.P3}
                       name="P3"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -504,7 +504,6 @@ export default class Home extends Component<Props, State> {
                       label="P8"
                       value={!!electrodes.P8}
                       name="P8"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -515,7 +514,6 @@ export default class Home extends Component<Props, State> {
                       label="O1"
                       value={!!electrodes.O1}
                       name="O1"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -526,7 +524,6 @@ export default class Home extends Component<Props, State> {
                       label="O2"
                       value={!!electrodes.O2}
                       name="O2"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -540,7 +537,6 @@ export default class Home extends Component<Props, State> {
                       label="T8"
                       value={!!electrodes.T8}
                       name="T8"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -551,7 +547,6 @@ export default class Home extends Component<Props, State> {
                       label="F8"
                       value={!!electrodes.F8}
                       name="F8"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -562,7 +557,6 @@ export default class Home extends Component<Props, State> {
                       label="C4"
                       value={!!electrodes.C4}
                       name="C4"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -573,7 +567,6 @@ export default class Home extends Component<Props, State> {
                       label="F4"
                       value={!!electrodes.F4}
                       name="F4"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -584,7 +577,6 @@ export default class Home extends Component<Props, State> {
                       label="Fp2"
                       value={!!electrodes.Fp2}
                       name="Fp2"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -595,7 +587,6 @@ export default class Home extends Component<Props, State> {
                       label="Fz"
                       value={!!electrodes.Fz}
                       name="Fz"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -606,7 +597,6 @@ export default class Home extends Component<Props, State> {
                       label="C3"
                       value={!!electrodes.C3}
                       name="C3"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -617,7 +607,6 @@ export default class Home extends Component<Props, State> {
                       label="F3"
                       value={!!electrodes.F3}
                       name="F3"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -631,7 +620,6 @@ export default class Home extends Component<Props, State> {
                       label="Fp1"
                       value={!!electrodes.Fp1}
                       name="Fp1"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -642,7 +630,6 @@ export default class Home extends Component<Props, State> {
                       label="T7"
                       value={!!electrodes.T7}
                       name="T7"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -653,7 +640,6 @@ export default class Home extends Component<Props, State> {
                       label="F7"
                       value={!!electrodes.F7}
                       name="F7"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -664,7 +650,6 @@ export default class Home extends Component<Props, State> {
                       label="Oz"
                       value={!!electrodes.Oz}
                       name="Oz"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -675,7 +660,6 @@ export default class Home extends Component<Props, State> {
                       label="PO4"
                       value={!!electrodes.PO4}
                       name="PO4"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -686,7 +670,6 @@ export default class Home extends Component<Props, State> {
                       label="FC6"
                       value={!!electrodes.FC6}
                       name="FC6"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -697,7 +680,6 @@ export default class Home extends Component<Props, State> {
                       label="FC2"
                       value={!!electrodes.FC2}
                       name="FC2"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -708,7 +690,6 @@ export default class Home extends Component<Props, State> {
                       label="AF4"
                       value={!!electrodes.AF4}
                       name="AF4"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -722,7 +703,6 @@ export default class Home extends Component<Props, State> {
                       label="CP6"
                       value={!!electrodes.CP6}
                       name="CP6"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -733,7 +713,6 @@ export default class Home extends Component<Props, State> {
                       label="CP2"
                       value={!!electrodes.CP2}
                       name="CP2"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -744,7 +723,6 @@ export default class Home extends Component<Props, State> {
                       label="CP1"
                       value={!!electrodes.CP1}
                       name="CP1"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -755,7 +733,6 @@ export default class Home extends Component<Props, State> {
                       label="CP5"
                       value={!!electrodes.CP5}
                       name="CP5"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -766,7 +743,6 @@ export default class Home extends Component<Props, State> {
                       label="FC1"
                       value={!!electrodes.FC1}
                       name="FC1"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -777,7 +753,6 @@ export default class Home extends Component<Props, State> {
                       label="FC5"
                       value={!!electrodes.FC5}
                       name="FC5"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -788,7 +763,6 @@ export default class Home extends Component<Props, State> {
                       label="AF3"
                       value={!!electrodes.AF3}
                       name="AF3"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />
@@ -799,7 +773,6 @@ export default class Home extends Component<Props, State> {
                       label="PO3"
                       value={!!electrodes.PO3}
                       name="PO3"
-                      defaultChecked
                       className={styles.electrode}
                       onChange={this.selectElectrode}
                     />

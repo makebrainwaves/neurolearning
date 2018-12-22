@@ -1,9 +1,46 @@
 import lsl from 'node-lsl';
-import { fromEvent, Observable, of } from 'rxjs';
-import { filter, map, mergeMap, tap } from 'rxjs/operators';
-import { epoch, fft, alphaPower, powerByBand } from '@neurosity/pipes';
+import { fromEvent, Observable, of, pipe } from 'rxjs';
+import {
+  filter,
+  map,
+  mergeMap,
+  tap,
+  catchError,
+  bufferTime,
+  take
+} from 'rxjs/operators';
+import {
+  epoch,
+  fft,
+  alphaPower,
+  sliceFFT,
+  averageDeep,
+  average,
+  standardDeviation,
+  addSignalQuality,
+  powerByBand,
+  pickChannels
+} from '@neurosity/pipes';
+import { emit } from 'cluster';
 
 const ENOBIO_SAMPLE_RATE = 500;
+const VARIANCE_THRESHOLD = 0.001; // ~100uV variance? Will have to update depend. on format of Enobio data
+const FFT_BINS = 512; // closest power of 2 to sampling rate
+const BASELINE_DURATION = 60000; // 60 seconds
+const DECISION_INTERVAL = 5000; // 5 seconds
+
+interface baselineOptions {
+  decisionThreshold?: number;
+  featurePipe?: Observable => Observable;
+  baselineDuration?: number;
+  varianceThreshold?: number;
+}
+
+interface classifierOptions {
+  interval?: number;
+  featurePipe?: Observable => Observable;
+  varianceThreshold?: number;
+}
 
 // Returns an array of StreamInfo objects representing available EEG LSL streams
 // NOTE: This is a synchronous operation and will freeze the UI while it executes. Keep timeout low
@@ -17,7 +54,13 @@ export const resolveLSLStreams = (
 export const createStreamInlet = (streamInfo: lsl.StreamInfo) =>
   new lsl.StreamInlet(streamInfo);
 
-export const createEEGObservable = (chunkSize = 250) => {
+// Resolves EEG LSL streams and returns an RxJS EEG Observable
+// chunkSize determines what size requested from LSL
+// selectedChannels determines which channels to select
+export const createEEGObservable = (
+  chunkSize: number = 250,
+  selectedChannels: Array<number> | null = null
+) => {
   const streams = resolveLSLStreams();
   console.log('Resolved ', streams.length, ' EEG streams');
   if (streams.length > 0) {
@@ -28,59 +71,137 @@ export const createEEGObservable = (chunkSize = 250) => {
     streamInlet.streamChunks(chunkSize);
 
     // Create RxJS Observable
-    // Filter operation will prevent any empty samples from being emitted
     return fromEvent(streamInlet, 'chunk').pipe(
-      filter(eegChunk => eegChunk.timestamps.length > 0)
+      filter(eegChunk => eegChunk.timestamps.length > 0),
+      mergeMap((
+        chunk // Operation to convert lsl chunks into single samples so that we can use eeg-pipes' epoching operator
+      ) =>
+        of(
+          ...chunk.timestamps.map((timestamp, index) => ({
+            data: chunk.data
+              .map(channelData => channelData[index])
+              .filter((_, i) => {
+                // selects channels
+                if (selectedChannels) {
+                  return selectedChannels.includes(i);
+                }
+                return true;
+              }),
+            timestamp
+          }))
+        )
+      )
     );
   }
 };
 
-export const createAlphaClassifierObservable = (rawObservable: Observable) =>
+export const createBaselineObservable = (
+  rawObservable: Observable,
+  {
+    decisionThreshold = 2, // Number of standard devs above mean to set threshold
+    featurePipe = computeAlpha,
+    baselineDuration = BASELINE_DURATION,
+    varianceThreshold = VARIANCE_THRESHOLD
+  }: baselineOptions = {}
+) =>
   rawObservable.pipe(
-    mergeMap(chunk =>
-      of(
-        ...chunk.timestamps.map((timestamp, index) => ({
-          data: chunk.data.map(channelData => channelData[index]),
-          timestamp
-        }))
-      )
-    ),
-    // Epoch the data into 10s long segments emitted every 1s
     epoch({
       samplingRate: ENOBIO_SAMPLE_RATE,
-      duration: 1024 * 4,
+      duration: ENOBIO_SAMPLE_RATE,
       interval: ENOBIO_SAMPLE_RATE
     }),
-    fft({ bins: 1024 * 4 }),
-    alphaPower(),
-    // Average alpha power across all channels
+    tap(epoch => console.log('epoch: ', epoch)),
+    removeNoise(varianceThreshold),
+    tap(epoch => console.log('removeNoise: ', epoch)),
+    featurePipe(),
+    tap(epoch => console.log('featurePipe: ', epoch)),
+    map(average),
+    bufferTime(baselineDuration),
+    tap(epoch => console.log('bufferTime: ', epoch)),
     map(
-      alphaArray =>
-        alphaArray.slice(4, 7).reduce((acc, curr) => acc + curr) /
-        alphaArray.length
+      featureBuffer =>
+        average(featureBuffer) +
+        decisionThreshold * standardDeviation(featureBuffer)
+    ),
+    take(1),
+    catchError(err => {
+      throw new Error(err);
+    })
+  );
+
+export const createClassifierObservable = (
+  rawObservable: Observable,
+  threshold: number,
+  {
+    interval = DECISION_INTERVAL,
+    featurePipe = computeAlpha,
+    varianceThreshold = VARIANCE_THRESHOLD
+  }: classifierOptions = {}
+) =>
+  rawObservable.pipe(
+    epoch({
+      samplingRate: ENOBIO_SAMPLE_RATE,
+      duration: ENOBIO_SAMPLE_RATE,
+      interval: ENOBIO_SAMPLE_RATE
+    }),
+    removeNoise(varianceThreshold),
+    featurePipe(),
+    map(average),
+    bufferTime(interval),
+    map(featureBuffer => {
+      const score = average(featureBuffer);
+      const decision = score >= threshold;
+      return { score, decision };
+    })
+  );
+
+// ------------------------------------------------------------------------------------------
+// Operators
+// Custom operators that can be composed to build our analysis pipeline
+
+export const removeNoise = (threshold: number = VARIANCE_THRESHOLD) =>
+  pipe(
+    deMean(),
+    addSignalQuality(),
+    tap(epoch => console.log('signal quality: ', epoch.signalQuality)),
+    filter(epo =>
+      Object.values(epo.signalQuality).reduce(
+        (acc, curr) => (curr >= threshold ? false : acc),
+        true
+      )
     )
   );
 
-export const createThetaBetaClassifierObservable = (
-  rawObservable: Observable
+export const computeAlpha = (alphaRange: Array<number> = [8, 13]) =>
+  pipe(
+    fft({ bins: FFT_BINS }),
+    powerByBand({ alpha: alphaRange }),
+    map(bandPowers => bandPowers.alpha)
+  );
+
+export const computeThetaBeta = (
+  thetaRange: Array<number> = [4, 7.5],
+  betaRange: Array<number> = [12.5, 30]
 ) =>
-  rawObservable.pipe(
-    mergeMap(chunk =>
-      of(
-        ...chunk.timestamps.map((timestamp, index) => ({
-          data: chunk.data.map(channelData => channelData[index]),
-          timestamp
-        }))
+  pipe(
+    fft({ bins: FFT_BINS }),
+    powerByBand({ theta: thetaRange, beta: betaRange }),
+    map(bandPowers =>
+      bandPowers.theta.map(
+        (channelTheta, index) => channelTheta / bandPowers.beta[index]
       )
-    ),
-    epoch({
-      samplingRate: ENOBIO_SAMPLE_RATE,
-      duration: 1024 * 4,
-      interval: ENOBIO_SAMPLE_RATE
-    }),
-    fft({ bins: 1024 * 4 }),
-    powerByBand(),
-    tap(console.log),
-    map(bandPowers => bandPowers.theta[2] / bandPowers.beta[2])
-    // Average power ratio across all channels
+    )
+  );
+
+export const deMean = () =>
+  pipe(
+    map(epo => {
+      const channelMeans = epo.data.map(average);
+      return {
+        ...epo,
+        data: epo.data.map((channelData, index) =>
+          channelData.map(value => value - channelMeans[index])
+        )
+      };
+    })
   );
