@@ -78,25 +78,6 @@ export default class VideoSet extends Component<Props, State> {
       props.location.state.rawEEGObservable
     );
     */
-
-    const handleStartEEG = () => {
-      // const baselineObs = createBaselineObservable(this.rawEEGObservable);
-      const baselineObs = createBaselineObservable(
-        props.location.state.rawEEGObservable
-      );
-      baselineObs.subscribe(threshold => {
-        this.setState({ threshold });
-        console.log('threshold', this.state.threshold);
-        const classifierObservable = createClassifierObservable(
-          // this.rawEEGObservable,
-          props.location.state.rawEEGObservable,
-          threshold
-        );
-        classifierObservable.subscribe(decision => this.setState({ decision }));
-        console.log('this.state.decision', this.state.decision);
-      });
-    };
-
     /*
     if (props.location.state.classifierType === 'alpha') {
       classifierEEGObservable = createAlphaClassifierObservable(
@@ -155,6 +136,7 @@ export default class VideoSet extends Component<Props, State> {
     this.pauseVideo = this.pauseVideo.bind(this);
     this.handleQuestion = this.handleQuestion.bind(this);
     this.getSequenceNumber = this.getSequenceNumber.bind(this);
+    this.handleStartEEG = this.handleStartEEG.bind(this);
   }
 
   componentWillMount() {
@@ -181,6 +163,29 @@ export default class VideoSet extends Component<Props, State> {
         }
       );
     }
+    this.handleStartEEG();
+  }
+
+  handleStartEEG() {
+    // const baselineObs = createBaselineObservable(this.rawEEGObservable);
+    const baselineObs = createBaselineObservable(
+      this.props.location.state.rawEEGObservable,
+      { varianceThreshold: 10 }
+    );
+    baselineObs.subscribe(threshold => {
+      this.setState({ threshold });
+      console.log('threshold', this.state.threshold);
+      const classifierObservable = createClassifierObservable(
+        // this.rawEEGObservable,
+        this.props.location.state.rawEEGObservable,
+        threshold,
+        { varianceThreshold: 10 }
+      );
+      classifierObservable.subscribe(decision => {
+        console.log('this.state.decision', decision);
+        this.setState({ decision });
+      });
+    });
   }
 
   getRandomQuestionSet(currVid) {
@@ -704,7 +709,8 @@ export default class VideoSet extends Component<Props, State> {
       fuelSequenceNumber,
       gasSequenceNumber,
       photosynthSequenceNumber,
-      updatedAnswers
+      updatedAnswers,
+      decision
     } = this.state;
     const { location } = this.props;
     const { state } = location;
