@@ -110,7 +110,7 @@ export const createBaselineObservable = (
       duration: ENOBIO_SAMPLE_RATE,
       interval: ENOBIO_SAMPLE_RATE
     }),
-    tap(epoch => console.log('epoch: ', epoch)),
+    // tap(epoch => console.log('epoch: ', epoch)),
     removeNoise(varianceThreshold),
     tap(epoch => console.log('removeNoise: ', epoch)),
     featurePipe(),

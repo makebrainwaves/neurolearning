@@ -69,7 +69,7 @@ export default class VideoSet extends Component<Props, State> {
 
   constructor(props) {
     super(props);
-    const classifierEEGObservable = null;
+    // const classifierEEGObservable = null;
     /*
     console.log('check varrrr', this.props.location.state.firstVideo);
     console.log('your eeg observable', props.location.state.classifierType);
@@ -123,7 +123,7 @@ export default class VideoSet extends Component<Props, State> {
       thirdOption: '',
       answers: answersArray,
       updatedAnswers: updatedAnswersArray,
-      classifierEEGObservable,
+      // classifierEEGObservable,
       classifierScore: 0,
       classifierThreshold: 1.1,
       obscureButton: true // TODO: set this based on baseline data collection
@@ -155,6 +155,7 @@ export default class VideoSet extends Component<Props, State> {
       questionSet: this.getRandomQuestionSet(this.state.currentVideo)
     });
     // Might be able to subscribe to these guys in constructor, but I've always done it in componentDidMount
+    /*
     if (this.props.location.state.firstVideoType === 'experimental') {
       this.classifierEEGSubscription = this.state.classifierEEGObservable.subscribe(
         classifierScore => {
@@ -163,6 +164,7 @@ export default class VideoSet extends Component<Props, State> {
         }
       );
     }
+    */
     this.handleStartEEG();
   }
 
@@ -341,6 +343,9 @@ export default class VideoSet extends Component<Props, State> {
     } = this.state;
 
     const vidCurrTime = document.getElementById('vidID').currentTime;
+
+    const videoType = this.getExperimentType();
+    console.log('hey video type', videoType);
 
     if (
       questionSet[0] &&
