@@ -344,115 +344,32 @@ export default class VideoSet extends Component<Props, State> {
     } = this.state;
 
     const vidCurrTime = document.getElementById('vidID').currentTime;
+    const videoType = this.getExperimentType();
 
     for (let i = 0; i < questionSet.length; i++) {
       const questNum = i + 1;
       const questionAnswered = `questionAnswered${questNum}`;
-      // console.log("questionAnswered", questionAnswered);
-      // console.log('question bool', this.state[questionAnswered]);
 
       if (
+        videoType === 'control' &&
         questionSet[i] &&
         questionSet[i].value.period <= vidCurrTime &&
         !this.state[questionAnswered]
       ) {
         this.nextQuestion(questionSet[i].key, vidCurrTime);
       }
+      if (
+        videoType === 'experimental' &&
+        questionSet[i] &&
+        questionSet[i].value.period <= vidCurrTime &&
+        this.state.decision &&
+        !this.state[questionAnswered]
+      ) {
+        this.nextQuestion(questionSet[i].key, vidCurrTime);
+      }
     }
-    /*
-    if (
-      questionSet[0] &&
-      questionSet[0].value.period <= vidCurrTime &&
-      !this.state.questionAnswered1
-    ) {
-      this.nextQuestion(questionSet[0].key, vidCurrTime);
-    }
-    if (
-      questionSet[1] &&
-      questionSet[1].value.period <= vidCurrTime &&
-      !this.state.questionAnswered2
-    ) {
-      this.nextQuestion(questionSet[1].key, vidCurrTime);
-    }
-    if (
-      questionSet[2] &&
-      questionSet[2].value.period <= vidCurrTime &&
-      !this.state.questionAnswered3
-    ) {
-      this.nextQuestion(questionSet[2].key, vidCurrTime);
-    }
-    if (
-      questionSet[3] &&
-      questionSet[3].value.period <= vidCurrTime &&
-      !this.state.questionAnswered4
-    ) {
-      this.nextQuestion(questionSet[3].key, vidCurrTime);
-    }
-    if (
-      questionSet[4] &&
-      questionSet[4].value.period <= vidCurrTime &&
-      !this.state.questionAnswered5
-    ) {
-      this.nextQuestion(questionSet[4].key, vidCurrTime);
-    }
-    if (
-      questionSet[5] &&
-      questionSet[5].value.period <= vidCurrTime &&
-      !this.state.questionAnswered6
-    ) {
-      this.nextQuestion(questionSet[5].key, vidCurrTime);
-    }
-    if (
-      questionSet[6] &&
-      questionSet[6].value.period <= vidCurrTime &&
-      !this.state.questionAnswered7
-    ) {
-      this.nextQuestion(questionSet[6].key, vidCurrTime);
-    }
-    if (
-      questionSet[7] &&
-      questionSet[7].value.period <= vidCurrTime &&
-      !this.state.questionAnswered8
-    ) {
-      this.nextQuestion(questionSet[7].key, vidCurrTime);
-    }
-    if (
-      questionSet[8] &&
-      questionSet[8].value.period <= vidCurrTime &&
-      !this.state.questionAnswered9
-    ) {
-      this.nextQuestion(questionSet[8].key, vidCurrTime);
-    }
-    if (
-      questionSet[9] &&
-      questionSet[9].value.period <= vidCurrTime &&
-      !this.state.questionAnswered10
-    ) {
-      this.nextQuestion(questionSet[9].key, vidCurrTime);
-    }
-    if (
-      questionSet[10] &&
-      questionSet[10].value.period <= vidCurrTime &&
-      !this.state.questionAnswered11
-    ) {
-      this.nextQuestion(questionSet[10].key, vidCurrTime);
-    }
-    if (
-      questionSet[11] &&
-      questionSet[11].value.period <= vidCurrTime &&
-      !this.state.questionAnswered12
-    ) {
-      this.nextQuestion(questionSet[11].key, vidCurrTime);
-    }
-    if (
-      questionSet[12] &&
-      questionSet[12].value.period <= vidCurrTime &&
-      !this.state.questionAnswered13
-    ) {
-      this.nextQuestion(questionSet[12].key, vidCurrTime);
-    }
-    */
 
+    /*
     if (this.props.location.state.firstVideoType === 'experimental') {
       if (question1AlreadyShown) {
         if (this.state.classifierScore >= this.state.classifierThreshold) {
@@ -471,6 +388,7 @@ export default class VideoSet extends Component<Props, State> {
         }
       }
     }
+    */
   };
 
   moveAlongVideoSequence() {
