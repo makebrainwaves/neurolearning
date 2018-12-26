@@ -392,21 +392,15 @@ export default class VideoSet extends Component<Props, State> {
   };
 
   moveAlongVideoSequence() {
-    this.setState({
-      questionAnswered1: false,
-      questionAnswered2: false,
-      questionAnswered3: false,
-      questionAnswered4: false,
-      questionAnswered5: false,
-      questionAnswered6: false,
-      questionAnswered7: false,
-      questionAnswered8: false,
-      questionAnswered9: false,
-      questionAnswered10: false,
-      questionAnswered11: false,
-      questionAnswered12: false,
-      questionAnswered13: false
-    });
+    const videoQuestions = this.state.questionSet;
+
+    for (let i = 0; i < videoQuestions.length; i++) {
+      const questionAnswered = `questionAnswered${i + 1}`;
+
+      this.setState({
+        [questionAnswered]: false
+      });
+    }
 
     if (this.state.currentVideo === this.props.location.state.firstVideo) {
       this.setState({
@@ -420,7 +414,6 @@ export default class VideoSet extends Component<Props, State> {
       this.state.currentVideo === this.props.location.state.secondVideo
     ) {
       this.setState({
-        questionAnswered1: false,
         currentVideo: this.props.location.state.thirdVideo,
         questionSet: this.getRandomQuestionSet(
           this.props.location.state.thirdVideo
