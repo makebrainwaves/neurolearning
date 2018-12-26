@@ -99,19 +99,6 @@ export default class VideoSet extends Component<Props, State> {
       finalModalIsOpen: false,
       question1AlreadyShown: false,
       question2AlreadyShown: false,
-      questionAnswered1: false,
-      questionAnswered2: false,
-      questionAnswered3: false,
-      questionAnswered4: false,
-      questionAnswered5: false,
-      questionAnswered6: false,
-      questionAnswered7: false,
-      questionAnswered8: false,
-      questionAnswered9: false,
-      questionAnswered10: false,
-      questionAnswered11: false,
-      questionAnswered12: false,
-      questionAnswered13: false,
       biomassSequenceNumber: 1,
       fuelSequenceNumber: 2,
       gasSequenceNumber: 3,
@@ -158,10 +145,17 @@ export default class VideoSet extends Component<Props, State> {
     if (this.props.location.state.firstVideoType === 'experimental') {
       questionSetTemp = this.getQuestionSet(this.state.currentVideo);
     }
-
     this.setState({
       questionSet: questionSetTemp
     });
+
+    for (let i = 0; i < 40; i++) {
+      const questionAnswered = `questionAnswered${i + 1}`;
+
+      this.setState({
+        [questionAnswered]: false
+      });
+    }
     // Might be able to subscribe to these guys in constructor, but I've always done it in componentDidMount
     /*
     if (this.props.location.state.firstVideoType === 'experimental') {
@@ -676,7 +670,6 @@ export default class VideoSet extends Component<Props, State> {
       fourthVideoType
     } = state;
 
-    // const answersCsv = this.updateAnswers();
     const answersCsv = this.getAnswerSet();
 
     return (
