@@ -520,6 +520,50 @@ export default class VideoSet extends Component<Props, State> {
     this.setState({ answers });
   }
 
+  getExperimentType() {
+    const currentVideoName = this.getVideoName(this.state.currentVideo);
+    console.log('get currentVideoName', currentVideoName);
+    //
+    let seqNo = '';
+    if (currentVideoName === 'biomass') {
+      seqNo = this.state.biomassSequenceNumber;
+    }
+    if (currentVideoName === 'fuel') {
+      seqNo = this.state.fuelSequenceNumber;
+    }
+    if (currentVideoName === 'gas') {
+      seqNo = this.state.gasSequenceNumber;
+    }
+    if (currentVideoName === 'photosynth') {
+      seqNo = this.state.photosynthSequenceNumber;
+    }
+    console.log('sequence number', seqNo);
+
+    const {
+      firstVideoType,
+      secondVideoType,
+      thirdVideoType,
+      fourthVideoType
+    } = this.props.location.state;
+
+    let expType = '';
+
+    if (seqNo === 1) {
+      expType = firstVideoType;
+    }
+    if (seqNo === 2) {
+      expType = secondVideoType;
+    }
+    if (seqNo === 3) {
+      expType = thirdVideoType;
+    }
+    if (seqNo === 4) {
+      expType = fourthVideoType;
+    }
+
+    return expType;
+  }
+
   handleQuestion(q, e) {
     this.setState({ obscureButton: false });
     const answers = this.state.answers;
@@ -528,7 +572,9 @@ export default class VideoSet extends Component<Props, State> {
 
     answers.forEach(answer => {
       answer[this.state.videoName].value = this.state.videoName;
-      answer[this.state.videoName][questionNumber].experimentType = 'control';
+      answer[this.state.videoName][
+        questionNumber
+      ].experimentType = this.getExperimentType();
       answer[this.state.videoName][questionNumber].value = q.questionNumber;
       answer[this.state.videoName][questionNumber].answer = e.target.value;
     });
