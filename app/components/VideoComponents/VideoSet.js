@@ -151,8 +151,16 @@ export default class VideoSet extends Component<Props, State> {
   }
 
   componentDidMount() {
+    let questionSetTemp = [];
+    if (this.props.location.state.firstVideoType === 'control') {
+      questionSetTemp = this.getRandomQuestionSet(this.state.currentVideo);
+    }
+    if (this.props.location.state.firstVideoType === 'experimental') {
+      questionSetTemp = this.getQuestionSet(this.state.currentVideo);
+    }
+
     this.setState({
-      questionSet: this.getRandomQuestionSet(this.state.currentVideo)
+      questionSet: questionSetTemp
     });
     // Might be able to subscribe to these guys in constructor, but I've always done it in componentDidMount
     /*
