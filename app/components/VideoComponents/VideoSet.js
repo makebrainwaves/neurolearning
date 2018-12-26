@@ -155,6 +155,7 @@ export default class VideoSet extends Component<Props, State> {
       questionSet: this.getRandomQuestionSet(this.state.currentVideo)
     });
     // Might be able to subscribe to these guys in constructor, but I've always done it in componentDidMount
+    /*
     if (this.props.location.state.firstVideoType === 'experimental') {
       this.classifierEEGSubscription = this.state.classifierEEGObservable.subscribe(
         classifierScore => {
@@ -163,6 +164,7 @@ export default class VideoSet extends Component<Props, State> {
         }
       );
     }
+    */
     this.handleStartEEG();
   }
 
@@ -343,6 +345,21 @@ export default class VideoSet extends Component<Props, State> {
 
     const vidCurrTime = document.getElementById('vidID').currentTime;
 
+    for (let i = 0; i < questionSet.length; i++) {
+      const questNum = i + 1;
+      const questionAnswered = `questionAnswered${questNum}`;
+      // console.log("questionAnswered", questionAnswered);
+      // console.log('question bool', this.state[questionAnswered]);
+
+      if (
+        questionSet[i] &&
+        questionSet[i].value.period <= vidCurrTime &&
+        !this.state[questionAnswered]
+      ) {
+        this.nextQuestion(questionSet[i].key, vidCurrTime);
+      }
+    }
+    /*
     if (
       questionSet[0] &&
       questionSet[0].value.period <= vidCurrTime &&
@@ -434,6 +451,7 @@ export default class VideoSet extends Component<Props, State> {
     ) {
       this.nextQuestion(questionSet[12].key, vidCurrTime);
     }
+    */
 
     if (this.props.location.state.firstVideoType === 'experimental') {
       if (question1AlreadyShown) {
@@ -522,8 +540,6 @@ export default class VideoSet extends Component<Props, State> {
 
   getExperimentType() {
     const currentVideoName = this.getVideoName(this.state.currentVideo);
-    console.log('get currentVideoName', currentVideoName);
-    //
     let seqNo = '';
     if (currentVideoName === 'biomass') {
       seqNo = this.state.biomassSequenceNumber;
@@ -537,7 +553,6 @@ export default class VideoSet extends Component<Props, State> {
     if (currentVideoName === 'photosynth') {
       seqNo = this.state.photosynthSequenceNumber;
     }
-    console.log('sequence number', seqNo);
 
     const {
       firstVideoType,
@@ -547,7 +562,6 @@ export default class VideoSet extends Component<Props, State> {
     } = this.props.location.state;
 
     let expType = '';
-
     if (seqNo === 1) {
       expType = firstVideoType;
     }
