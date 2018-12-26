@@ -336,6 +336,7 @@ export default class VideoSet extends Component<Props, State> {
       question1AlreadyShown,
       question2AlreadyShown,
       isRunning,
+      currentVideo,
       videoName,
       questionSet
     } = this.state;
@@ -519,34 +520,6 @@ export default class VideoSet extends Component<Props, State> {
     this.setState({ answers });
   }
 
-  getExperimentType() {
-    const currentVideoName = this.getVideoName(this.state.currentVideo);
-    const seqNo = this.getSequenceNumber(currentVideoName);
-    const {
-      firstVideoType,
-      secondVideoType,
-      thirdVideoType,
-      fourthVideoType
-    } = this.props.location.state;
-
-    let expType = '';
-
-    if (seqNo === 1) {
-      expType = firstVideoType;
-    }
-    if (seqNo === 2) {
-      expType = secondVideoType;
-    }
-    if (seqNo === 3) {
-      expType = thirdVideoType;
-    }
-    if (seqNo === 4) {
-      expType = fourthVideoType;
-    }
-
-    return expType;
-  }
-
   handleQuestion(q, e) {
     this.setState({ obscureButton: false });
     const answers = this.state.answers;
@@ -555,9 +528,7 @@ export default class VideoSet extends Component<Props, State> {
 
     answers.forEach(answer => {
       answer[this.state.videoName].value = this.state.videoName;
-      answer[this.state.videoName][
-        questionNumber
-      ].experimentType = this.getExperimentType();
+      answer[this.state.videoName][questionNumber].experimentType = 'control';
       answer[this.state.videoName][questionNumber].value = q.questionNumber;
       answer[this.state.videoName][questionNumber].answer = e.target.value;
     });
@@ -619,8 +590,7 @@ export default class VideoSet extends Component<Props, State> {
         const questionNum = `q${questVal + 1}`;
         newAnswers[key].Subject = this.props.location.state.subjectId;
         newAnswers[key].VideoName = 'biomass';
-        newAnswers[key].ExperimentType =
-          answersTemp[0].biomass[questionNum].experimentType;
+        newAnswers[key].ExperimentType = 'control';
         newAnswers[key].SequenceNo = this.state.biomassSequenceNumber;
         newAnswers[key].ModalPopupTOD =
           answersTemp[0].biomass[questionNum].modalPopupTOD;
@@ -637,8 +607,7 @@ export default class VideoSet extends Component<Props, State> {
         const questionNum = `q${questVal - 20}`;
         newAnswers[key].Subject = this.props.location.state.subjectId;
         newAnswers[key].VideoName = 'fuel';
-        newAnswers[key].ExperimentType =
-          answersTemp[0].fuel[questionNum].experimentType;
+        newAnswers[key].ExperimentType = 'control';
         newAnswers[key].SequenceNo = this.state.fuelSequenceNumber;
         newAnswers[key].ModalPopupTOD =
           answersTemp[0].fuel[questionNum].modalPopupTOD;
@@ -655,8 +624,7 @@ export default class VideoSet extends Component<Props, State> {
         const questionNum = `q${questVal - 43}`;
         newAnswers[key].Subject = this.props.location.state.subjectId;
         newAnswers[key].VideoName = 'gas';
-        newAnswers[key].ExperimentType =
-          answersTemp[0].gas[questionNum].experimentType;
+        newAnswers[key].ExperimentType = 'control';
         newAnswers[key].SequenceNo = this.state.gasSequenceNumber;
         newAnswers[key].ModalPopupTOD =
           answersTemp[0].gas[questionNum].modalPopupTOD;
@@ -672,8 +640,7 @@ export default class VideoSet extends Component<Props, State> {
         const questionNum = `q${questVal - 82}`;
         newAnswers[key].Subject = this.props.location.state.subjectId;
         newAnswers[key].VideoName = 'photosynth';
-        newAnswers[key].ExperimentType =
-          answersTemp[0].photosynth[questionNum].experimentType;
+        newAnswers[key].ExperimentType = 'control';
         newAnswers[key].SequenceNo = this.state.photosynthSequenceNumber;
         newAnswers[key].ModalPopupTOD =
           answersTemp[0].photosynth[questionNum].modalPopupTOD;
@@ -726,8 +693,1320 @@ export default class VideoSet extends Component<Props, State> {
       fourthVideoType
     } = state;
 
+    // const answersCsv = this.updateAnswers();
     const answersCsv = this.getAnswerSet();
-
+    /*
+    const answersCsv = [
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q1.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q1.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q1.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q1.value,
+        Engagement: answers[0].biomass.q1.engagement,
+        Answer: answers[0].biomass.q1.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q3.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q3.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q3.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q3.value,
+        Engagement: answers[0].biomass.q3.engagement,
+        Answer: answers[0].biomass.q3.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q4.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q4.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q4.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q4.value,
+        Engagement: answers[0].biomass.q4.engagement,
+        Answer: answers[0].biomass.q4.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q5.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q5.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q5.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q5.value,
+        Engagement: answers[0].biomass.q5.engagement,
+        Answer: answers[0].biomass.q5.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q6.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q6.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q6.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q6.value,
+        Engagement: answers[0].biomass.q6.engagement,
+        Answer: answers[0].biomass.q6.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q7.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q7.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q7.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q7.value,
+        Engagement: answers[0].biomass.q7.engagement,
+        Answer: answers[0].biomass.q7.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q8.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q8.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q8.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q8.value,
+        Engagement: answers[0].biomass.q8.engagement,
+        Answer: answers[0].biomass.q8.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q9.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q9.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q9.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q9.value,
+        Engagement: answers[0].biomass.q9.engagement,
+        Answer: answers[0].biomass.q9.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q10.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q10.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q10.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q10.value,
+        Engagement: answers[0].biomass.q10.engagement,
+        Answer: answers[0].biomass.q10.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q11.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q11.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q11.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q11.value,
+        Engagement: answers[0].biomass.q11.engagement,
+        Answer: answers[0].biomass.q11.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q12.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q12.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q12.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q12.value,
+        Engagement: answers[0].biomass.q12.engagement,
+        Answer: answers[0].biomass.q12.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q13.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q13.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q13.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q13.value,
+        Engagement: answers[0].biomass.q13.engagement,
+        Answer: answers[0].biomass.q13.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q14.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q14.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q14.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q14.value,
+        Engagement: answers[0].biomass.q14.engagement,
+        Answer: answers[0].biomass.q14.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q15.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q15.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q15.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q15.value,
+        Engagement: answers[0].biomass.q15.engagement,
+        Answer: answers[0].biomass.q15.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q16.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q16.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q16.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q16.value,
+        Engagement: answers[0].biomass.q16.engagement,
+        Answer: answers[0].biomass.q16.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q17.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q17.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q17.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q17.value,
+        Engagement: answers[0].biomass.q17.engagement,
+        Answer: answers[0].biomass.q17.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q18.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q18.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q18.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q18.value,
+        Engagement: answers[0].biomass.q18.engagement,
+        Answer: answers[0].biomass.q18.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q19.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q19.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q19.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q19.value,
+        Engagement: answers[0].biomass.q19.engagement,
+        Answer: answers[0].biomass.q19.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q20.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q20.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q20.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q20.value,
+        Engagement: answers[0].biomass.q20.engagement,
+        Answer: answers[0].biomass.q20.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q21.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q21.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q21.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q21.value,
+        Engagement: answers[0].biomass.q21.engagement,
+        Answer: answers[0].biomass.q21.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q1.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q1.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q1.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q1.value,
+        Engagement: answers[0].fuel.q1.engagement,
+        Answer: answers[0].fuel.q1.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q2.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q2.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q2.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q2.value,
+        Engagement: answers[0].fuel.q2.engagement,
+        Answer: answers[0].fuel.q2.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q3.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q3.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q3.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q3.value,
+        Engagement: answers[0].fuel.q3.engagement,
+        Answer: answers[0].fuel.q3.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q4.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q4.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q4.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q4.value,
+        Engagement: answers[0].fuel.q4.engagement,
+        Answer: answers[0].fuel.q4.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q5.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q5.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q5.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q5.value,
+        Engagement: answers[0].fuel.q5.engagement,
+        Answer: answers[0].fuel.q5.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q6.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q6.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q6.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q6.value,
+        Engagement: answers[0].fuel.q6.engagement,
+        Answer: answers[0].fuel.q6.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q7.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q7.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q7.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q7.value,
+        Engagement: answers[0].fuel.q7.engagement,
+        Answer: answers[0].fuel.q7.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q8.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q8.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q8.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q8.value,
+        Engagement: answers[0].fuel.q8.engagement,
+        Answer: answers[0].fuel.q8.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q9.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q9.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q9.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q9.value,
+        Engagement: answers[0].fuel.q9.engagement,
+        Answer: answers[0].fuel.q9.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q10.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q10.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q10.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q10.value,
+        Engagement: answers[0].fuel.q10.engagement,
+        Answer: answers[0].fuel.q10.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q11.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q11.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q11.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q11.value,
+        Engagement: answers[0].fuel.q11.engagement,
+        Answer: answers[0].fuel.q11.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q12.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q12.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q12.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q12.value,
+        Engagement: answers[0].fuel.q12.engagement,
+        Answer: answers[0].fuel.q12.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q13.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q13.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q13.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q13.value,
+        Engagement: answers[0].fuel.q13.engagement,
+        Answer: answers[0].fuel.q13.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q14.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q14.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q14.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q14.value,
+        Engagement: answers[0].fuel.q14.engagement,
+        Answer: answers[0].fuel.q14.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q15.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q15.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q15.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q15.value,
+        Engagement: answers[0].fuel.q15.engagement,
+        Answer: answers[0].fuel.q15.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q16.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q16.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q16.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q16.value,
+        Engagement: answers[0].fuel.q16.engagement,
+        Answer: answers[0].fuel.q16.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q17.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q17.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q17.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q17.value,
+        Engagement: answers[0].fuel.q17.engagement,
+        Answer: answers[0].fuel.q17.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q18.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q18.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q18.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q18.value,
+        Engagement: answers[0].fuel.q18.engagement,
+        Answer: answers[0].fuel.q18.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q19.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q19.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q19.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q19.value,
+        Engagement: answers[0].fuel.q19.engagement,
+        Answer: answers[0].fuel.q19.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q20.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q20.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q20.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q20.value,
+        Engagement: answers[0].fuel.q20.engagement,
+        Answer: answers[0].fuel.q20.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q21.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q21.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q21.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q21.value,
+        Engagement: answers[0].fuel.q21.engagement,
+        Answer: answers[0].fuel.q21.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q22.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q22.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q22.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q22.value,
+        Engagement: answers[0].fuel.q22.engagement,
+        Answer: answers[0].fuel.q22.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].fuel.value,
+        ExperimentType: 'control',
+        SequenceNo: fuelSequenceNumber,
+        ModalPopupTOD: answers[0].fuel.q23.modalPopupTOD,
+        ModalPopupTOV: answers[0].fuel.q23.modalPopupTOV,
+        SubmitTimeTOD: answers[0].fuel.q23.submitTimeTOD,
+        QuestionNo: answers[0].fuel.q23.value,
+        Engagement: answers[0].fuel.q23.engagement,
+        Answer: answers[0].fuel.q23.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q1.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q1.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q1.submitTimeTOD,
+        QuestionNo: answers[0].gas.q1.value,
+        Engagement: answers[0].gas.q1.engagement,
+        Answer: answers[0].gas.q1.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q2.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q2.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q2.submitTimeTOD,
+        QuestionNo: answers[0].gas.q2.value,
+        Engagement: answers[0].gas.q2.engagement,
+        Answer: answers[0].gas.q2.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q3.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q3.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q3.submitTimeTOD,
+        QuestionNo: answers[0].gas.q3.value,
+        Engagement: answers[0].gas.q3.engagement,
+        Answer: answers[0].gas.q3.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q4.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q4.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q4.submitTimeTOD,
+        QuestionNo: answers[0].gas.q4.value,
+        Engagement: answers[0].gas.q4.engagement,
+        Answer: answers[0].gas.q4.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q5.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q5.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q5.submitTimeTOD,
+        QuestionNo: answers[0].gas.q5.value,
+        Engagement: answers[0].gas.q5.engagement,
+        Answer: answers[0].gas.q5.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q6.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q6.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q6.submitTimeTOD,
+        QuestionNo: answers[0].gas.q6.value,
+        Engagement: answers[0].gas.q6.engagement,
+        Answer: answers[0].gas.q6.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q7.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q7.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q7.submitTimeTOD,
+        QuestionNo: answers[0].gas.q7.value,
+        Engagement: answers[0].gas.q7.engagement,
+        Answer: answers[0].gas.q7.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q8.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q8.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q8.submitTimeTOD,
+        QuestionNo: answers[0].gas.q8.value,
+        Engagement: answers[0].gas.q8.engagement,
+        Answer: answers[0].gas.q8.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q9.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q9.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q9.submitTimeTOD,
+        QuestionNo: answers[0].gas.q9.value,
+        Engagement: answers[0].gas.q9.engagement,
+        Answer: answers[0].gas.q9.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q10.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q10.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q10.submitTimeTOD,
+        QuestionNo: answers[0].gas.q10.value,
+        Engagement: answers[0].gas.q10.engagement,
+        Answer: answers[0].gas.q10.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q11.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q11.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q11.submitTimeTOD,
+        QuestionNo: answers[0].gas.q11.value,
+        Engagement: answers[0].gas.q11.engagement,
+        Answer: answers[0].gas.q11.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q12.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q12.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q12.submitTimeTOD,
+        QuestionNo: answers[0].gas.q12.value,
+        Engagement: answers[0].gas.q12.engagement,
+        Answer: answers[0].gas.q12.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q13.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q13.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q13.submitTimeTOD,
+        QuestionNo: answers[0].gas.q13.value,
+        Engagement: answers[0].gas.q13.engagement,
+        Answer: answers[0].gas.q13.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q14.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q14.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q14.submitTimeTOD,
+        QuestionNo: answers[0].gas.q14.value,
+        Engagement: answers[0].gas.q14.engagement,
+        Answer: answers[0].gas.q14.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q15.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q15.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q15.submitTimeTOD,
+        QuestionNo: answers[0].gas.q15.value,
+        Engagement: answers[0].gas.q15.engagement,
+        Answer: answers[0].gas.q15.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q16.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q16.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q16.submitTimeTOD,
+        QuestionNo: answers[0].gas.q16.value,
+        Engagement: answers[0].gas.q16.engagement,
+        Answer: answers[0].gas.q16.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q17.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q17.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q17.submitTimeTOD,
+        QuestionNo: answers[0].gas.q17.value,
+        Engagement: answers[0].gas.q17.engagement,
+        Answer: answers[0].gas.q17.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q18.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q18.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q18.submitTimeTOD,
+        QuestionNo: answers[0].gas.q18.value,
+        Engagement: answers[0].gas.q18.engagement,
+        Answer: answers[0].gas.q18.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q19.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q19.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q19.submitTimeTOD,
+        QuestionNo: answers[0].gas.q19.value,
+        Engagement: answers[0].gas.q19.engagement,
+        Answer: answers[0].gas.q19.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q20.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q20.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q20.submitTimeTOD,
+        QuestionNo: answers[0].gas.q20.value,
+        Engagement: answers[0].gas.q20.engagement,
+        Answer: answers[0].gas.q20.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q21.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q21.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q21.submitTimeTOD,
+        QuestionNo: answers[0].gas.q21.value,
+        Engagement: answers[0].gas.q21.engagement,
+        Answer: answers[0].gas.q21.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q22.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q22.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q22.submitTimeTOD,
+        QuestionNo: answers[0].gas.q22.value,
+        Engagement: answers[0].gas.q22.engagement,
+        Answer: answers[0].gas.q22.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q23.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q23.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q23.submitTimeTOD,
+        QuestionNo: answers[0].gas.q23.value,
+        Engagement: answers[0].gas.q23.engagement,
+        Answer: answers[0].gas.q23.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q24.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q24.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q24.submitTimeTOD,
+        QuestionNo: answers[0].gas.q24.value,
+        Engagement: answers[0].gas.q24.engagement,
+        Answer: answers[0].gas.q24.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q25.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q25.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q25.submitTimeTOD,
+        QuestionNo: answers[0].gas.q25.value,
+        Engagement: answers[0].gas.q25.engagement,
+        Answer: answers[0].gas.q25.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q26.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q26.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q26.submitTimeTOD,
+        QuestionNo: answers[0].gas.q26.value,
+        Engagement: answers[0].gas.q26.engagement,
+        Answer: answers[0].gas.q26.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q27.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q27.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q27.submitTimeTOD,
+        QuestionNo: answers[0].gas.q27.value,
+        Engagement: answers[0].gas.q27.engagement,
+        Answer: answers[0].gas.q27.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q28.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q28.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q28.submitTimeTOD,
+        QuestionNo: answers[0].gas.q28.value,
+        Engagement: answers[0].gas.q28.engagement,
+        Answer: answers[0].gas.q28.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q29.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q29.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q29.submitTimeTOD,
+        QuestionNo: answers[0].gas.q29.value,
+        Engagement: answers[0].gas.q29.engagement,
+        Answer: answers[0].gas.q29.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q30.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q30.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q30.submitTimeTOD,
+        QuestionNo: answers[0].gas.q30.value,
+        Engagement: answers[0].gas.q30.engagement,
+        Answer: answers[0].gas.q30.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q31.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q31.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q31.submitTimeTOD,
+        QuestionNo: answers[0].gas.q31.value,
+        Engagement: answers[0].gas.q31.engagement,
+        Answer: answers[0].gas.q31.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q32.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q32.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q32.submitTimeTOD,
+        QuestionNo: answers[0].gas.q32.value,
+        Engagement: answers[0].gas.q32.engagement,
+        Answer: answers[0].gas.q32.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q33.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q33.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q33.submitTimeTOD,
+        QuestionNo: answers[0].gas.q33.value,
+        Engagement: answers[0].gas.q33.engagement,
+        Answer: answers[0].gas.q33.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q34.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q34.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q34.submitTimeTOD,
+        QuestionNo: answers[0].gas.q34.value,
+        Engagement: answers[0].gas.q34.engagement,
+        Answer: answers[0].gas.q34.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q35.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q35.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q35.submitTimeTOD,
+        QuestionNo: answers[0].gas.q35.value,
+        Engagement: answers[0].gas.q35.engagement,
+        Answer: answers[0].gas.q35.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q36.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q36.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q36.submitTimeTOD,
+        QuestionNo: answers[0].gas.q36.value,
+        Engagement: answers[0].gas.q36.engagement,
+        Answer: answers[0].gas.q36.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q37.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q37.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q37.submitTimeTOD,
+        QuestionNo: answers[0].gas.q37.value,
+        Engagement: answers[0].gas.q37.engagement,
+        Answer: answers[0].gas.q37.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q38.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q38.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q38.submitTimeTOD,
+        QuestionNo: answers[0].gas.q38.value,
+        Engagement: answers[0].gas.q38.engagement,
+        Answer: answers[0].gas.q38.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].gas.value,
+        ExperimentType: 'control',
+        SequenceNo: gasSequenceNumber,
+        ModalPopupTOD: answers[0].gas.q39.modalPopupTOD,
+        ModalPopupTOV: answers[0].gas.q39.modalPopupTOV,
+        SubmitTimeTOD: answers[0].gas.q39.submitTimeTOD,
+        QuestionNo: answers[0].gas.q39.value,
+        Engagement: answers[0].gas.q39.engagement,
+        Answer: answers[0].gas.q39.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q1.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q1.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q1.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q1.value,
+        Engagement: answers[0].photosynth.q1.engagement,
+        Answer: answers[0].photosynth.q1.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q2.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q2.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q2.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q2.value,
+        Engagement: answers[0].photosynth.q2.engagement,
+        Answer: answers[0].photosynth.q2.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q3.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q3.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q3.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q3.value,
+        Engagement: answers[0].photosynth.q3.engagement,
+        Answer: answers[0].photosynth.q3.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q4.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q4.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q4.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q4.value,
+        Engagement: answers[0].photosynth.q4.engagement,
+        Answer: answers[0].photosynth.q4.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q5.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q5.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q5.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q5.value,
+        Engagement: answers[0].photosynth.q5.engagement,
+        Answer: answers[0].photosynth.q5.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q6.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q6.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q6.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q6.value,
+        Engagement: answers[0].photosynth.q6.engagement,
+        Answer: answers[0].photosynth.q6.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q7.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q7.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q7.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q7.value,
+        Engagement: answers[0].photosynth.q7.engagement,
+        Answer: answers[0].photosynth.q7.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q8.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q8.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q8.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q8.value,
+        Engagement: answers[0].photosynth.q8.engagement,
+        Answer: answers[0].photosynth.q8.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q9.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q9.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q9.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q9.value,
+        Engagement: answers[0].photosynth.q9.engagement,
+        Answer: answers[0].photosynth.q9.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q10.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q10.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q10.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q10.value,
+        Engagement: answers[0].photosynth.q10.engagement,
+        Answer: answers[0].photosynth.q10.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q11.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q11.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q11.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q11.value,
+        Engagement: answers[0].photosynth.q11.engagement,
+        Answer: answers[0].photosynth.q11.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q12.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q12.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q12.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q12.value,
+        Engagement: answers[0].photosynth.q12.engagement,
+        Answer: answers[0].photosynth.q12.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q13.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q13.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q13.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q13.value,
+        Engagement: answers[0].photosynth.q13.engagement,
+        Answer: answers[0].photosynth.q13.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q14.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q14.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q14.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q14.value,
+        Engagement: answers[0].photosynth.q14.engagement,
+        Answer: answers[0].photosynth.q14.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q15.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q15.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q15.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q15.value,
+        Engagement: answers[0].photosynth.q15.engagement,
+        Answer: answers[0].photosynth.q15.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q16.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q16.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q16.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q16.value,
+        Engagement: answers[0].photosynth.q16.engagement,
+        Answer: answers[0].photosynth.q16.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q17.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q17.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q17.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q17.value,
+        Engagement: answers[0].photosynth.q17.engagement,
+        Answer: answers[0].photosynth.q17.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q18.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q18.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q18.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q18.value,
+        Engagement: answers[0].photosynth.q18.engagement,
+        Answer: answers[0].photosynth.q18.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q19.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q19.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q19.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q19.value,
+        Engagement: answers[0].photosynth.q19.engagement,
+        Answer: answers[0].photosynth.q19.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q20.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q20.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q20.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q20.value,
+        Engagement: answers[0].photosynth.q20.engagement,
+        Answer: answers[0].photosynth.q20.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q21.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q21.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q21.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q21.value,
+        Engagement: answers[0].photosynth.q21.engagement,
+        Answer: answers[0].photosynth.q21.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q22.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q22.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q22.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q22.value,
+        Engagement: answers[0].photosynth.q22.engagement,
+        Answer: answers[0].photosynth.q22.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q23.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q23.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q23.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q23.value,
+        Engagement: answers[0].photosynth.q23.engagement,
+        Answer: answers[0].photosynth.q23.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q24.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q24.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q24.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q24.value,
+        Engagement: answers[0].photosynth.q24.engagement,
+        Answer: answers[0].photosynth.q24.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q25.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q25.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q25.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q25.value,
+        Engagement: answers[0].photosynth.q25.engagement,
+        Answer: answers[0].photosynth.q25.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q26.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q26.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q26.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q26.value,
+        Engagement: answers[0].photosynth.q26.engagement,
+        Answer: answers[0].photosynth.q26.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].photosynth.value,
+        ExperimentType: 'control',
+        SequenceNo: photosynthSequenceNumber,
+        ModalPopupTOD: answers[0].photosynth.q27.modalPopupTOD,
+        ModalPopupTOV: answers[0].photosynth.q27.modalPopupTOV,
+        SubmitTimeTOD: answers[0].photosynth.q27.submitTimeTOD,
+        QuestionNo: answers[0].photosynth.q27.value,
+        Engagement: answers[0].photosynth.q27.engagement,
+        Answer: answers[0].photosynth.q27.answer
+      }
+    ];
+*/
     return (
       <div className={styles.videoContainer}>
         <div className={styles.backButton} data-tid="backButton">
