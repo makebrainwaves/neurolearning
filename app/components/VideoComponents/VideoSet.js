@@ -70,9 +70,9 @@ export default class VideoSet extends Component<Props, State> {
   constructor(props) {
     super(props);
     const classifierEEGObservable = null;
-    /*
-    console.log('check varrrr', this.props.location.state.firstVideo);
+
     console.log('your eeg observable', props.location.state.classifierType);
+    /*
     console.log(
       'you rawEEGObservable state',
       props.location.state.rawEEGObservable
@@ -172,24 +172,26 @@ export default class VideoSet extends Component<Props, State> {
 
   handleStartEEG() {
     // const baselineObs = createBaselineObservable(this.rawEEGObservable);
-    const baselineObs = createBaselineObservable(
-      this.props.location.state.rawEEGObservable,
-      { varianceThreshold: 10 }
-    );
-    baselineObs.subscribe(threshold => {
-      this.setState({ threshold });
-      console.log('threshold', this.state.threshold);
-      const classifierObservable = createClassifierObservable(
-        // this.rawEEGObservable,
+    if (this.props.location.state.classifierType === 'alpha') {
+      const baselineObs = createBaselineObservable(
         this.props.location.state.rawEEGObservable,
-        threshold,
         { varianceThreshold: 10 }
       );
-      classifierObservable.subscribe(decision => {
-        console.log('this.state.decision', decision);
-        this.setState({ decision });
+      baselineObs.subscribe(threshold => {
+        this.setState({ threshold });
+        console.log('threshold', this.state.threshold);
+        const classifierObservable = createClassifierObservable(
+          // this.rawEEGObservable,
+          this.props.location.state.rawEEGObservable,
+          threshold,
+          { varianceThreshold: 10 }
+        );
+        classifierObservable.subscribe(decision => {
+          console.log('this.state.decision', decision);
+          this.setState({ decision });
+        });
       });
-    });
+    }
   }
 
   getRandomQuestionSet(currVid) {
