@@ -31,14 +31,16 @@ const DECISION_INTERVAL = 5000; // 5 seconds
 
 interface baselineOptions {
   decisionThreshold?: number;
-  featurePipe?: Observable => Observable;
+  // featurePipe?: Observable => Observable;
+  featurePipe?: array<number>;
   baselineDuration?: number;
   varianceThreshold?: number;
 }
 
 interface classifierOptions {
   interval?: number;
-  featurePipe?: Observable => Observable;
+  // featurePipe?: Observable => Observable;
+  featurePipe?: array<number>;
   varianceThreshold?: number;
 }
 
@@ -163,7 +165,9 @@ export const removeNoise = (threshold: number = VARIANCE_THRESHOLD) =>
   pipe(
     deMean(),
     addSignalQuality(),
-    tap(epoch => console.log('signal quality: ', epoch.signalQuality)),
+    tap(epoch =>
+      console.log('signal quality removeNoise: ', epoch.signalQuality)
+    ),
     filter(epo =>
       Object.values(epo.signalQuality).reduce(
         (acc, curr) => (curr >= threshold ? false : acc),

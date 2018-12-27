@@ -54,8 +54,8 @@ const date = new Date(time).toString();
 
 // TODO: Move this into global constants
 const CLASSIFIER_OPTIONS = [
-  { key: 'thetaBeta', value: 'thetaBeta', text: 'Theta/Beta' },
-  { key: 'alpha', value: 'alpha', text: 'Alpha' }
+  { key: 'alpha', value: 'alpha', text: 'Alpha' },
+  { key: 'thetaBeta', value: 'thetaBeta', text: 'Theta/Beta' }
 ];
 
 export default class Home extends Component<Props, State> {
@@ -433,6 +433,7 @@ export default class Home extends Component<Props, State> {
                 <Grid.Column>
                   <Dropdown
                     placeholder="Select Experiment Type"
+                    name="fourthVideoType"
                     value={fourthVideoType}
                     onChange={this.handleExperimentType}
                     selection
