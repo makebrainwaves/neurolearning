@@ -31,14 +31,16 @@ const DECISION_INTERVAL = 5000; // 5 seconds
 
 interface baselineOptions {
   decisionThreshold?: number;
-  featurePipe?: Observable => Observable;
+  // featurePipe?: Observable => Observable;
+  featurePipe?: array<number>;
   baselineDuration?: number;
   varianceThreshold?: number;
 }
 
 interface classifierOptions {
   interval?: number;
-  featurePipe?: Observable => Observable;
+  // featurePipe?: Observable => Observable;
+  featurePipe?: array<number>;
   varianceThreshold?: number;
 }
 

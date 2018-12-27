@@ -17,7 +17,8 @@ import {
 */
 import {
   createBaselineObservable,
-  createClassifierObservable
+  createClassifierObservable,
+  computeAlpha
 } from '../../utils/eeg';
 
 interface State {
@@ -175,7 +176,7 @@ export default class VideoSet extends Component<Props, State> {
     if (this.props.location.state.classifierType === 'alpha') {
       const baselineObs = createBaselineObservable(
         this.props.location.state.rawEEGObservable,
-        { varianceThreshold: 10 }
+        { featurePipe: computeAlpha, varianceThreshold: 10 }
       );
       baselineObs.subscribe(threshold => {
         this.setState({ threshold });
@@ -184,7 +185,7 @@ export default class VideoSet extends Component<Props, State> {
           // this.rawEEGObservable,
           this.props.location.state.rawEEGObservable,
           threshold,
-          { varianceThreshold: 10 }
+          { featurePipe: computeAlpha, varianceThreshold: 10 }
         );
         classifierObservable.subscribe(decision => {
           console.log('this.state.decision', decision);
