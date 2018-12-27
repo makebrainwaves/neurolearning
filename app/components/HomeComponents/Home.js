@@ -433,6 +433,7 @@ export default class Home extends Component<Props, State> {
                 <Grid.Column>
                   <Dropdown
                     placeholder="Select Experiment Type"
+                    name="fourthVideoType"
                     value={fourthVideoType}
                     onChange={this.handleExperimentType}
                     selection

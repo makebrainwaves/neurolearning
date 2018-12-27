@@ -71,29 +71,9 @@ export default class VideoSet extends Component<Props, State> {
 
   constructor(props) {
     super(props);
-    // const classifierEEGObservable = null;
 
-    console.log('your eeg observable', props.location.state.classifierType);
-    /*
-    console.log(
-      'you rawEEGObservable state',
-      props.location.state.rawEEGObservable
-    );
-    */
-    /*
-    if (props.location.state.classifierType === 'alpha') {
-      classifierEEGObservable = createAlphaClassifierObservable(
-        props.location.state.rawEEGObservable
-      );
-      console.log('your classifierEEGObservable: ', classifierEEGObservable);
-    } else if (props.location.state.classifierType === 'thetaBeta') {
-      classifierEEGObservable = createThetaBetaClassifierObservable(
-        props.location.state.rawEEGObservable
-      );
-      console.log('your classifierEEGObservable: ', classifierEEGObservable);
-    }
-  */
-    console.log('tests', this.props.location.props.electrodesChosen);
+    // console.log('your eeg observable', props.location.state.classifierType);
+    // console.log('tests', this.props.location.props.electrodesChosen);
 
     this.state = {
       isRunning: false,
@@ -112,9 +92,7 @@ export default class VideoSet extends Component<Props, State> {
       thirdOption: '',
       answers: answersArray,
       updatedAnswers: updatedAnswersArray,
-      // classifierEEGObservable,
-      // classifierScore: 0,
-      // classifierThreshold: 1.1,
+      askQuestion: false,
       obscureButton: true // TODO: set this based on baseline data collection
     };
     // These are just so that we can unsubscribe from the observables
@@ -153,27 +131,18 @@ export default class VideoSet extends Component<Props, State> {
 
     for (let i = 0; i < 40; i++) {
       const questionAnswered = `questionAnswered${i + 1}`;
+      const askQuestion = `askQuestion${i + 1}`;
 
       this.setState({
-        [questionAnswered]: false
+        [questionAnswered]: false,
+        [askQuestion]: false
       });
     }
-    // Might be able to subscribe to these guys in constructor, but I've always done it in componentDidMount
-    /*
-    if (this.props.location.state.firstVideoType === 'experimental') {
-      this.classifierEEGSubscription = this.state.classifierEEGObservable.subscribe(
-        classifierScore => {
-          this.setState({ classifierScore });
-          console.log('classifierScore', classifierScore);
-        }
-      );
-    }
-    */
+
     this.handleStartEEG();
   }
 
   handleStartEEG() {
-    // const baselineObs = createBaselineObservable(this.rawEEGObservable);
     if (this.props.location.state.classifierType === 'alpha') {
       const baselineObs = createBaselineObservable(
         this.props.location.state.rawEEGObservable,
@@ -363,15 +332,35 @@ export default class VideoSet extends Component<Props, State> {
       isRunning,
       currentVideo,
       videoName,
-      questionSet
+      questionSet,
+      decision
     } = this.state;
 
     const vidCurrTime = document.getElementById('vidID').currentTime;
     const videoType = this.getExperimentType();
 
+    if (videoType === 'experimental') {
+      for (let i = 0; i < questionSet.length; i++) {
+        const askQuestion = `askQuestion${i + 1}`;
+
+        if (
+          questionSet[i].value.period - 20 <= vidCurrTime &&
+          vidCurrTime < questionSet[i].value.period - 15 &&
+          decision
+        ) {
+          this.setState({
+            [askQuestion]: true
+          });
+        }
+      }
+    }
+
     for (let i = 0; i < questionSet.length; i++) {
       const questNum = i + 1;
       const questionAnswered = `questionAnswered${questNum}`;
+
+      const askQuestionNum = i + 1;
+      const askQuestion = `askQuestion${askQuestionNum}`;
 
       if (
         videoType === 'control' &&
@@ -385,7 +374,7 @@ export default class VideoSet extends Component<Props, State> {
         videoType === 'experimental' &&
         questionSet[i] &&
         questionSet[i].value.period <= vidCurrTime &&
-        this.state.decision &&
+        this.state[askQuestion] &&
         !this.state[questionAnswered]
       ) {
         this.nextQuestion(questionSet[i].key, vidCurrTime);
@@ -419,38 +408,70 @@ export default class VideoSet extends Component<Props, State> {
 
     for (let i = 0; i < videoQuestions.length; i++) {
       const questionAnswered = `questionAnswered${i + 1}`;
+      const askQuestion = `askQuestion${i + 1}`;
 
       this.setState({
-        [questionAnswered]: false
+        [questionAnswered]: false,
+        [askQuestion]: false
       });
     }
 
     if (this.state.currentVideo === this.props.location.state.firstVideo) {
+      let questionSetTemp = [];
+      if (this.props.location.state.secondVideoType === 'control') {
+        questionSetTemp = this.getRandomQuestionSet(
+          this.props.location.state.secondVideo
+        );
+      }
+      if (this.props.location.state.secondVideoType === 'experimental') {
+        questionSetTemp = this.getQuestionSet(
+          this.props.location.state.secondVideo
+        );
+      }
+
       this.setState({
         currentVideo: this.props.location.state.secondVideo,
-        questionSet: this.getRandomQuestionSet(
-          this.props.location.state.secondVideo
-        ),
+        questionSet: questionSetTemp,
         videoName: this.getVideoName(this.props.location.state.secondVideo)
       });
     } else if (
       this.state.currentVideo === this.props.location.state.secondVideo
     ) {
+      let questionSetTemp = [];
+      if (this.props.location.state.thirdVideoType === 'control') {
+        questionSetTemp = this.getRandomQuestionSet(
+          this.props.location.state.thirdVideo
+        );
+      }
+      if (this.props.location.state.thirdVideoType === 'experimental') {
+        questionSetTemp = this.getQuestionSet(
+          this.props.location.state.thirdVideo
+        );
+      }
+
       this.setState({
         currentVideo: this.props.location.state.thirdVideo,
-        questionSet: this.getRandomQuestionSet(
-          this.props.location.state.thirdVideo
-        ),
+        questionSet: questionSetTemp,
         videoName: this.getVideoName(this.props.location.state.thirdVideo)
       });
     } else if (
       this.state.currentVideo === this.props.location.state.thirdVideo
     ) {
+      let questionSetTemp = [];
+      if (this.props.location.state.fourthVideoType === 'control') {
+        questionSetTemp = this.getRandomQuestionSet(
+          this.props.location.state.fourthVideo
+        );
+      }
+      if (this.props.location.state.fourthVideoType === 'experimental') {
+        questionSetTemp = this.getQuestionSet(
+          this.props.location.state.fourthVideo
+        );
+      }
+
       this.setState({
         currentVideo: this.props.location.state.fourthVideo,
-        questionSet: this.getRandomQuestionSet(
-          this.props.location.state.fourthVideo
-        ),
+        questionSet: questionSetTemp,
         videoName: this.getVideoName(this.props.location.state.fourthVideo)
       });
     }
@@ -530,9 +551,11 @@ export default class VideoSet extends Component<Props, State> {
     for (let i = 0; i < videoQuestions.length; i++) {
       if (videoQuestions[i].key === q.questionNumber) {
         const questionAnswered = `questionAnswered${i + 1}`;
+        const askQuestion = `askQuestion${i + 1}`;
 
         this.setState({
-          [questionAnswered]: true
+          [questionAnswered]: true,
+          [askQuestion]: false
         });
       }
     }
@@ -574,7 +597,7 @@ export default class VideoSet extends Component<Props, State> {
   }
 
   getAnswerSet() {
-    console.log('AnswerSet', this.state.answers);
+    // console.log('AnswerSet', this.state.answers);
     const newAnswers = this.state.updatedAnswers;
     const answersTemp = this.state.answers;
 

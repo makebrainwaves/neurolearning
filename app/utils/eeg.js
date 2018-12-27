@@ -178,7 +178,6 @@ export const removeNoise = (threshold: number = VARIANCE_THRESHOLD) =>
 
 export const computeAlpha = (alphaRange: Array<number> = [8, 13]) =>
   pipe(
-    tap(epoch => console.log('computeAlpha being called')),
     fft({ bins: FFT_BINS }),
     powerByBand({ alpha: alphaRange }),
     map(bandPowers => bandPowers.alpha)
@@ -189,7 +188,6 @@ export const computeThetaBeta = (
   betaRange: Array<number> = [12.5, 30]
 ) =>
   pipe(
-    tap(epoch => console.log('computeThetaBeta being called')),
     fft({ bins: FFT_BINS }),
     powerByBand({ theta: thetaRange, beta: betaRange }),
     map(bandPowers =>
