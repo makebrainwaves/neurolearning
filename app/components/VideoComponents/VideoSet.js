@@ -18,7 +18,8 @@ import {
 import {
   createBaselineObservable,
   createClassifierObservable,
-  computeAlpha
+  computeAlpha,
+  computeThetaBeta
 } from '../../utils/eeg';
 
 interface State {
@@ -70,7 +71,7 @@ export default class VideoSet extends Component<Props, State> {
 
   constructor(props) {
     super(props);
-    const classifierEEGObservable = null;
+    // const classifierEEGObservable = null;
 
     console.log('your eeg observable', props.location.state.classifierType);
     /*
@@ -111,9 +112,9 @@ export default class VideoSet extends Component<Props, State> {
       thirdOption: '',
       answers: answersArray,
       updatedAnswers: updatedAnswersArray,
-      classifierEEGObservable,
-      classifierScore: 0,
-      classifierThreshold: 1.1,
+      // classifierEEGObservable,
+      // classifierScore: 0,
+      // classifierThreshold: 1.1,
       obscureButton: true // TODO: set this based on baseline data collection
     };
     // These are just so that we can unsubscribe from the observables
@@ -187,7 +188,25 @@ export default class VideoSet extends Component<Props, State> {
           { featurePipe: computeAlpha, varianceThreshold: 10 }
         );
         classifierObservable.subscribe(decision => {
-          console.log('this.state.decision', decision);
+          console.log('this.state.decision ALPHA', decision);
+          this.setState({ decision });
+        });
+      });
+    } else {
+      const baselineObs = createBaselineObservable(
+        this.props.location.state.rawEEGObservable,
+        { featurePipe: computeThetaBeta, varianceThreshold: 10 }
+      );
+      baselineObs.subscribe(threshold => {
+        // this.setState({ threshold });
+        // console.log('threshold', threshold);
+        const classifierObservable = createClassifierObservable(
+          this.props.location.state.rawEEGObservable,
+          0.001, // set threshold here (same as VARIANCE_THRESHOLD)
+          { featurePipe: computeThetaBeta, varianceThreshold: 10 }
+        );
+        classifierObservable.subscribe(decision => {
+          console.log('this.state.decision TB', decision);
           this.setState({ decision });
         });
       });
