@@ -179,12 +179,11 @@ export default class VideoSet extends Component<Props, State> {
         { featurePipe: computeAlpha, varianceThreshold: 10 }
       );
       baselineObs.subscribe(threshold => {
-        this.setState({ threshold });
-        console.log('threshold', this.state.threshold);
+        // this.setState({ threshold });
+        // console.log('threshold', threshold);
         const classifierObservable = createClassifierObservable(
-          // this.rawEEGObservable,
           this.props.location.state.rawEEGObservable,
-          threshold,
+          0.001, // set threshold here (same as VARIANCE_THRESHOLD)
           { featurePipe: computeAlpha, varianceThreshold: 10 }
         );
         classifierObservable.subscribe(decision => {
