@@ -344,8 +344,8 @@ export default class VideoSet extends Component<Props, State> {
         const askQuestion = `askQuestion${i + 1}`;
 
         if (
-          questionSet[i].value.period - 20 <= vidCurrTime &&
-          vidCurrTime < questionSet[i].value.period - 15 &&
+          questionSet[i].value.period - 5 <= vidCurrTime &&
+          vidCurrTime < questionSet[i].value.period &&
           decision
         ) {
           this.setState({
