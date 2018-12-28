@@ -357,6 +357,10 @@ export default class VideoSet extends Component<Props, State> {
           this.setState({
             [askQuestion]: true
           });
+        } else {
+          this.setState({
+            [askQuestion]: false
+          });
         }
       }
     }
