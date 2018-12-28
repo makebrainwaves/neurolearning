@@ -17,7 +17,7 @@ module.exports = [
       name: 'Question 2:',
       period: 100, // '1:20-1:40' or 80-100
       question:
-        'biomass2true or false? Biomass chemicals usually have circular molecular structures while oil chemicals typically',
+        'biomass2true or false? Biomass chemicals usually have circular molecular structures while oil chemicals typically don’t',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"

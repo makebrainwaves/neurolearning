@@ -9,12 +9,6 @@ import styles from './VideoSet.css';
 import routes from '../../constants/routes.json';
 import * as data from '../../questions/questions.json';
 
-/*
-import {
-  createAlphaClassifierObservable,
-  createThetaBetaClassifierObservable
-} from '../../utils/eeg';
-*/
 import {
   createBaselineObservable,
   createClassifierObservable,
@@ -153,12 +147,16 @@ export default class VideoSet extends Component<Props, State> {
         // console.log('threshold', threshold);
         const classifierObservable = createClassifierObservable(
           this.props.location.state.rawEEGObservable,
-          0.001, // set threshold here (same as VARIANCE_THRESHOLD)
+          // 0.001, // set threshold here (same as VARIANCE_THRESHOLD)
           { featurePipe: computeAlpha, varianceThreshold: 10 }
         );
         classifierObservable.subscribe(decision => {
           console.log('this.state.decision ALPHA', decision);
-          this.setState({ decision });
+          console.log('this.state.score ALPHA', decision.score);
+          this.setState({
+            decision: decision.decision,
+            score: decision.score
+          });
         });
       });
     } else {
@@ -171,12 +169,15 @@ export default class VideoSet extends Component<Props, State> {
         // console.log('threshold', threshold);
         const classifierObservable = createClassifierObservable(
           this.props.location.state.rawEEGObservable,
-          0.001, // set threshold here (same as VARIANCE_THRESHOLD)
+          // 0.001, // set threshold here (same as VARIANCE_THRESHOLD)
           { featurePipe: computeThetaBeta, varianceThreshold: 10 }
         );
         classifierObservable.subscribe(decision => {
           console.log('this.state.decision TB', decision);
-          this.setState({ decision });
+          this.setState({
+            decision: decision.decision,
+            score: decision.score
+          });
         });
       });
     }
@@ -333,11 +334,16 @@ export default class VideoSet extends Component<Props, State> {
       currentVideo,
       videoName,
       questionSet,
-      decision
+      decision,
+      score
     } = this.state;
 
     const vidCurrTime = document.getElementById('vidID').currentTime;
     const videoType = this.getExperimentType();
+
+    console.log('second vidCurrTime', vidCurrTime);
+    console.log('second decison', decision);
+    console.log('second score', score);
 
     if (videoType === 'experimental') {
       for (let i = 0; i < questionSet.length; i++) {
@@ -350,6 +356,10 @@ export default class VideoSet extends Component<Props, State> {
         ) {
           this.setState({
             [askQuestion]: true
+          });
+        } else {
+          this.setState({
+            [askQuestion]: false
           });
         }
       }
@@ -679,6 +689,14 @@ export default class VideoSet extends Component<Props, State> {
     return newAnswers;
   }
 
+  getClassifierCsv() {
+    // console.log('AnswerSet', this.state.answers);
+    const newAnswers = this.state.updatedAnswers;
+    //  const answersTemp = this.state.answers;
+
+    return newAnswers;
+  }
+
   render() {
     const {
       modalIsOpen,
@@ -698,7 +716,8 @@ export default class VideoSet extends Component<Props, State> {
       gasSequenceNumber,
       photosynthSequenceNumber,
       updatedAnswers,
-      decision
+      decision,
+      score
     } = this.state;
     const { location } = this.props;
     const { state } = location;
@@ -716,6 +735,47 @@ export default class VideoSet extends Component<Props, State> {
 
     const answersCsv = this.getAnswerSet();
 
+    const classifierCsv = this.getClassifierCsv();
+    /*
+    const classifierCsv = [
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q1.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q1.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q1.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q1.value,
+        Engagement: answers[0].biomass.q1.engagement,
+        Answer: answers[0].biomass.q1.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q1.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q1.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q1.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q1.value,
+        Engagement: answers[0].biomass.q1.engagement,
+        Answer: answers[0].biomass.q1.answer
+      },
+      {
+        Subject: subjectId,
+        VideoName: answers[0].biomass.value,
+        ExperimentType: 'control',
+        SequenceNo: biomassSequenceNumber,
+        ModalPopupTOD: answers[0].biomass.q1.modalPopupTOD,
+        ModalPopupTOV: answers[0].biomass.q1.modalPopupTOV,
+        SubmitTimeTOD: answers[0].biomass.q1.submitTimeTOD,
+        QuestionNo: answers[0].biomass.q1.value,
+        Engagement: answers[0].biomass.q1.engagement,
+        Answer: answers[0].biomass.q1.answer
+      },
+    ];
+*/
     return (
       <div className={styles.videoContainer}>
         <div className={styles.backButton} data-tid="backButton">
@@ -761,6 +821,11 @@ export default class VideoSet extends Component<Props, State> {
         <Button>
           <CSVLink data={answersCsv} filename="answers.csv">
             Download Subject Answers
+          </CSVLink>
+        </Button>
+        <Button>
+          <CSVLink data={classifierCsv} filename="classifier.csv">
+            Download Classifier CSV
           </CSVLink>
         </Button>
         <Modal
