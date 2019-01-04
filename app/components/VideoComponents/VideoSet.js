@@ -35,6 +35,7 @@ interface State {
   secondOption: string;
   thirdOption: string;
   obscureButton: boolean;
+  allFourControlVideos: boolean;
 }
 
 interface Props {
@@ -68,7 +69,6 @@ export default class VideoSet extends Component<Props, State> {
 
     // console.log('your eeg observable', props.location.state.classifierType);
     // console.log('tests', this.props.location.props.electrodesChosen);
-
     this.state = {
       isRunning: false,
       modalIsOpen: false,
@@ -87,7 +87,8 @@ export default class VideoSet extends Component<Props, State> {
       answers: answersArray,
       updatedAnswers: updatedAnswersArray,
       askQuestion: false,
-      obscureButton: true // TODO: set this based on baseline data collection
+      obscureButton: true, // TODO: set this based on baseline data collection
+      allFourControlVideos: false
     };
     // These are just so that we can unsubscribe from the observables
     this.rawEEGSubscription = null;
@@ -101,6 +102,7 @@ export default class VideoSet extends Component<Props, State> {
   }
 
   componentWillMount() {
+    console.log('componentWillMount just called');
     this.setState({
       currentVideo: this.props.location.state.firstVideo,
       videoName: this.getVideoName(this.props.location.state.firstVideo),
@@ -112,10 +114,23 @@ export default class VideoSet extends Component<Props, State> {
   }
 
   componentDidMount() {
+    console.log('componentDidMount just called');
     let questionSetTemp = [];
     if (this.props.location.state.firstVideoType === 'control') {
-      questionSetTemp = this.getRandomQuestionSet(this.state.currentVideo);
+      if (
+        this.props.location.state.secondVideoType === 'control' &&
+        this.props.location.state.thirdVideoType === 'control' &&
+        this.props.location.state.fourthVideoType === 'control'
+      ) {
+        questionSetTemp = this.getRandomControlQuestionSet(
+          this.state.currentVideo
+        );
+        this.setState({ allFourControlVideos: true });
+      } else {
+        questionSetTemp = this.getRandomQuestionSet(this.state.currentVideo);
+      }
     }
+
     if (this.props.location.state.firstVideoType === 'experimental') {
       questionSetTemp = this.getQuestionSet(this.state.currentVideo);
     }
@@ -209,6 +224,39 @@ export default class VideoSet extends Component<Props, State> {
     }
 
     console.log('newQuestionSet', newQuestionSet);
+
+    this.setState({
+      questionSet: newQuestionSet
+    });
+
+    return newQuestionSet;
+  }
+
+  getRandomControlQuestionSet(currVid) {
+    const videoQuestions = this.getQuestionSet(currVid);
+    let randomNumbers = [];
+    const arr = [];
+    const newQuestionSet = [];
+    // find random values between 1 and videoQuestions.length
+    while (arr.length < Math.floor((videoQuestions.length * 2) / 3)) {
+      const r = Math.floor(Math.random() * videoQuestions.length) + 1;
+      if (arr.indexOf(r) === -1) arr.push(r);
+    }
+
+    // sort array of random numbers
+    randomNumbers = arr.sort((a, b) => a - b);
+    console.log('randomrandomNumbers Control', randomNumbers);
+
+    // copy corresponding questions to new array
+    for (let i = 0; i < randomNumbers.length; i++) {
+      for (let j = 0; j < videoQuestions.length; j++) {
+        if (randomNumbers[i] === videoQuestions[j].key) {
+          newQuestionSet.push(videoQuestions[j]);
+        }
+      }
+    }
+
+    console.log('newQuestionSet - Control', newQuestionSet);
 
     this.setState({
       questionSet: newQuestionSet
@@ -429,9 +477,15 @@ export default class VideoSet extends Component<Props, State> {
     if (this.state.currentVideo === this.props.location.state.firstVideo) {
       let questionSetTemp = [];
       if (this.props.location.state.secondVideoType === 'control') {
-        questionSetTemp = this.getRandomQuestionSet(
-          this.props.location.state.secondVideo
-        );
+        if (this.state.allFourControlVideos) {
+          questionSetTemp = this.getRandomControlQuestionSet(
+            this.props.location.state.secondVideo
+          );
+        } else {
+          questionSetTemp = this.getRandomQuestionSet(
+            this.props.location.state.secondVideo
+          );
+        }
       }
       if (this.props.location.state.secondVideoType === 'experimental') {
         questionSetTemp = this.getQuestionSet(
@@ -449,9 +503,15 @@ export default class VideoSet extends Component<Props, State> {
     ) {
       let questionSetTemp = [];
       if (this.props.location.state.thirdVideoType === 'control') {
-        questionSetTemp = this.getRandomQuestionSet(
-          this.props.location.state.thirdVideo
-        );
+        if (this.state.allFourControlVideos) {
+          questionSetTemp = this.getRandomControlQuestionSet(
+            this.props.location.state.thirdVideo
+          );
+        } else {
+          questionSetTemp = this.getRandomQuestionSet(
+            this.props.location.state.thirdVideo
+          );
+        }
       }
       if (this.props.location.state.thirdVideoType === 'experimental') {
         questionSetTemp = this.getQuestionSet(
@@ -469,9 +529,15 @@ export default class VideoSet extends Component<Props, State> {
     ) {
       let questionSetTemp = [];
       if (this.props.location.state.fourthVideoType === 'control') {
-        questionSetTemp = this.getRandomQuestionSet(
-          this.props.location.state.fourthVideo
-        );
+        if (this.state.allFourControlVideos) {
+          questionSetTemp = this.getRandomControlQuestionSet(
+            this.props.location.state.fourthVideo
+          );
+        } else {
+          questionSetTemp = this.getRandomQuestionSet(
+            this.props.location.state.fourthVideo
+          );
+        }
       }
       if (this.props.location.state.fourthVideoType === 'experimental') {
         questionSetTemp = this.getQuestionSet(
