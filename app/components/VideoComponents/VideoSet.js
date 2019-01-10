@@ -173,7 +173,7 @@ export default class VideoSet extends Component<Props, State> {
           console.log('this.state.decision ALPHA', decision);
           console.log('this.state.score ALPHA', decision.score);
           this.setState({
-            decision: true,
+            decision: decision.decision,
             score: decision.score
           });
         });
@@ -194,7 +194,7 @@ export default class VideoSet extends Component<Props, State> {
         classifierObservable.subscribe(decision => {
           console.log('this.state.decision TB', decision);
           this.setState({
-            decision: true,
+            decision: decision.decision,
             score: decision.score
           });
         });
