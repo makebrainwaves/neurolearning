@@ -39,6 +39,8 @@ interface State {
   firstExpQuestionSetLength: number;
   secondExpQuestionSetLength: number;
   thirdExpQuestionSetLength: number;
+  classifierCsv: array;
+  addedToCsv: boolean;
 }
 
 interface Props {
@@ -94,7 +96,9 @@ export default class VideoSet extends Component<Props, State> {
       allFourControlVideos: false,
       firstExpQuestionSetLength: 0,
       secondExpQuestionSetLength: 0,
-      thirdExpQuestionSetLength: 0
+      thirdExpQuestionSetLength: 0,
+      classifierCsv: [],
+      addedToCsv: false
     };
     // These are just so that we can unsubscribe from the observables
     this.rawEEGSubscription = null;
@@ -145,10 +149,11 @@ export default class VideoSet extends Component<Props, State> {
     for (let i = 0; i < 40; i++) {
       const questionAnswered = `questionAnswered${i + 1}`;
       const askQuestion = `askQuestion${i + 1}`;
-
+      const addedToCsv = `addedToCsv${i + 1}`;
       this.setState({
         [questionAnswered]: false,
-        [askQuestion]: false
+        [askQuestion]: false,
+        [addedToCsv]: false
       });
     }
 
@@ -163,15 +168,15 @@ export default class VideoSet extends Component<Props, State> {
       );
       baselineObs.subscribe(threshold => {
         // this.setState({ threshold });
-        // console.log('threshold', threshold);
+        console.log('THRESHOLD ALPHA threshold', threshold);
         const classifierObservable = createClassifierObservable(
           this.props.location.state.rawEEGObservable,
           0.001, // set threshold here (same as VARIANCE_THRESHOLD)
           { featurePipe: computeAlpha, varianceThreshold: 10 }
         );
         classifierObservable.subscribe(decision => {
-          console.log('this.state.decision ALPHA', decision);
-          console.log('this.state.score ALPHA', decision.score);
+          // console.log('this.state.decision ALPHA', decision);
+          // console.log('this.state.score ALPHA', decision.score);
           this.setState({
             decision: decision.decision,
             score: decision.score
@@ -184,15 +189,15 @@ export default class VideoSet extends Component<Props, State> {
         { featurePipe: computeThetaBeta, varianceThreshold: 10 }
       );
       baselineObs.subscribe(threshold => {
-        this.setState({ threshold });
-        console.log('threshold', threshold);
+        // this.setState({ threshold });
+        // console.log('THRESHOLD THETABETA threshold', threshold);
         const classifierObservable = createClassifierObservable(
           this.props.location.state.rawEEGObservable,
           0.001, // set threshold here (same as VARIANCE_THRESHOLD)
           { featurePipe: computeThetaBeta, varianceThreshold: 10 }
         );
         classifierObservable.subscribe(decision => {
-          console.log('this.state.decision TB', decision);
+          // console.log('this.state.decision TB', decision);
           this.setState({
             decision: decision.decision,
             score: decision.score
@@ -440,7 +445,24 @@ export default class VideoSet extends Component<Props, State> {
     console.log('second vidCurrTime', vidCurrTime);
     console.log('second decison', decision);
     console.log('second score', score);
+    /*
 
+    if(
+      20 <= vidCurrTime < 25
+    ){
+      this.addToClassifierCSV();
+    }
+    if(
+      40 <= vidCurrTime < 45
+    ){
+      this.addToClassifierCSV();
+    }
+        if(
+      60 <= vidCurrTime < 65
+    ){
+      this.addToClassifierCSV();
+    }
+*/
     if (videoType === 'experimental') {
       for (let i = 0; i < questionSet.length; i++) {
         const askQuestion = `askQuestion${i + 1}`;
@@ -448,7 +470,7 @@ export default class VideoSet extends Component<Props, State> {
         if (
           questionSet[i].value.period - 5 <= vidCurrTime &&
           vidCurrTime < questionSet[i].value.period &&
-          decision
+          decision === true
         ) {
           this.setState({
             [askQuestion]: true
@@ -468,6 +490,9 @@ export default class VideoSet extends Component<Props, State> {
       const askQuestionNum = i + 1;
       const askQuestion = `askQuestion${askQuestionNum}`;
 
+      const addedToCsvNum = i + 1;
+      const addedToCsv = `addedToCsv${addedToCsvNum}`;
+
       if (
         videoType === 'control' &&
         questionSet[i] &&
@@ -485,8 +510,14 @@ export default class VideoSet extends Component<Props, State> {
       ) {
         this.nextQuestion(questionSet[i].key, vidCurrTime);
       }
+      if (
+        questionSet[i] &&
+        questionSet[i].value.period <= vidCurrTime &&
+        !this.state[addedToCsv]
+      ) {
+        this.addToClassifierCSV(questionSet[i].value.period);
+      }
     }
-
     /*
     if (this.props.location.state.firstVideoType === 'experimental') {
       if (question1AlreadyShown) {
@@ -515,10 +546,12 @@ export default class VideoSet extends Component<Props, State> {
     for (let i = 0; i < videoQuestions.length; i++) {
       const questionAnswered = `questionAnswered${i + 1}`;
       const askQuestion = `askQuestion${i + 1}`;
+      const addedToCsv = `addedToCsv${i + 1}`;
 
       this.setState({
         [questionAnswered]: false,
-        [askQuestion]: false
+        [askQuestion]: false,
+        [addedToCsv]: false
       });
     }
 
@@ -864,9 +897,38 @@ export default class VideoSet extends Component<Props, State> {
     return newAnswers;
   }
 
+  addToClassifierCSV(value) {
+    const videoQuestions = this.state.questionSet;
+    const classifierCsvTemp = this.state.classifierCsv;
+
+    const classifierEntry = {
+      Subject: this.props.location.state.subjectId,
+      VideoName: this.getVideoName(this.state.currentVideo),
+      ExperimentType: this.getExperimentType(),
+      ClassifierType: this.props.location.state.classifierType,
+      ThresholdSurpassed: this.state.decision ? 1 : 0,
+      PowerEstimate: this.state.score ? this.state.score : 'N/A'
+    };
+    classifierCsvTemp.push(classifierEntry);
+    this.setState({ classifierCsv: classifierCsvTemp });
+    console.log('classifierEntry', classifierEntry);
+    console.log('this.state.classifierCsv', this.state.classifierCsv);
+
+    for (let i = 0; i < videoQuestions.length; i++) {
+      if (videoQuestions[i].value.period === value) {
+        const addedToCsv = `addedToCsv${i + 1}`;
+
+        this.setState({
+          [addedToCsv]: true
+        });
+      }
+    }
+  }
+
   getClassifierCsv() {
     // console.log('AnswerSet', this.state.answers);
-    const newAnswers = this.state.updatedAnswers;
+
+    const newAnswers = this.state.classifierCsv;
     //  const answersTemp = this.state.answers;
 
     return newAnswers;
