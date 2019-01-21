@@ -205,7 +205,7 @@ export default class Home extends Component<Props, State> {
   }
 
   handleClassiferType(event: Object, data: Object) {
-    console.log(data);
+    console.log('classifier data from home', data);
     this.setState({ classifierType: data.value });
   }
 
@@ -453,7 +453,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="1"
                       label="P7"
-                      value={!!electrodes.P7}
+                      value={electrodes.P7}
                       name="P7"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -463,7 +463,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="2"
                       label="P4"
-                      value={!!electrodes.P4}
+                      value={electrodes.P4}
                       name="P4"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -473,7 +473,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="3"
                       label="Cz"
-                      value={!!electrodes.Cz}
+                      value={electrodes.Cz}
                       name="Cz"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -483,7 +483,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="4"
                       label="Pz"
-                      value={!!electrodes.Pz}
+                      value={electrodes.Pz}
                       name="Pz"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -493,7 +493,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="5"
                       label="P3"
-                      value={!!electrodes.P3}
+                      value={electrodes.P3}
                       name="P3"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -503,7 +503,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="6"
                       label="P8"
-                      value={!!electrodes.P8}
+                      value={electrodes.P8}
                       name="P8"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -513,7 +513,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="7"
                       label="O1"
-                      value={!!electrodes.O1}
+                      value={electrodes.O1}
                       name="O1"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -523,7 +523,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="8"
                       label="O2"
-                      value={!!electrodes.O2}
+                      value={electrodes.O2}
                       name="O2"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -536,7 +536,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="9"
                       label="T8"
-                      value={!!electrodes.T8}
+                      value={electrodes.T8}
                       name="T8"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -546,7 +546,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="10"
                       label="F8"
-                      value={!!electrodes.F8}
+                      value={electrodes.F8}
                       name="F8"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -556,7 +556,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="11"
                       label="C4"
-                      value={!!electrodes.C4}
+                      value={electrodes.C4}
                       name="C4"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -566,7 +566,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="12"
                       label="F4"
-                      value={!!electrodes.F4}
+                      value={electrodes.F4}
                       name="F4"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -576,7 +576,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="13"
                       label="Fp2"
-                      value={!!electrodes.Fp2}
+                      value={electrodes.Fp2}
                       name="Fp2"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -586,7 +586,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="14"
                       label="Fz"
-                      value={!!electrodes.Fz}
+                      value={electrodes.Fz}
                       name="Fz"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -596,7 +596,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="15"
                       label="C3"
-                      value={!!electrodes.C3}
+                      value={electrodes.C3}
                       name="C3"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -606,7 +606,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="16"
                       label="F3"
-                      value={!!electrodes.F3}
+                      value={electrodes.F3}
                       name="F3"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -619,7 +619,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="17"
                       label="Fp1"
-                      value={!!electrodes.Fp1}
+                      value={electrodes.Fp1}
                       name="Fp1"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -629,7 +629,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="18"
                       label="T7"
-                      value={!!electrodes.T7}
+                      value={electrodes.T7}
                       name="T7"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -639,7 +639,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="19"
                       label="F7"
-                      value={!!electrodes.F7}
+                      value={electrodes.F7}
                       name="F7"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -649,7 +649,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="20"
                       label="Oz"
-                      value={!!electrodes.Oz}
+                      value={electrodes.Oz}
                       name="Oz"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -659,7 +659,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="21"
                       label="PO4"
-                      value={!!electrodes.PO4}
+                      value={electrodes.PO4}
                       name="PO4"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -669,7 +669,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="22"
                       label="FC6"
-                      value={!!electrodes.FC6}
+                      value={electrodes.FC6}
                       name="FC6"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -679,7 +679,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="23"
                       label="FC2"
-                      value={!!electrodes.FC2}
+                      value={electrodes.FC2}
                       name="FC2"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -689,7 +689,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="24"
                       label="AF4"
-                      value={!!electrodes.AF4}
+                      value={electrodes.AF4}
                       name="AF4"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -702,7 +702,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="25"
                       label="CP6"
-                      value={!!electrodes.CP6}
+                      value={electrodes.CP6}
                       name="CP6"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -712,7 +712,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="26"
                       label="CP2"
-                      value={!!electrodes.CP2}
+                      value={electrodes.CP2}
                       name="CP2"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -722,7 +722,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="27"
                       label="CP1"
-                      value={!!electrodes.CP1}
+                      value={electrodes.CP1}
                       name="CP1"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -732,7 +732,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="28"
                       label="CP5"
-                      value={!!electrodes.CP5}
+                      value={electrodes.CP5}
                       name="CP5"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -742,7 +742,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="29"
                       label="FC1"
-                      value={!!electrodes.FC1}
+                      value={electrodes.FC1}
                       name="FC1"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -752,7 +752,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="30"
                       label="FC5"
-                      value={!!electrodes.FC5}
+                      value={electrodes.FC5}
                       name="FC5"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -762,7 +762,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="31"
                       label="AF3"
-                      value={!!electrodes.AF3}
+                      value={electrodes.AF3}
                       name="AF3"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
@@ -772,7 +772,7 @@ export default class Home extends Component<Props, State> {
                     <Checkbox
                       id="32"
                       label="PO3"
-                      value={!!electrodes.PO3}
+                      value={electrodes.PO3}
                       name="PO3"
                       className={styles.electrode}
                       onChange={this.selectElectrode}
