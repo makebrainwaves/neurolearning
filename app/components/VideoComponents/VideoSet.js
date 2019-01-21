@@ -156,6 +156,14 @@ export default class VideoSet extends Component<Props, State> {
   }
 
   handleStartEEG() {
+    const eegObservable = this.props.location.state.rawEEGObservable;
+    eegObservable.subscribe(data => {
+      const dataArray = data.data;
+      const timeStamp = data.timestamp;
+      // console.log('timeStamp', timeStamp);
+      // console.log('data[0]', dataArray);
+    });
+
     if (this.props.location.state.classifierType === 'alpha') {
       const baselineObs = createBaselineObservable(
         this.props.location.state.rawEEGObservable,
