@@ -41,10 +41,6 @@ interface State {
   thirdExpQuestionSetLength: number;
 }
 
-interface Props {
-  electrodesChosen: [];
-}
-
 const rollBackTime = 5;
 const biomassQ = require('../../questions/BiomassQuestions.js');
 const fuelQ = require('../../questions/FuelQuestions.js');
