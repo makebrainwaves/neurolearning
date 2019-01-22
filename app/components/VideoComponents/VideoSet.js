@@ -167,14 +167,14 @@ export default class VideoSet extends Component<Props, State> {
         console.log('THRESHOLD ALPHA threshold', threshold);
         const classifierObservable = createClassifierObservable(
           this.props.location.state.rawEEGObservable,
-          0.001, // set threshold here (same as VARIANCE_THRESHOLD)
+          0.00001, // set threshold here (same as VARIANCE_THRESHOLD)
           { featurePipe: computeAlpha, varianceThreshold: 10 }
         );
         classifierObservable.subscribe(decision => {
           // console.log('this.state.decision ALPHA', decision);
           // console.log('this.state.score ALPHA', decision.score);
           this.setState({
-            decision: true,
+            decision: decision.decision,
             score: decision.score
           });
         });
@@ -189,13 +189,13 @@ export default class VideoSet extends Component<Props, State> {
         console.log('THRESHOLD THETABETA threshold', threshold);
         const classifierObservable = createClassifierObservable(
           this.props.location.state.rawEEGObservable,
-          0.001, // set threshold here (same as VARIANCE_THRESHOLD)
+          0.00001, // set threshold here (same as VARIANCE_THRESHOLD)
           { featurePipe: computeThetaBeta, varianceThreshold: 10 }
         );
         classifierObservable.subscribe(decision => {
           // console.log('this.state.decision TB', decision);
           this.setState({
-            decision: true,
+            decision: decision.decision,
             score: decision.score
           });
         });
