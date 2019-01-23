@@ -39,10 +39,8 @@ interface State {
   firstExpQuestionSetLength: number;
   secondExpQuestionSetLength: number;
   thirdExpQuestionSetLength: number;
-}
-
-interface Props {
-  electrodesChosen: [];
+  classifierCsv: array;
+  addedToCsv: boolean;
 }
 
 const rollBackTime = 5;
@@ -94,7 +92,9 @@ export default class VideoSet extends Component<Props, State> {
       allFourControlVideos: false,
       firstExpQuestionSetLength: 0,
       secondExpQuestionSetLength: 0,
-      thirdExpQuestionSetLength: 0
+      thirdExpQuestionSetLength: 0,
+      classifierCsv: [],
+      addedToCsv: false
     };
     // These are just so that we can unsubscribe from the observables
     this.rawEEGSubscription = null;
@@ -145,10 +145,11 @@ export default class VideoSet extends Component<Props, State> {
     for (let i = 0; i < 40; i++) {
       const questionAnswered = `questionAnswered${i + 1}`;
       const askQuestion = `askQuestion${i + 1}`;
-
+      const addedToCsv = `addedToCsv${i + 1}`;
       this.setState({
         [questionAnswered]: false,
-        [askQuestion]: false
+        [askQuestion]: false,
+        [addedToCsv]: false
       });
     }
 
@@ -171,18 +172,19 @@ export default class VideoSet extends Component<Props, State> {
       );
       baselineObs.subscribe(threshold => {
         // this.setState({ threshold });
-        // console.log('threshold', threshold);
+        console.log('THRESHOLD ALPHA threshold', threshold);
         const classifierObservable = createClassifierObservable(
           this.props.location.state.rawEEGObservable,
-          0.001, // set threshold here (same as VARIANCE_THRESHOLD)
+          0.000001, // set threshold here (same as VARIANCE_THRESHOLD)
           { featurePipe: computeAlpha, varianceThreshold: 10 }
         );
         classifierObservable.subscribe(decision => {
           console.log('this.state.decision ALPHA', decision);
-          console.log('this.state.score ALPHA', decision.score);
+          // console.log('this.state.score ALPHA', decision.score);
           this.setState({
             decision: decision.decision,
-            score: decision.score
+            score: decision.score,
+            powerEstimate: decision.powerEstimate
           });
         });
       });
@@ -192,18 +194,19 @@ export default class VideoSet extends Component<Props, State> {
         { featurePipe: computeThetaBeta, varianceThreshold: 10 }
       );
       baselineObs.subscribe(threshold => {
-        this.setState({ threshold });
-        console.log('threshold', threshold);
+        // this.setState({ threshold });
+        console.log('THRESHOLD THETABETA threshold', threshold);
         const classifierObservable = createClassifierObservable(
           this.props.location.state.rawEEGObservable,
-          0.001, // set threshold here (same as VARIANCE_THRESHOLD)
+          0.000001, // set threshold here (same as VARIANCE_THRESHOLD)
           { featurePipe: computeThetaBeta, varianceThreshold: 10 }
         );
         classifierObservable.subscribe(decision => {
-          console.log('this.state.decision TB', decision);
+          // console.log('this.state.decision TB', decision);
           this.setState({
             decision: decision.decision,
-            score: decision.score
+            score: decision.score,
+            powerEstimate: decision.powerEstimate
           });
         });
       });
@@ -439,24 +442,25 @@ export default class VideoSet extends Component<Props, State> {
       videoName,
       questionSet,
       decision,
-      score
+      score,
+      powerEstimate
     } = this.state;
 
     const vidCurrTime = document.getElementById('vidID').currentTime;
     const videoType = this.getExperimentType();
 
-    console.log('second vidCurrTime', vidCurrTime);
-    console.log('second decison', decision);
-    console.log('second score', score);
-
     if (videoType === 'experimental') {
+      console.log('second vidCurrTime', vidCurrTime);
+      console.log('second decison', decision);
+      console.log('second score', score);
+      console.log('second powerEstimate', powerEstimate);
       for (let i = 0; i < questionSet.length; i++) {
         const askQuestion = `askQuestion${i + 1}`;
 
         if (
           questionSet[i].value.period - 5 <= vidCurrTime &&
           vidCurrTime < questionSet[i].value.period &&
-          decision
+          decision === true
         ) {
           this.setState({
             [askQuestion]: true
@@ -476,6 +480,9 @@ export default class VideoSet extends Component<Props, State> {
       const askQuestionNum = i + 1;
       const askQuestion = `askQuestion${askQuestionNum}`;
 
+      const addedToCsvNum = i + 1;
+      const addedToCsv = `addedToCsv${addedToCsvNum}`;
+
       if (
         videoType === 'control' &&
         questionSet[i] &&
@@ -493,8 +500,14 @@ export default class VideoSet extends Component<Props, State> {
       ) {
         this.nextQuestion(questionSet[i].key, vidCurrTime);
       }
+      if (
+        questionSet[i] &&
+        questionSet[i].value.period <= vidCurrTime &&
+        !this.state[addedToCsv]
+      ) {
+        this.addToClassifierCSV(questionSet[i].value.period);
+      }
     }
-
     /*
     if (this.props.location.state.firstVideoType === 'experimental') {
       if (question1AlreadyShown) {
@@ -523,10 +536,12 @@ export default class VideoSet extends Component<Props, State> {
     for (let i = 0; i < videoQuestions.length; i++) {
       const questionAnswered = `questionAnswered${i + 1}`;
       const askQuestion = `askQuestion${i + 1}`;
+      const addedToCsv = `addedToCsv${i + 1}`;
 
       this.setState({
         [questionAnswered]: false,
-        [askQuestion]: false
+        [askQuestion]: false,
+        [addedToCsv]: false
       });
     }
 
@@ -872,11 +887,36 @@ export default class VideoSet extends Component<Props, State> {
     return newAnswers;
   }
 
-  getClassifierCsv() {
-    // console.log('AnswerSet', this.state.answers);
-    const newAnswers = this.state.updatedAnswers;
-    //  const answersTemp = this.state.answers;
+  addToClassifierCSV(value) {
+    const videoQuestions = this.state.questionSet;
+    const classifierCsvTemp = this.state.classifierCsv;
 
+    const classifierEntry = {
+      Subject: this.props.location.state.subjectId,
+      VideoName: this.getVideoName(this.state.currentVideo),
+      ExperimentType: this.getExperimentType(),
+      ClassifierType: this.props.location.state.classifierType,
+      ThresholdSurpassed: this.state.decision ? 1 : 0,
+      PowerEstimate: this.state.powerEstimate ? this.state.powerEstimate : 'N/A'
+    };
+    classifierCsvTemp.push(classifierEntry);
+    this.setState({ classifierCsv: classifierCsvTemp });
+    // console.log('classifierEntry', classifierEntry);
+    // console.log('this.state.classifierCsv', this.state.classifierCsv);
+
+    for (let i = 0; i < videoQuestions.length; i++) {
+      if (videoQuestions[i].value.period === value) {
+        const addedToCsv = `addedToCsv${i + 1}`;
+
+        this.setState({
+          [addedToCsv]: true
+        });
+      }
+    }
+  }
+
+  getClassifierCsv() {
+    const newAnswers = this.state.classifierCsv;
     return newAnswers;
   }
 
@@ -917,48 +957,8 @@ export default class VideoSet extends Component<Props, State> {
     } = state;
 
     const answersCsv = this.getAnswerSet();
-
     const classifierCsv = this.getClassifierCsv();
-    /*
-    const classifierCsv = [
-      {
-        Subject: subjectId,
-        VideoName: answers[0].biomass.value,
-        ExperimentType: 'control',
-        SequenceNo: biomassSequenceNumber,
-        ModalPopupTOD: answers[0].biomass.q1.modalPopupTOD,
-        ModalPopupTOV: answers[0].biomass.q1.modalPopupTOV,
-        SubmitTimeTOD: answers[0].biomass.q1.submitTimeTOD,
-        QuestionNo: answers[0].biomass.q1.value,
-        Engagement: answers[0].biomass.q1.engagement,
-        Answer: answers[0].biomass.q1.answer
-      },
-      {
-        Subject: subjectId,
-        VideoName: answers[0].biomass.value,
-        ExperimentType: 'control',
-        SequenceNo: biomassSequenceNumber,
-        ModalPopupTOD: answers[0].biomass.q1.modalPopupTOD,
-        ModalPopupTOV: answers[0].biomass.q1.modalPopupTOV,
-        SubmitTimeTOD: answers[0].biomass.q1.submitTimeTOD,
-        QuestionNo: answers[0].biomass.q1.value,
-        Engagement: answers[0].biomass.q1.engagement,
-        Answer: answers[0].biomass.q1.answer
-      },
-      {
-        Subject: subjectId,
-        VideoName: answers[0].biomass.value,
-        ExperimentType: 'control',
-        SequenceNo: biomassSequenceNumber,
-        ModalPopupTOD: answers[0].biomass.q1.modalPopupTOD,
-        ModalPopupTOV: answers[0].biomass.q1.modalPopupTOV,
-        SubmitTimeTOD: answers[0].biomass.q1.submitTimeTOD,
-        QuestionNo: answers[0].biomass.q1.value,
-        Engagement: answers[0].biomass.q1.engagement,
-        Answer: answers[0].biomass.q1.answer
-      },
-    ];
-*/
+
     return (
       <div className={styles.videoContainer}>
         <div className={styles.backButton} data-tid="backButton">
