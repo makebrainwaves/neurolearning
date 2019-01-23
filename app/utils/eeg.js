@@ -32,7 +32,7 @@ const DECISION_INTERVAL = 5000; // 5 seconds
 interface baselineOptions {
   decisionThreshold?: number;
   // featurePipe?: Observable => Observable;
-  featurePipe?: array<number>;
+  // featurePipe?: array<number>;
   baselineDuration?: number;
   varianceThreshold?: number;
 }
@@ -40,7 +40,7 @@ interface baselineOptions {
 interface classifierOptions {
   interval?: number;
   // featurePipe?: Observable => Observable;
-  featurePipe?: array<number>;
+  // featurePipe?: array<number>;
   varianceThreshold?: number;
 }
 
@@ -112,14 +112,14 @@ export const createBaselineObservable = (
       duration: ENOBIO_SAMPLE_RATE,
       interval: ENOBIO_SAMPLE_RATE
     }),
-    tap(epoch => console.log('epoch: ', epoch)),
+    tap(epoch => console.log(' baseline epoch: ', epoch)),
     removeNoise(varianceThreshold),
-    tap(epoch => console.log('removeNoise: ', epoch)),
+    // tap(epoch => console.log('removeNoise: ', epoch)),
     featurePipe(),
-    tap(epoch => console.log('featurePipe: ', epoch)),
+    // tap(epoch => console.log('featurePipe: ', epoch)),
     map(average),
     bufferTime(baselineDuration),
-    tap(epoch => console.log('bufferTime: ', epoch)),
+    // tap(epoch => console.log('bufferTime: ', epoch)),
     map(
       featureBuffer =>
         average(featureBuffer) +
@@ -146,14 +146,21 @@ export const createClassifierObservable = (
       duration: ENOBIO_SAMPLE_RATE,
       interval: ENOBIO_SAMPLE_RATE
     }),
+    tap(epoch => console.log(' classifier epoch: ', epoch)),
     removeNoise(varianceThreshold),
+    // tap(epoch => console.log(' classifier sig quality: ', epoch.signalQuality)),
     featurePipe(),
-    map(average),
+    // tap(alpha => console.log('power estimates coming out of featurePipe: ', alpha)),
+    map(powerEstimates => average(powerEstimates)),
+    tap(avg => console.log('mapped average of power estimates: ', avg)),
     bufferTime(interval),
+    tap(epoch => console.log(' classifier epoch buff time: ', epoch)),
     map(featureBuffer => {
       const score = average(featureBuffer);
       const decision = score >= threshold;
-      return { score, decision };
+      const powerEstimate = featureBuffer.slice(-1)[0];
+
+      return { score, decision, powerEstimate };
     })
   );
 
@@ -161,6 +168,7 @@ export const createClassifierObservable = (
 // Operators
 // Custom operators that can be composed to build our analysis pipeline
 
+/*
 export const removeNoise = (threshold: number = VARIANCE_THRESHOLD) =>
   pipe(
     deMean(),
@@ -174,6 +182,20 @@ export const removeNoise = (threshold: number = VARIANCE_THRESHOLD) =>
         true
       )
     )
+  );
+*/
+
+export const removeNoise = (threshold: number = VARIANCE_THRESHOLD) =>
+  pipe(
+    deMean(),
+    addSignalQuality(),
+    filter(epo => {
+      const isNoiseArray = Object.values(epo.signalQuality).map(
+        noise => (noise >= threshold ? false : true)
+      );
+      // console.log(isNoiseArray);
+      return isNoiseArray.reduce((acc, curr) => (curr ? curr : acc), true);
+    })
   );
 
 export const computeAlpha = (alphaRange: Array<number> = [8, 13]) =>

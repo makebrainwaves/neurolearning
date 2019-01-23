@@ -167,15 +167,16 @@ export default class VideoSet extends Component<Props, State> {
         console.log('THRESHOLD ALPHA threshold', threshold);
         const classifierObservable = createClassifierObservable(
           this.props.location.state.rawEEGObservable,
-          0.00001, // set threshold here (same as VARIANCE_THRESHOLD)
+          0.000001, // set threshold here (same as VARIANCE_THRESHOLD)
           { featurePipe: computeAlpha, varianceThreshold: 10 }
         );
         classifierObservable.subscribe(decision => {
-          // console.log('this.state.decision ALPHA', decision);
+          console.log('this.state.decision ALPHA', decision);
           // console.log('this.state.score ALPHA', decision.score);
           this.setState({
             decision: decision.decision,
-            score: decision.score
+            score: decision.score,
+            powerEstimate: decision.powerEstimate
           });
         });
       });
@@ -189,14 +190,15 @@ export default class VideoSet extends Component<Props, State> {
         console.log('THRESHOLD THETABETA threshold', threshold);
         const classifierObservable = createClassifierObservable(
           this.props.location.state.rawEEGObservable,
-          0.00001, // set threshold here (same as VARIANCE_THRESHOLD)
+          0.000001, // set threshold here (same as VARIANCE_THRESHOLD)
           { featurePipe: computeThetaBeta, varianceThreshold: 10 }
         );
         classifierObservable.subscribe(decision => {
           // console.log('this.state.decision TB', decision);
           this.setState({
             decision: decision.decision,
-            score: decision.score
+            score: decision.score,
+            powerEstimate: decision.powerEstimate
           });
         });
       });
@@ -432,7 +434,8 @@ export default class VideoSet extends Component<Props, State> {
       videoName,
       questionSet,
       decision,
-      score
+      score,
+      powerEstimate
     } = this.state;
 
     const vidCurrTime = document.getElementById('vidID').currentTime;
@@ -442,6 +445,7 @@ export default class VideoSet extends Component<Props, State> {
       console.log('second vidCurrTime', vidCurrTime);
       console.log('second decison', decision);
       console.log('second score', score);
+      console.log('second powerEstimate', powerEstimate);
       for (let i = 0; i < questionSet.length; i++) {
         const askQuestion = `askQuestion${i + 1}`;
 
@@ -885,12 +889,12 @@ export default class VideoSet extends Component<Props, State> {
       ExperimentType: this.getExperimentType(),
       ClassifierType: this.props.location.state.classifierType,
       ThresholdSurpassed: this.state.decision ? 1 : 0,
-      PowerEstimate: this.state.score ? this.state.score : 'N/A'
+      PowerEstimate: this.state.powerEstimate ? this.state.powerEstimate : 'N/A'
     };
     classifierCsvTemp.push(classifierEntry);
     this.setState({ classifierCsv: classifierCsvTemp });
-    console.log('classifierEntry', classifierEntry);
-    console.log('this.state.classifierCsv', this.state.classifierCsv);
+    // console.log('classifierEntry', classifierEntry);
+    // console.log('this.state.classifierCsv', this.state.classifierCsv);
 
     for (let i = 0; i < videoQuestions.length; i++) {
       if (videoQuestions[i].value.period === value) {

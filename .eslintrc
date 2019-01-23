@@ -28,6 +28,7 @@
     "no-restricted-syntax": "off",
     "no-shadow": "off",
     "no-undef": "off",
+    "no-unneeded-ternary": "off",
     "no-unused-vars": "off",
     "promise/param-names": "error",
     "promise/always-return": "error",
