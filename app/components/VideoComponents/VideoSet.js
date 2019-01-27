@@ -15,6 +15,7 @@ import {
   computeAlpha,
   computeThetaBeta
 } from '../../utils/eeg';
+import { createEEGWriteStream } from '../../utils/write';
 
 interface State {
   subjectId: string;
@@ -68,9 +69,8 @@ export default class VideoSet extends Component<Props, State> {
   constructor(props) {
     super(props);
 
-    // console.log('your eeg observable', props.location.state.classifierType);
-    // console.log('tests', this.props.location.props.electrodesChosen);
     this.state = {
+      isEEGRecording: false,
       isRunning: false,
       modalIsOpen: false,
       finalModalIsOpen: false,
@@ -157,52 +157,31 @@ export default class VideoSet extends Component<Props, State> {
   }
 
   handleStartEEG() {
-    if (this.props.location.state.classifierType === 'alpha') {
-      const baselineObs = createBaselineObservable(
-        this.props.location.state.rawEEGObservable,
-        { featurePipe: computeAlpha, varianceThreshold: 10 }
+    const { classifierType, rawEEGObservable } = this.props.location.state;
+    const classifierPipe =
+      classifierType === 'alpha' ? computeAlpha : computeThetaBeta;
+    // start recording raw EEG
+
+    // create baseline observable
+    const baselineObs = createBaselineObservable(rawEEGObservable, {
+      featurePipe: classifierPipe
+    });
+
+    baselineObs.subscribe(threshold => {
+      console.log('Baseline observable completed with result: ', threshold);
+      const classifierObservable = createClassifierObservable(
+        rawEEGObservable,
+        threshold,
+        { featurePipe: classifierPipe }
       );
-      baselineObs.subscribe(threshold => {
-        // this.setState({ threshold });
-        console.log('THRESHOLD ALPHA threshold', threshold);
-        const classifierObservable = createClassifierObservable(
-          this.props.location.state.rawEEGObservable,
-          0.000001, // set threshold here (same as VARIANCE_THRESHOLD)
-          { featurePipe: computeAlpha, varianceThreshold: 10 }
-        );
-        classifierObservable.subscribe(decision => {
-          console.log('this.state.decision ALPHA', decision);
-          // console.log('this.state.score ALPHA', decision.score);
-          this.setState({
-            decision: decision.decision,
-            score: decision.score,
-            powerEstimate: decision.powerEstimate
-          });
+      classifierObservable.subscribe(decision => {
+        console.log('classifier emitted decicsion', decision);
+        this.setState({
+          decision: decision.decision,
+          score: decision.score
         });
       });
-    } else {
-      const baselineObs = createBaselineObservable(
-        this.props.location.state.rawEEGObservable,
-        { featurePipe: computeThetaBeta, varianceThreshold: 10 }
-      );
-      baselineObs.subscribe(threshold => {
-        // this.setState({ threshold });
-        console.log('THRESHOLD THETABETA threshold', threshold);
-        const classifierObservable = createClassifierObservable(
-          this.props.location.state.rawEEGObservable,
-          0.000001, // set threshold here (same as VARIANCE_THRESHOLD)
-          { featurePipe: computeThetaBeta, varianceThreshold: 10 }
-        );
-        classifierObservable.subscribe(decision => {
-          // console.log('this.state.decision TB', decision);
-          this.setState({
-            decision: decision.decision,
-            score: decision.score,
-            powerEstimate: decision.powerEstimate
-          });
-        });
-      });
-    }
+    });
   }
 
   getRandomQuestionSet(currVid) {
@@ -340,6 +319,9 @@ export default class VideoSet extends Component<Props, State> {
   };
 
   playVideo = () => {
+    if (!this.state.isEEGRecording) {
+      this.handleStartEEG();
+    }
     const videoRef = this.getVideoRef;
     videoRef.play();
     this.setState({ isRunning: true });
