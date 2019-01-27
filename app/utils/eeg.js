@@ -27,18 +27,20 @@ const ENOBIO_SAMPLE_RATE = 500;
 const VARIANCE_THRESHOLD = 0.001; // ~100uV variance? Will have to update depend. on format of Enobio data
 const FFT_BINS = 512; // closest power of 2 to sampling rate
 const BASELINE_DURATION = 60000; // 60 seconds
-const DECISION_INTERVAL = 20000; // 20 seconds
+const DECISION_INTERVAL = 5000; // 5 seconds
 
 interface baselineOptions {
   decisionThreshold?: number;
-  featurePipe?: Observable => Observable;
+  // featurePipe?: Observable => Observable;
+  // featurePipe?: array<number>;
   baselineDuration?: number;
   varianceThreshold?: number;
 }
 
 interface classifierOptions {
   interval?: number;
-  featurePipe?: Observable => Observable;
+  // featurePipe?: Observable => Observable;
+  // featurePipe?: array<number>;
   varianceThreshold?: number;
 }
 
@@ -110,10 +112,12 @@ export const createBaselineObservable = (
       duration: ENOBIO_SAMPLE_RATE,
       interval: ENOBIO_SAMPLE_RATE
     }),
-    removeNoise(varianceThreshold),
+    removeNoise(varianceThreshold), // tap(epoch => console.log('removeNoise: ', epoch)),
     featurePipe(),
+    // tap(epoch => console.log('featurePipe: ', epoch)),
     map(average),
     bufferTime(baselineDuration),
+    // tap(epoch => console.log('bufferTime: ', epoch)),
     map(
       featureBuffer =>
         average(featureBuffer) +
@@ -142,12 +146,14 @@ export const createClassifierObservable = (
     }),
     removeNoise(varianceThreshold),
     featurePipe(),
-    map(average),
+    map(powerEstimates => average(powerEstimates)),
     bufferTime(interval),
     map(featureBuffer => {
-      const score = average(featureBuffer);
-      const decision = score >= threshold;
-      return { score, decision };
+      const averagedPowerEstimate = average(featureBuffer);
+      const decision = averagedPowerEstimate >= threshold;
+      const goodEpochs = featureBuffer.length;
+
+      return { averagedPowerEstimate, decision, goodEpochs };
     })
   );
 
@@ -155,16 +161,34 @@ export const createClassifierObservable = (
 // Operators
 // Custom operators that can be composed to build our analysis pipeline
 
+/*
 export const removeNoise = (threshold: number = VARIANCE_THRESHOLD) =>
   pipe(
     deMean(),
     addSignalQuality(),
+    tap(epoch =>
+      console.log('signal quality removeNoise: ', epoch.signalQuality)
+    ),
     filter(epo =>
       Object.values(epo.signalQuality).reduce(
         (acc, curr) => (curr >= threshold ? false : acc),
         true
       )
     )
+  );
+*/
+
+export const removeNoise = (threshold: number = VARIANCE_THRESHOLD) =>
+  pipe(
+    deMean(),
+    addSignalQuality(),
+    map(epo => {
+      const filteredData = epo.data.filter(
+        (_, index) => epo.signalQuality[index] < threshold
+      );
+      return { ...epo, data: filteredData };
+    }),
+    filter(epo => epo.data.length > 0)
   );
 
 export const computeAlpha = (alphaRange: Array<number> = [8, 13]) =>

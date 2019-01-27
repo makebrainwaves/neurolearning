@@ -25,7 +25,8 @@ describe('Classifier observables', () => {
   jest.setTimeout(10000);
   it('should compute baseline from specific duration of data', done => {
     const baselineObservable = createBaselineObservable(rawEEGObservable, {
-      baselineDuration: 8000
+      baselineDuration: 5000,
+      varianceThreshold: 0.000046850844390398775
     });
     baselineObservable.subscribe(
       result => {
@@ -45,7 +46,7 @@ describe('Classifier observables', () => {
     const classifierObservable = createClassifierObservable(
       rawEEGObservable,
       threshold,
-      { interval: 2000 } // Note: bug when setting this interval too low
+      { interval: 2000, varianceThreshold: 0.000046850844390398775 } // Note: bug when setting this interval too low
     );
     classifierObservable.subscribe(
       decision => {
