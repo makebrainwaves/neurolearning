@@ -15,7 +15,7 @@ import {
   computeAlpha,
   computeThetaBeta
 } from '../../utils/eeg';
-import { createEEGWriteStream } from '../../utils/write';
+import { createEEGWriteStream, writeEEGData } from '../../utils/write';
 
 interface State {
   subjectId: string;
@@ -154,7 +154,18 @@ export default class VideoSet extends Component<Props, State> {
     const { classifierType, rawEEGObservable } = this.props.location.state;
     const classifierPipe =
       classifierType === 'alpha' ? computeAlpha : computeThetaBeta;
+
     // start recording raw EEG
+    // TODO: this worskpacedir variable needs to be set by a workspace property inherited from Home
+    const workspaceDir = 'placeholder';
+    const rawEEGWriteStream = createEEGWriteStream(
+      workspaceDir,
+      this.state.videoName
+    );
+
+    rawEEGObservable.subscribe(rawData =>
+      writeEEGData(rawEEGWriteStream, rawData)
+    );
 
     // create baseline observable
     const baselineObs = createBaselineObservable(rawEEGObservable, {
