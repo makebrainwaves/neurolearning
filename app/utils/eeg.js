@@ -113,8 +113,7 @@ export const createBaselineObservable = (
       interval: ENOBIO_SAMPLE_RATE
     }),
     tap(epoch => console.log(' baseline epoch: ', epoch)),
-    removeNoise(varianceThreshold),
-    // tap(epoch => console.log('removeNoise: ', epoch)),
+    removeNoise(varianceThreshold), // tap(epoch => console.log('removeNoise: ', epoch)),
     featurePipe(),
     // tap(epoch => console.log('featurePipe: ', epoch)),
     map(average),
@@ -150,17 +149,14 @@ export const createClassifierObservable = (
     removeNoise(varianceThreshold),
     // tap(epoch => console.log(' classifier sig quality: ', epoch.signalQuality)),
     featurePipe(),
-    // tap(alpha => console.log('power estimates coming out of featurePipe: ', alpha)),
     map(powerEstimates => average(powerEstimates)),
-    tap(avg => console.log('mapped average of power estimates: ', avg)),
     bufferTime(interval),
-    tap(epoch => console.log(' classifier epoch buff time: ', epoch)),
     map(featureBuffer => {
-      const score = average(featureBuffer);
-      const decision = score >= threshold;
-      const powerEstimate = featureBuffer.slice(-1)[0];
+      const averagedPowerEstimate = average(featureBuffer);
+      const decision = averagedPowerEstimate >= threshold;
+      const goodEpochs = featureBuffer.length;
 
-      return { score, decision, powerEstimate };
+      return { averagedPowerEstimate, decision, goodEpochs };
     })
   );
 
