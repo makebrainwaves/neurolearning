@@ -5,7 +5,7 @@ module.exports = [
       name: 'Question 1:',
       period: 80, // '1:00-1:20' or 60-80
       question:
-        'fuel1true or false? Bio-oils are chemically similar to petroleum oils.',
+        'True or false? Bio-oils are chemically similar to petroleum oils.',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -17,7 +17,7 @@ module.exports = [
       name: 'Question 2:',
       period: 100, // '1:20-1:40' or 80-100
       question:
-        'fuel2true or false? Biodiesel is composed almost entirely of fatty acid methyl esters.',
+        'True or false? Biodiesel is composed almost entirely of fatty acid methyl esters.',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -29,7 +29,7 @@ module.exports = [
       name: 'Question 3:',
       period: 120, // '1:40-2:00' or 100-120
       question:
-        'fuel3true or false? Blendstocks means it has to be mixed with regular gasoline or diesel at some level to be a fuel that works well in the engines commonly available today.',
+        'True or false? Blendstocks means it has to be mixed with regular gasoline or diesel at some level to be a fuel that works well in the engines commonly available today.',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -41,7 +41,7 @@ module.exports = [
       name: 'Question 4:',
       period: 140, // '2:00-2:20' or 120-140
       question:
-        'fuel4true or false? DME is dimethyl ether and it is commonly regarded as a renewable diesel alternative.',
+        'True or false? DME is dimethyl ether and it is commonly regarded as a renewable diesel alternative.',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -53,7 +53,7 @@ module.exports = [
       name: 'Question 5:',
       period: 160, // '2:20-2:40' or 140-160
       question:
-        'fuel5true or false? Diesel and gasoline engines have been designed for the same kinds of fuel.',
+        'True or false? Diesel and gasoline engines have been designed for the same kinds of fuel.',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -65,7 +65,7 @@ module.exports = [
       name: 'Question 6:',
       period: 180, // '2:40-3:00' or 160-180
       question:
-        'fuel6true or false? Octane and cetane ratings can be considered independently of one another when investigating new fuels.',
+        'True or false? Octane and cetane ratings can be considered independently of one another when investigating new fuels.',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -76,8 +76,7 @@ module.exports = [
     value: {
       name: 'Question 7:',
       period: 200, // '3:00-3:20' or 180-200
-      question:
-        'fuel7true or false? Cetane ignites very easily under compression.',
+      question: 'True or false? Cetane ignites very easily under compression.',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -88,7 +87,7 @@ module.exports = [
     value: {
       name: 'Question 8:',
       period: 220, // '3:20-3:40' or 200-220
-      question: 'fuel8true or false? The cetane spectrum ranges from 0 to 100.',
+      question: 'True or false? The cetane spectrum ranges from 0 to 100.',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -100,7 +99,7 @@ module.exports = [
       name: 'Question 9:',
       period: 240, // '3:40-4:00' or 220-240
       question:
-        'fuel9true or false? The cetane number of a diesel is an average of the cetane values of its components.',
+        'True or false? The cetane number of a diesel is an average of the cetane values of its components.',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -112,7 +111,7 @@ module.exports = [
       name: 'Question 10:',
       period: 260, // '4:00-4:20' or 240-260
       question:
-        'fuel10true or false? The chemical structure of fuel components changes with cetane number',
+        'True or false? The chemical structure of fuel components changes with cetane number',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -124,7 +123,7 @@ module.exports = [
       name: 'Question 11:',
       period: 280, // '4:20-4:40' or 260-280
       question:
-        'fuel11true or false? Diesel is produced almost entirely from petroleum.',
+        'True or false? Diesel is produced almost entirely from petroleum.',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -136,7 +135,7 @@ module.exports = [
       name: 'Question 12:',
       period: 300, // '4:40-5:00' or 280-300
       question:
-        'fuel12true or false? Heptane is rated at 0 and iso-octane is rated at 100.',
+        'True or false? Heptane is rated at 0 and iso-octane is rated at 100.',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -148,7 +147,7 @@ module.exports = [
       name: 'Question 13:',
       period: 320, // '5:00-5:20' or 300-320
       question:
-        'fuel13true or false? The octane rating of gasoline is measured in a test engine and is defined by comparison with the mixture of iso-octane and heptane.',
+        'True or false? The octane rating of gasoline is measured in a test engine and is defined by comparison with the mixture of iso-octane and heptane.',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -160,7 +159,7 @@ module.exports = [
       name: 'Question 14:',
       period: 340, // '5:20-5:40' or 320-340
       question:
-        "fuel14true or false? Octane ratings are a measure of the fuel's tendency to explode in an uncontrolled manner.",
+        "True or false? Octane ratings are a measure of the fuel's tendency to explode in an uncontrolled manner.",
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -172,7 +171,7 @@ module.exports = [
       name: 'Question 15:',
       period: 360, // '5:40-6:00' or 340-360
       question:
-        'fuel15true or false? The chemical structures don’t change with the octane value.',
+        'True or false? The chemical structures don’t change with the octane value.',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -183,7 +182,7 @@ module.exports = [
     value: {
       name: 'Question 16:',
       period: 380, // '6:00-6:20' or 360-380
-      question: 'fuel16true or false? Biological oils are closest to diesel.',
+      question: 'True or false? Biological oils are closest to diesel.',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -195,7 +194,7 @@ module.exports = [
       name: 'Question 17:',
       period: 400, // '6:20-6:40' or 380-400
       question:
-        'fuel17true or false? Exposing bio-oils to high levels of carbon can be used to reduce its high oxygen levels',
+        'True or false? Exposing bio-oils to high levels of carbon can be used to reduce its high oxygen levels',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -207,7 +206,7 @@ module.exports = [
       name: 'Question 18:',
       period: 420, // '6:40-7:00' or 400-420
       question:
-        'fuel18true or false? The most important thing for a jet fuel is energy content.',
+        'True or false? The most important thing for a jet fuel is energy content.',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -218,7 +217,7 @@ module.exports = [
     value: {
       name: 'Question 19:',
       period: 440, // '7:00-7:20' or 420-440
-      question: 'fuel19true or false? Fuel is almost always a pure chemical.',
+      question: 'True or false? Fuel is almost always a pure chemical.',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -229,7 +228,7 @@ module.exports = [
     value: {
       name: 'Question 20:',
       period: 460, // '7:20-7:40' or 440-460
-      question: 'fuel20true or false? Fuel is almost always a mixture.',
+      question: 'True or false? Fuel is almost always a mixture.',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -241,7 +240,7 @@ module.exports = [
       name: 'Question 21:',
       period: 480, // '7:40-8:00' or 460-480
       question:
-        'fuel21true or false? The only characteristics that are relevant and important to make a high-performing fuel are its energy content and freezing point.',
+        'True or false? The only characteristics that are relevant and important to make a high-performing fuel are its energy content and freezing point.',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -253,7 +252,7 @@ module.exports = [
       name: 'Question 22:',
       period: 500, // '8:00-8:20' or 480-500
       question:
-        'fuel22true or false? A good fuel serves the needs of just the engine.',
+        'True or false? A good fuel serves the needs of just the engine.',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
@@ -265,7 +264,7 @@ module.exports = [
       name: 'Question 23:',
       period: 520, // '8:20-8:40' or 500-520
       question:
-        'fuel23true or false? Walmart developed a car with the primary purpose of reducing their fuel consumption.',
+        'True or false? Walmart developed a car with the primary purpose of reducing their fuel consumption.',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
