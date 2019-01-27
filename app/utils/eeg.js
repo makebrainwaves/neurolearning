@@ -112,7 +112,6 @@ export const createBaselineObservable = (
       duration: ENOBIO_SAMPLE_RATE,
       interval: ENOBIO_SAMPLE_RATE
     }),
-    tap(epoch => console.log(' baseline epoch: ', epoch)),
     removeNoise(varianceThreshold), // tap(epoch => console.log('removeNoise: ', epoch)),
     featurePipe(),
     // tap(epoch => console.log('featurePipe: ', epoch)),
@@ -145,9 +144,7 @@ export const createClassifierObservable = (
       duration: ENOBIO_SAMPLE_RATE,
       interval: ENOBIO_SAMPLE_RATE
     }),
-    tap(epoch => console.log(' classifier epoch: ', epoch)),
     removeNoise(varianceThreshold),
-    // tap(epoch => console.log(' classifier sig quality: ', epoch.signalQuality)),
     featurePipe(),
     map(powerEstimates => average(powerEstimates)),
     bufferTime(interval),
@@ -185,13 +182,13 @@ export const removeNoise = (threshold: number = VARIANCE_THRESHOLD) =>
   pipe(
     deMean(),
     addSignalQuality(),
-    filter(epo => {
-      const isNoiseArray = Object.values(epo.signalQuality).map(
-        noise => (noise >= threshold ? false : true)
+    map(epo => {
+      const filteredData = epo.data.filter(
+        (_, index) => epo.signalQuality[index] < threshold
       );
-      // console.log(isNoiseArray);
-      return isNoiseArray.reduce((acc, curr) => (curr ? curr : acc), true);
-    })
+      return { ...epo, data: filteredData };
+    }),
+    filter(epo => epo.data.length > 0)
   );
 
 export const computeAlpha = (alphaRange: Array<number> = [8, 13]) =>
