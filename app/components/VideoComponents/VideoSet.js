@@ -160,15 +160,15 @@ export default class VideoSet extends Component<Props, State> {
     if (this.props.location.state.classifierType === 'alpha') {
       const baselineObs = createBaselineObservable(
         this.props.location.state.rawEEGObservable,
-        { featurePipe: computeAlpha, varianceThreshold: 10 }
+        { featurePipe: computeAlpha }
       );
       baselineObs.subscribe(threshold => {
         // this.setState({ threshold });
         console.log('THRESHOLD ALPHA threshold', threshold);
         const classifierObservable = createClassifierObservable(
           this.props.location.state.rawEEGObservable,
-          0.000001, // set threshold here (same as VARIANCE_THRESHOLD)
-          { featurePipe: computeAlpha, varianceThreshold: 10 }
+          threshold,
+          { featurePipe: computeAlpha }
         );
         classifierObservable.subscribe(decision => {
           console.log('this.state.decision ALPHA', decision);
@@ -183,15 +183,15 @@ export default class VideoSet extends Component<Props, State> {
     } else {
       const baselineObs = createBaselineObservable(
         this.props.location.state.rawEEGObservable,
-        { featurePipe: computeThetaBeta, varianceThreshold: 10 }
+        { featurePipe: computeThetaBeta }
       );
       baselineObs.subscribe(threshold => {
         // this.setState({ threshold });
         console.log('THRESHOLD THETABETA threshold', threshold);
         const classifierObservable = createClassifierObservable(
           this.props.location.state.rawEEGObservable,
-          0.000001, // set threshold here (same as VARIANCE_THRESHOLD)
-          { featurePipe: computeThetaBeta, varianceThreshold: 10 }
+          threshold,
+          { featurePipe: computeThetaBeta }
         );
         classifierObservable.subscribe(decision => {
           // console.log('this.state.decision TB', decision);
