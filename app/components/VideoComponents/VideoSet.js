@@ -882,13 +882,15 @@ export default class VideoSet extends Component<Props, State> {
   addToClassifierCSV(value, vidCurrTime) {
     const videoQuestions = this.state.questionSet;
     const classifierCsvTemp = this.state.classifierCsv;
+    const time = new Date().getTime();
 
     const classifierEntry = {
       Subject: this.props.location.state.subjectId,
       VideoName: this.getVideoName(this.state.currentVideo),
       ExperimentType: this.getExperimentType(),
       ClassifierType: this.props.location.state.classifierType,
-      TimeStamp: vidCurrTime,
+      TOD: time,
+      TOV: vidCurrTime,
       ThresholdSurpassed: this.state.decision ? 1 : 0,
       PowerEstimate: this.state.powerEstimate ? this.state.powerEstimate : 'N/A'
     };
