@@ -497,7 +497,7 @@ export default class VideoSet extends Component<Props, State> {
         questionSet[i].value.period <= vidCurrTime &&
         !this.state[addedToCsv]
       ) {
-        this.addToClassifierCSV(questionSet[i].value.period);
+        this.addToClassifierCSV(questionSet[i].value.period, vidCurrTime);
       }
     }
     /*
@@ -879,7 +879,7 @@ export default class VideoSet extends Component<Props, State> {
     return newAnswers;
   }
 
-  addToClassifierCSV(value) {
+  addToClassifierCSV(value, vidCurrTime) {
     const videoQuestions = this.state.questionSet;
     const classifierCsvTemp = this.state.classifierCsv;
 
@@ -888,6 +888,7 @@ export default class VideoSet extends Component<Props, State> {
       VideoName: this.getVideoName(this.state.currentVideo),
       ExperimentType: this.getExperimentType(),
       ClassifierType: this.props.location.state.classifierType,
+      TimeStamp: vidCurrTime,
       ThresholdSurpassed: this.state.decision ? 1 : 0,
       PowerEstimate: this.state.powerEstimate ? this.state.powerEstimate : 'N/A'
     };
