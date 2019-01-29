@@ -99,6 +99,8 @@ export default class VideoSet extends Component<Props, State> {
     this.handleQuestion = this.handleQuestion.bind(this);
     this.getSequenceNumber = this.getSequenceNumber.bind(this);
     this.handleStartEEG = this.handleStartEEG.bind(this);
+    this.openFullscreen = this.openFullscreen.bind(this);
+    this.closeFullscreen = this.closeFullscreen.bind(this);
   }
 
   componentWillMount() {
@@ -334,12 +336,14 @@ export default class VideoSet extends Component<Props, State> {
   };
 
   playVideo = () => {
+    this.openFullscreen();
     const videoRef = this.getVideoRef;
     videoRef.play();
     this.setState({ isRunning: true });
   };
 
   pauseVideo = () => {
+    this.closeFullscreen();
     const videoRef = this.getVideoRef;
     videoRef.pause();
     videoRef.currentTime -= rollBackTime;
@@ -357,6 +361,21 @@ export default class VideoSet extends Component<Props, State> {
     });
 
     this.setState({ answers });
+  };
+
+  closeFullscreen = () => {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      /* Firefox */
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      /* Chrome, Safari and Opera */
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      /* IE/Edge */
+      document.msExitFullscreen();
+    }
   };
 
   nextQuestion = (key, vidCurrTime) => {
@@ -642,6 +661,7 @@ export default class VideoSet extends Component<Props, State> {
   }
 
   endOfVideo = () => {
+    this.closeFullscreen();
     this.setState({ finalModalIsOpen: true });
   };
 
@@ -750,6 +770,25 @@ export default class VideoSet extends Component<Props, State> {
       answers
     });
   }
+
+  /* When the openFullscreen() function is executed, open the video in fullscreen.
+  Note that we must include prefixes for different browsers, as they don't support the requestFullscreen method yet */
+  openFullscreen = () => {
+    const elem = document.getElementById('vidID');
+
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) {
+      /* Firefox */
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) {
+      /* Chrome, Safari and Opera */
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+      /* IE/Edge */
+      elem.msRequestFullscreen();
+    }
+  };
 
   getSequenceNumber(videoName) {
     let sequenceNumber = null;
@@ -1111,7 +1150,7 @@ export default class VideoSet extends Component<Props, State> {
                       <input
                         name="DK"
                         type="radio"
-                        value="I don&apos;t know"
+                        value="I don't know"
                         onChange={e =>
                           this.handleQuestion({ questionNumber }, e)
                         }
