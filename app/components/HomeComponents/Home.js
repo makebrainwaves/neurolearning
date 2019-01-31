@@ -25,6 +25,7 @@ import videoSrc1 from '../Biomass.mp4';
 import videoSrc2 from '../Fuel.mp4';
 import videoSrc3 from '../Combustion.mp4';
 import videoSrc4 from '../Photosynth.mp4';
+import { createWorkspaceDir, writeExperimentCSV } from '../../utils/write.js';
 
 type Props = {};
 
@@ -56,6 +57,41 @@ const date = new Date(time).toString();
 const CLASSIFIER_OPTIONS = [
   { key: 'alpha', value: 'alpha', text: 'Alpha' },
   { key: 'thetaBeta', value: 'thetaBeta', text: 'Theta/Beta' }
+];
+
+const ELECTRODES = [
+  { id: 0, value: 'P7', checked: false },
+  { id: 1, value: 'P4', checked: false },
+  { id: 2, value: 'Cz', checked: false },
+  { id: 3, value: 'Pz', checked: false },
+  { id: 4, value: 'P3', checked: false },
+  { id: 5, value: 'P8', checked: false },
+  { id: 6, value: 'O1', checked: false },
+  { id: 7, value: 'O2', checked: false },
+  { id: 8, value: 'T8', checked: false },
+  { id: 9, value: 'F8', checked: false },
+  { id: 10, value: 'C4', checked: false },
+  { id: 11, value: 'F4', checked: false },
+  { id: 12, value: 'Fp2', checked: false },
+  { id: 13, value: 'Fz', checked: false },
+  { id: 14, value: 'C3', checked: false },
+  { id: 15, value: 'F3', checked: false },
+  { id: 16, value: 'Fp1', checked: false },
+  { id: 17, value: 'T7', checked: false },
+  { id: 18, value: 'F7', checked: false },
+  { id: 19, value: 'Oz', checked: false },
+  { id: 20, value: 'PO4', checked: false },
+  { id: 21, value: 'FC6', checked: false },
+  { id: 22, value: 'FC2', checked: false },
+  { id: 23, value: 'AF4', checked: false },
+  { id: 24, value: 'CP6', checked: false },
+  { id: 25, value: 'CP2', checked: false },
+  { id: 26, value: 'CP1', checked: false },
+  { id: 27, value: 'CP5', checked: false },
+  { id: 28, value: 'FC1', checked: false },
+  { id: 29, value: 'FC5', checked: false },
+  { id: 30, value: 'AF3', checked: false },
+  { id: 31, value: 'PO3', checked: false }
 ];
 
 export default class Home extends Component<Props, State> {
@@ -94,40 +130,7 @@ export default class Home extends Component<Props, State> {
       fourthVideoType: 'control',
       rawEEGObservable: null,
       classifierType: 'alpha',
-      electrodes: [
-        { id: 0, value: 'P7', checked: false },
-        { id: 1, value: 'P4', checked: false },
-        { id: 2, value: 'Cz', checked: false },
-        { id: 3, value: 'Pz', checked: false },
-        { id: 4, value: 'P3', checked: false },
-        { id: 5, value: 'P8', checked: false },
-        { id: 6, value: 'O1', checked: false },
-        { id: 7, value: 'O2', checked: false },
-        { id: 8, value: 'T8', checked: false },
-        { id: 9, value: 'F8', checked: false },
-        { id: 10, value: 'C4', checked: false },
-        { id: 11, value: 'F4', checked: false },
-        { id: 12, value: 'Fp2', checked: false },
-        { id: 13, value: 'Fz', checked: false },
-        { id: 14, value: 'C3', checked: false },
-        { id: 15, value: 'F3', checked: false },
-        { id: 16, value: 'Fp1', checked: false },
-        { id: 17, value: 'T7', checked: false },
-        { id: 18, value: 'F7', checked: false },
-        { id: 19, value: 'Oz', checked: false },
-        { id: 20, value: 'PO4', checked: false },
-        { id: 21, value: 'FC6', checked: false },
-        { id: 22, value: 'FC2', checked: false },
-        { id: 23, value: 'AF4', checked: false },
-        { id: 24, value: 'CP6', checked: false },
-        { id: 25, value: 'CP2', checked: false },
-        { id: 26, value: 'CP1', checked: false },
-        { id: 27, value: 'CP5', checked: false },
-        { id: 28, value: 'FC1', checked: false },
-        { id: 29, value: 'FC5', checked: false },
-        { id: 30, value: 'AF3', checked: false },
-        { id: 31, value: 'PO3', checked: false }
-      ]
+      electrodes: ELECTRODES
     };
     this.handleSubjectId = this.handleSubjectId.bind(this);
     this.handleExperimenterId = this.handleExperimenterId.bind(this);
@@ -135,6 +138,7 @@ export default class Home extends Component<Props, State> {
     this.handleExperimentType = this.handleExperimentType.bind(this);
     this.handleConnectEEG = this.handleConnectEEG.bind(this);
     this.handleClassiferType = this.handleClassiferType.bind(this);
+    this.handleCreateWorkspace = this.handleCreateWorkspace.bind(this);
     this.selectAllElectrodes = this.selectAllElectrodes.bind(this);
     this.electrodesChosen = this.electrodesChosen.bind(this);
   }
@@ -207,6 +211,46 @@ export default class Home extends Component<Props, State> {
   handleClassiferType(event: Object, data: Object) {
     console.log('classifier data from home', data);
     this.setState({ classifierType: data.value });
+  }
+
+  // TODO: make sure all values are in state by the time this function runs. Right now it seems that some things aren't loaded when options are selected in dropdowns
+  handleCreateWorkspace() {
+    const {
+      subjectId,
+      experimenterId,
+      classifierType,
+      electrodes,
+      firstVideoName,
+      secondVideoName,
+      thirdVideoName,
+      fourthVideoName,
+      firstVideoType,
+      secondVideoType,
+      thirdVideoType,
+      fourthVideoType
+    } = this.state;
+    const videoNames = [
+      firstVideoName,
+      secondVideoName,
+      thirdVideoName,
+      fourthVideoName
+    ];
+    const videoTypes = [
+      firstVideoType,
+      secondVideoType,
+      thirdVideoType,
+      fourthVideoType
+    ];
+    const workspacePath = createWorkspaceDir(this.state.subjectId);
+    writeExperimentCSV(workspacePath, {
+      date: new Date().toString(),
+      subjectId,
+      experimenterId,
+      classifierType,
+      electrodes: this.electrodesChosen(electrodes),
+      videoNames,
+      videoTypes
+    });
   }
 
   selectAllElectrodes() {
@@ -823,7 +867,7 @@ export default class Home extends Component<Props, State> {
         <Grid.Row columns={1}>
           <Grid.Column>
             {electrodesChosen && (
-              <Button secondary>
+              <Button onClick={this.handleCreateWorkspace} secondary>
                 <Link
                   to={{
                     pathname: routes.VIDEOSET,
