@@ -16,6 +16,13 @@ import {
   computeThetaBeta
 } from '../../utils/eeg';
 
+import {
+  getQuestionSet
+  // getRandomQuestionSet,
+  // getRandomControlQuestionSet,
+  // getRandomQuestionSetAfterExperimental
+} from '../../utils/questionSets';
+
 interface State {
   subjectId: string;
   firstVideo: string;
@@ -132,7 +139,7 @@ export default class VideoSet extends Component<Props, State> {
     }
 
     if (this.props.location.state.firstVideoType === 'experimental') {
-      questionSetTemp = this.getQuestionSet(this.state.currentVideo);
+      questionSetTemp = getQuestionSet(this.state.currentVideo);
     }
     this.setState({
       questionSet: questionSetTemp
@@ -202,7 +209,8 @@ export default class VideoSet extends Component<Props, State> {
   }
 
   getRandomQuestionSet(currVid) {
-    const videoQuestions = this.getQuestionSet(currVid);
+    const videoQuestions = getQuestionSet(currVid);
+
     let randomNumbers = [];
     const arr = [];
     const newQuestionSet = [];
@@ -236,7 +244,7 @@ export default class VideoSet extends Component<Props, State> {
   }
 
   getRandomControlQuestionSet(currVid) {
-    const videoQuestions = this.getQuestionSet(currVid);
+    const videoQuestions = getQuestionSet(currVid);
     let randomNumbers = [];
     const arr = [];
     const newQuestionSet = [];
@@ -269,7 +277,7 @@ export default class VideoSet extends Component<Props, State> {
   }
 
   getRandomQuestionSetAfterExperimental(currVid, numOfPreviousExpQuestions) {
-    const videoQuestions = this.getQuestionSet(currVid);
+    const videoQuestions = getQuestionSet(currVid);
 
     // console.log('numOfPreviousExpQuestions', numOfPreviousExpQuestions); //21
     // console.log('lenght of quesiton set curr vid', videoQuestions.length); //23
@@ -314,19 +322,25 @@ export default class VideoSet extends Component<Props, State> {
 
   closeModal = () => {
     const { questionNumber } = this.state;
+    console.log('questionNumber', questionNumber);
     const answers = this.state.answers;
+    console.log('ANSWRES', answers);
     const time = new Date().getTime();
-    const qNumber = `q${questionNumber}`;
+    console.log('TIMEEE', time);
+    const qNumberForSubmit = `q${questionNumber}`;
+    console.log('QNUM', qNumberForSubmit);
 
     answers.forEach(answer => {
-      answer[this.state.videoName][qNumber].submitTimeTOD = time;
+      answer[this.state.videoName][qNumberForSubmit].submitTimeTOD = time;
     });
 
+    this.setState({ answers });
+
     this.setState({
-      answers,
       modalIsOpen: false,
       obscureButton: true
     });
+
     this.playVideo();
   };
 
@@ -412,27 +426,6 @@ export default class VideoSet extends Component<Props, State> {
     });
 
     return videoNameTemp;
-  }
-
-  getQuestionSet(video) {
-    let questionSetTemp = [];
-    if (video === biomassVideo) {
-      questionSetTemp = biomassQ;
-    } else if (video === fuelVideo) {
-      questionSetTemp = fuelQ;
-    } else if (video === gasVideo) {
-      questionSetTemp = gasQ;
-    } else if (video === photosynthVideo) {
-      questionSetTemp = photosynthQ;
-    } else {
-      questionSetTemp = null;
-    }
-
-    this.setState({
-      questionSet: questionSetTemp
-    });
-
-    return questionSetTemp;
   }
 
   onTimeUpdate = () => {
@@ -563,9 +556,7 @@ export default class VideoSet extends Component<Props, State> {
         }
       }
       if (this.props.location.state.secondVideoType === 'experimental') {
-        questionSetTemp = this.getQuestionSet(
-          this.props.location.state.secondVideo
-        );
+        questionSetTemp = getQuestionSet(this.props.location.state.secondVideo);
       }
       this.setState({
         currentVideo: this.props.location.state.secondVideo,
@@ -602,9 +593,7 @@ export default class VideoSet extends Component<Props, State> {
         }
       }
       if (this.props.location.state.thirdVideoType === 'experimental') {
-        questionSetTemp = this.getQuestionSet(
-          this.props.location.state.thirdVideo
-        );
+        questionSetTemp = getQuestionSet(this.props.location.state.thirdVideo);
       }
       this.setState({
         currentVideo: this.props.location.state.thirdVideo,
@@ -648,9 +637,7 @@ export default class VideoSet extends Component<Props, State> {
         }
       }
       if (this.props.location.state.fourthVideoType === 'experimental') {
-        questionSetTemp = this.getQuestionSet(
-          this.props.location.state.fourthVideo
-        );
+        questionSetTemp = getQuestionSet(this.props.location.state.fourthVideo);
       }
       this.setState({
         currentVideo: this.props.location.state.fourthVideo,
