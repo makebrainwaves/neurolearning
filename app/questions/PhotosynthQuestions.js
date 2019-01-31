@@ -255,7 +255,7 @@ module.exports = [
       name: 'Question 22:',
       period: 500, // '8:00-8:20' or 480-500
       question:
-        'True or false? There are no industries using insects’ chemicals today.',
+        "True or false? There are no industries using insects' chemicals today.",
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
