@@ -178,8 +178,11 @@ export default class VideoSet extends Component<Props, State> {
     );
 
     if (rawEEGWriteStream) {
-      rawEEGObservable.subscribe(rawData =>
-        writeEEGData(rawEEGWriteStream, rawData)
+      rawEEGObservable.subscribe(
+        rawData => writeEEGData(rawEEGWriteStream, rawData),
+        // These callbacks should force the write stream to close when the raw eeg stream is either completed or errors out
+        complete => rawEEGWriteStream.close(),
+        error => rawEEGWriteStream.close()
       );
     }
 
