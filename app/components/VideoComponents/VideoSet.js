@@ -15,7 +15,7 @@ import {
   computeAlpha,
   computeThetaBeta
 } from '../../utils/eeg';
-import { createEEGWriteStream, writeEEGData } from '../../utils/write';
+import { createRawEEGWriteStream, writeEEGData } from '../../utils/write';
 
 interface State {
   subjectId: string;
@@ -37,8 +37,10 @@ interface State {
   firstExpQuestionSetLength: number;
   secondExpQuestionSetLength: number;
   thirdExpQuestionSetLength: number;
-  classifierCsv: array;
+  classifierCsv: Array<any>;
   addedToCsv: boolean;
+  decision: boolean;
+  score: number;
 }
 
 const rollBackTime = 5;
@@ -88,7 +90,9 @@ export default class VideoSet extends Component<Props, State> {
       secondExpQuestionSetLength: 0,
       thirdExpQuestionSetLength: 0,
       classifierCsv: [],
-      addedToCsv: false
+      addedToCsv: false,
+      decision: false,
+      score: 0
     };
     // These are just so that we can unsubscribe from the observables
     this.rawEEGSubscription = null;
@@ -158,14 +162,17 @@ export default class VideoSet extends Component<Props, State> {
     // start recording raw EEG
     // TODO: this worskpacedir variable needs to be set by a workspace property inherited from Home
     const workspaceDir = 'placeholder';
-    const rawEEGWriteStream = createEEGWriteStream(
+    const rawEEGWriteStream = createRawEEGWriteStream(
       workspaceDir,
-      this.state.videoName
+      // Not sure if this is the right state variable to use. Need something that can be used to identify the particular video displated in this component
+      this.state.firstVideo
     );
 
-    rawEEGObservable.subscribe(rawData =>
-      writeEEGData(rawEEGWriteStream, rawData)
-    );
+    if (rawEEGWriteStream) {
+      rawEEGObservable.subscribe(rawData =>
+        writeEEGData(rawEEGWriteStream, rawData)
+      );
+    }
 
     // create baseline observable
     const baselineObs = createBaselineObservable(rawEEGObservable, {

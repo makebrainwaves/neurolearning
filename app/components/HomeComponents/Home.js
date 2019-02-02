@@ -25,7 +25,7 @@ import videoSrc1 from '../Biomass.mp4';
 import videoSrc2 from '../Fuel.mp4';
 import videoSrc3 from '../Combustion.mp4';
 import videoSrc4 from '../Photosynth.mp4';
-import { createWorkspaceDir, writeExperimentCSV } from '../../utils/write.js';
+import { createWorkspaceDir, writeExperimentCSV } from '../../utils/write';
 
 type Props = {};
 
@@ -103,6 +103,7 @@ export default class Home extends Component<Props, State> {
   handleExperimentType: Object => void;
   handleConnectEEG: () => void;
   handleClassiferType: (Object, Object) => void;
+  handleCreateWorkspace: () => void;
   selectAllElectrodes: Object => void;
   electrodesChosen: Object => void;
 
