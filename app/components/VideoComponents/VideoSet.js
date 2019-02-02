@@ -38,9 +38,6 @@ interface State {
   question2AlreadyShown: boolean;
   questionNumber: string;
   questionText: string;
-  firstOption: string;
-  secondOption: string;
-  thirdOption: string;
   obscureButton: boolean;
   allFourControlVideos: boolean;
   firstExpQuestionSetLength: number;
@@ -89,9 +86,6 @@ export default class VideoSet extends Component<Props, State> {
       photosynthSequenceNumber: 4,
       questionNumber: '',
       questionText: '',
-      firstOption: '',
-      secondOption: '',
-      thirdOption: '',
       answers: answersArray,
       updatedAnswers: updatedAnswersArray,
       askQuestion: false,
@@ -410,9 +404,6 @@ export default class VideoSet extends Component<Props, State> {
         this.setState({
           questionNumber: videoQuestions[i].key,
           questionText: videoQuestions[i].value.question,
-          firstOption: videoQuestions[i].value.option1,
-          secondOption: videoQuestions[i].value.option2,
-          thirdOption: videoQuestions[i].value.option3,
           modalIsOpen: true
         });
         this.setModalTimes(videoQuestions[i].key, vidCurrTime);
@@ -524,11 +515,6 @@ export default class VideoSet extends Component<Props, State> {
             question1AlreadyShown: !question1AlreadyShown,
             questionNumber: data.q1.name,
             questionText: data.q1.question,
-            firstOption: data.q1.option1,
-            secondOption: data.q1.option2,
-            thirdOption: data.q1.option3,
-            fourthOption: data.q1.option4,
-            fifthOption: data.q1.option5
           });
           this.pauseVideo();
         }
@@ -951,11 +937,6 @@ export default class VideoSet extends Component<Props, State> {
       answers,
       questionNumber,
       questionText,
-      firstOption,
-      secondOption,
-      thirdOption,
-      fourthOption,
-      fifthOption,
       currentVideo,
       videoName,
       biomassSequenceNumber,
@@ -1049,6 +1030,7 @@ export default class VideoSet extends Component<Props, State> {
                 <h5>(1 = not engaged at all, 5 = very engaged)</h5>
                 <div className={styles.engagement}>
                   <div className="radio">
+                    1
                     <label
                       className={styles.engagementRadio}
                       htmlFor="something"
@@ -1061,8 +1043,8 @@ export default class VideoSet extends Component<Props, State> {
                           this.handleEngagement({ questionNumber }, e)
                         }
                       />
-                      1
                     </label>
+                    2
                     <label
                       className={styles.engagementRadio}
                       htmlFor="something"
@@ -1075,8 +1057,8 @@ export default class VideoSet extends Component<Props, State> {
                           this.handleEngagement({ questionNumber }, e)
                         }
                       />
-                      2
                     </label>
+                    3
                     <label
                       className={styles.engagementRadio}
                       htmlFor="something"
@@ -1089,8 +1071,8 @@ export default class VideoSet extends Component<Props, State> {
                           this.handleEngagement({ questionNumber }, e)
                         }
                       />
-                      3
                     </label>
+                    4
                     <label
                       className={styles.engagementRadio}
                       htmlFor="something"
@@ -1103,8 +1085,8 @@ export default class VideoSet extends Component<Props, State> {
                           this.handleEngagement({ questionNumber }, e)
                         }
                       />
-                      4
                     </label>
+                    5
                     <label
                       className={styles.engagementRadio}
                       htmlFor="something"
@@ -1117,7 +1099,6 @@ export default class VideoSet extends Component<Props, State> {
                           this.handleEngagement({ questionNumber }, e)
                         }
                       />
-                      5
                     </label>
                   </div>
                 </div>
@@ -1126,46 +1107,46 @@ export default class VideoSet extends Component<Props, State> {
                   2.
                   {this.state.questionText}
                 </h4>
-                <h5>Please select an answer to continue</h5>
+                <h5>Please select an answer to continue:</h5>
                 <div>
                   <div className="radio">
-                    <label htmlFor={this.state.firstOption}>
+                    <label htmlFor="True">
                       <input
-                        name="option"
+                        name="True"
                         type="radio"
-                        value="option1"
+                        value="True"
                         onChange={e =>
                           this.handleQuestion({ questionNumber }, e)
                         }
                       />
-                      {this.state.firstOption}
                     </label>
+                    True
                   </div>
                   <div className="radio">
-                    <label htmlFor={this.state.secondOption}>
+                    <label htmlFor="2False">
                       <input
-                        name="option"
+                        name="False"
                         type="radio"
-                        value="option2"
+                        value="False"
                         onChange={e =>
                           this.handleQuestion({ questionNumber }, e)
                         }
                       />
-                      {this.state.secondOption}
                     </label>
+                    False
                   </div>
                   <div className="radio">
-                    <label htmlFor={this.state.thirdOption}>
+                    <label htmlFor="DK">
                       <input
-                        name="option"
+                        name="DK"
                         type="radio"
                         value="I don't know"
                         onChange={e =>
                           this.handleQuestion({ questionNumber }, e)
                         }
                       />
-                      {this.state.thirdOption}
                     </label>
+                    I don&apos;t know
                   </div>
                   <br />
                   {!this.state.obscureButton && (
