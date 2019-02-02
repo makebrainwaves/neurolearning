@@ -24,7 +24,7 @@ import {
 import { emit } from 'cluster';
 
 const ENOBIO_SAMPLE_RATE = 500;
-const VARIANCE_THRESHOLD = 10; // ~100uV variance? Will have to update depend. on format of Enobio data
+const VARIANCE_THRESHOLD = 0.001; // ~100uV variance? Will have to update depend. on format of Enobio data
 const FFT_BINS = 512; // closest power of 2 to sampling rate
 const BASELINE_DURATION = 60000; // 60 seconds
 const DECISION_INTERVAL = 5000; // 5 seconds
