@@ -119,6 +119,8 @@ export default class VideoSet extends Component<Props, State> {
       gasSequenceNumber: this.getSequenceNumber('gas'),
       photosynthSequenceNumber: this.getSequenceNumber('photosynth')
     });
+
+    this.setCounterControlAfterExp();
   }
 
   componentDidMount() {
@@ -163,15 +165,15 @@ export default class VideoSet extends Component<Props, State> {
     if (this.props.location.state.classifierType === 'alpha') {
       const baselineObs = createBaselineObservable(
         this.props.location.state.rawEEGObservable,
-        { featurePipe: computeAlpha, varianceThreshold: 10 }
+        { featurePipe: computeAlpha }
       );
       baselineObs.subscribe(threshold => {
         // this.setState({ threshold });
         console.log('THRESHOLD ALPHA threshold', threshold);
         const classifierObservable = createClassifierObservable(
           this.props.location.state.rawEEGObservable,
-          0.000001, // set threshold here (same as VARIANCE_THRESHOLD)
-          { featurePipe: computeAlpha, varianceThreshold: 10 }
+          threshold,
+          { featurePipe: computeAlpha }
         );
         classifierObservable.subscribe(decision => {
           console.log('this.state.decision ALPHA', decision);
@@ -186,15 +188,15 @@ export default class VideoSet extends Component<Props, State> {
     } else {
       const baselineObs = createBaselineObservable(
         this.props.location.state.rawEEGObservable,
-        { featurePipe: computeThetaBeta, varianceThreshold: 10 }
+        { featurePipe: computeThetaBeta }
       );
       baselineObs.subscribe(threshold => {
         // this.setState({ threshold });
         console.log('THRESHOLD THETABETA threshold', threshold);
         const classifierObservable = createClassifierObservable(
           this.props.location.state.rawEEGObservable,
-          0.000001, // set threshold here (same as VARIANCE_THRESHOLD)
-          { featurePipe: computeThetaBeta, varianceThreshold: 10 }
+          threshold,
+          { featurePipe: computeThetaBeta }
         );
         classifierObservable.subscribe(decision => {
           // console.log('this.state.decision TB', decision);
@@ -205,6 +207,30 @@ export default class VideoSet extends Component<Props, State> {
           });
         });
       });
+    }
+  }
+
+  setCounterControlAfterExp() {
+    // counter for when Experiment precedes Control video:
+    const expType = this.getExperimentType();
+    const seqNo = this.getSequenceNumber(this.state.videoName);
+
+    if (expType === 'experimental') {
+      if (seqNo === 1) {
+        let expLengthTemp = this.state.firstExpQuestionSetLength;
+        expLengthTemp += 1;
+        this.setState({ firstExpQuestionSetLength: expLengthTemp });
+      }
+      if (seqNo === 2) {
+        let expLengthTemp = this.state.secondExpQuestionSetLength;
+        expLengthTemp += 1;
+        this.setState({ secondExpQuestionSetLength: expLengthTemp });
+      }
+      if (seqNo === 3) {
+        let expLengthTemp = this.state.thirdExpQuestionSetLength;
+        expLengthTemp += 1;
+        this.setState({ thirdExpQuestionSetLength: expLengthTemp });
+      }
     }
   }
 
@@ -722,6 +748,13 @@ export default class VideoSet extends Component<Props, State> {
       answer[this.state.videoName][questionNumber].answer = e.target.value;
     });
 
+    this.setState({
+      answers
+    });
+    this.setState({
+      answers
+    });
+
     for (let i = 0; i < videoQuestions.length; i++) {
       if (videoQuestions[i].key === q.questionNumber) {
         const questionAnswered = `questionAnswered${i + 1}`;
@@ -733,32 +766,6 @@ export default class VideoSet extends Component<Props, State> {
         });
       }
     }
-
-    // counter for when Experiment precedes Control video:
-    const expType = this.getExperimentType();
-    const seqNo = this.getSequenceNumber(this.state.videoName);
-
-    if (expType === 'experimental') {
-      if (seqNo === 1) {
-        let expLengthTemp = this.state.firstExpQuestionSetLength;
-        expLengthTemp += 1;
-        this.setState({ firstExpQuestionSetLength: expLengthTemp });
-      }
-      if (seqNo === 2) {
-        let expLengthTemp = this.state.secondExpQuestionSetLength;
-        expLengthTemp += 1;
-        this.setState({ secondExpQuestionSetLength: expLengthTemp });
-      }
-      if (seqNo === 3) {
-        let expLengthTemp = this.state.thirdExpQuestionSetLength;
-        expLengthTemp += 1;
-        this.setState({ thirdExpQuestionSetLength: expLengthTemp });
-      }
-    }
-
-    this.setState({
-      answers
-    });
   }
 
   /* When the openFullscreen() function is executed, open the video in fullscreen.
