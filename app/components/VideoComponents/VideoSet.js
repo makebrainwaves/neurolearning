@@ -72,8 +72,6 @@ export default class VideoSet extends Component<Props, State> {
   constructor(props) {
     super(props);
 
-    // console.log('your eeg observable', props.location.state.classifierType);
-    // console.log('tests', this.props.location.props.electrodesChosen);
     this.state = {
       isRunning: false,
       modalIsOpen: false,
@@ -305,9 +303,6 @@ export default class VideoSet extends Component<Props, State> {
   getRandomQuestionSetAfterExperimental(currVid, numOfPreviousExpQuestions) {
     const videoQuestions = getQuestionSet(currVid);
 
-    // console.log('numOfPreviousExpQuestions', numOfPreviousExpQuestions); //21
-    // console.log('lenght of quesiton set curr vid', videoQuestions.length); //23
-
     let randomNumbers = [];
     const arr = [];
     const newQuestionSet = [];
@@ -348,13 +343,9 @@ export default class VideoSet extends Component<Props, State> {
 
   closeModal = () => {
     const { questionNumber } = this.state;
-    console.log('questionNumber', questionNumber);
     const answers = this.state.answers;
-    console.log('ANSWRES', answers);
     const time = new Date().getTime();
-    console.log('TIMEEE', time);
     const qNumberForSubmit = `q${questionNumber}`;
-    console.log('QNUM', qNumberForSubmit);
 
     answers.forEach(answer => {
       answer[this.state.videoName][qNumberForSubmit].submitTimeTOD = time;
@@ -819,7 +810,7 @@ export default class VideoSet extends Component<Props, State> {
   }
 
   getAnswerSet() {
-    // console.log('AnswerSet', this.state.answers);
+    console.log('AnswerSet', this.state.answers);
     const newAnswers = this.state.updatedAnswers;
     const answersTemp = this.state.answers;
 
