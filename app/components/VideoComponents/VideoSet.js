@@ -160,52 +160,32 @@ export default class VideoSet extends Component<Props, State> {
   }
 
   handleStartEEG() {
-    if (this.props.location.state.classifierType === 'alpha') {
-      const baselineObs = createBaselineObservable(
-        this.props.location.state.rawEEGObservable,
-        { featurePipe: computeAlpha }
+    const { classifierType, rawEEGObservable } = this.props.location.state;
+    const classifierPipe =
+      classifierType === 'alpha' ? computeAlpha : computeThetaBeta;
+    // start recording raw EEG
+
+    // create baseline observable
+    const baselineObs = createBaselineObservable(rawEEGObservable, {
+      featurePipe: classifierPipe
+    });
+
+    baselineObs.subscribe(threshold => {
+      console.log('Baseline observable completed with result: ', threshold);
+      const classifierObservable = createClassifierObservable(
+        rawEEGObservable,
+        threshold,
+        { featurePipe: classifierPipe }
       );
-      baselineObs.subscribe(threshold => {
-        // this.setState({ threshold });
-        console.log('THRESHOLD ALPHA threshold', threshold);
-        const classifierObservable = createClassifierObservable(
-          this.props.location.state.rawEEGObservable,
-          threshold,
-          { featurePipe: computeAlpha }
-        );
-        classifierObservable.subscribe(decision => {
-          console.log('this.state.decision ALPHA', decision);
-          // console.log('this.state.score ALPHA', decision.score);
-          this.setState({
-            decision: decision.decision,
-            score: decision.score,
-            powerEstimate: decision.powerEstimate
-          });
+      classifierObservable.subscribe(decision => {
+        console.log('classifier emitted decicsion', decision);
+        this.setState({
+          powerEstimate: decision.averagedPowerEstimate,
+          decision: decision.decision,
+          goodEpochs: decision.goodEpochs
         });
       });
-    } else {
-      const baselineObs = createBaselineObservable(
-        this.props.location.state.rawEEGObservable,
-        { featurePipe: computeThetaBeta }
-      );
-      baselineObs.subscribe(threshold => {
-        // this.setState({ threshold });
-        console.log('THRESHOLD THETABETA threshold', threshold);
-        const classifierObservable = createClassifierObservable(
-          this.props.location.state.rawEEGObservable,
-          threshold,
-          { featurePipe: computeThetaBeta }
-        );
-        classifierObservable.subscribe(decision => {
-          // console.log('this.state.decision TB', decision);
-          this.setState({
-            decision: decision.decision,
-            score: decision.score,
-            powerEstimate: decision.powerEstimate
-          });
-        });
-      });
-    }
+    });
   }
 
   setCounterControlAfterExp() {
@@ -456,9 +436,9 @@ export default class VideoSet extends Component<Props, State> {
       currentVideo,
       videoName,
       questionSet,
+      powerEstimate,
       decision,
-      score,
-      powerEstimate
+      goodEpochs
     } = this.state;
 
     const vidCurrTime = document.getElementById('vidID').currentTime;
@@ -466,9 +446,9 @@ export default class VideoSet extends Component<Props, State> {
 
     if (videoType === 'experimental') {
       console.log('second vidCurrTime', vidCurrTime);
-      console.log('second decison', decision);
-      console.log('second score', score);
       console.log('second powerEstimate', powerEstimate);
+      console.log('second decision', decision);
+      console.log('second goodEpochs', goodEpochs);
       for (let i = 0; i < questionSet.length; i++) {
         const askQuestion = `askQuestion${i + 1}`;
 
