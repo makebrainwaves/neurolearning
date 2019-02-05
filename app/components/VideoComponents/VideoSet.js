@@ -55,6 +55,8 @@ const photosynthQ = require('../../questions/PhotosynthQuestions.js');
 const answersArray = require('../../constants/Answers.js');
 const updatedAnswersArray = require('../../constants/UpdatedAnswers.js');
 
+const soundFileLoc = require('../beep-ping.flac');
+
 const biomassVideo =
   'http://localhost:1212/dist/bab08a1b5e70073aa05bda2923a835f2.mp4';
 const fuelVideo =
@@ -106,6 +108,10 @@ export default class VideoSet extends Component<Props, State> {
     this.handleStartEEG = this.handleStartEEG.bind(this);
     this.openFullscreen = this.openFullscreen.bind(this);
     this.closeFullscreen = this.closeFullscreen.bind(this);
+    // for ping sound:
+    this.soundFile = soundFileLoc;
+    this.audio = new Audio(this.soundFile);
+    this.togglePlay = this.togglePlay.bind(this);
   }
 
   componentWillMount() {
@@ -392,12 +398,17 @@ export default class VideoSet extends Component<Props, State> {
     }
   };
 
+  togglePlay() {
+    this.audio.play();
+  }
+
   nextQuestion = (key, vidCurrTime) => {
     const videoQuestions = this.state.questionSet;
 
     for (let i = 0; i < videoQuestions.length; i++) {
       if (videoQuestions[i].key === key) {
         this.pauseVideo();
+        this.togglePlay();
         this.setState({
           questionNumber: videoQuestions[i].key,
           questionText: videoQuestions[i].value.question,
