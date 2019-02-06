@@ -175,13 +175,13 @@ export default class VideoSet extends Component<Props, State> {
       classifierType === 'alpha' ? computeAlpha : computeThetaBeta;
     // start recording raw EEG
 
-    // start recording raw EEG
     // TODO: this worskpacedir variable needs to be set by a workspace property inherited from Home
-    const workspaceDir = 'placeholder';
+    const workspaceDir = 'RAW EEG';
     const rawEEGWriteStream = createRawEEGWriteStream(
       workspaceDir,
       // Not sure if this is the right state variable to use. Need something that can be used to identify the particular video displated in this component
-      this.state.firstVideo
+      // this.props.location.state.firstVideo
+      this.getVideoName(this.props.location.state.currentVideo)
     );
 
     if (rawEEGWriteStream) {
