@@ -17,10 +17,10 @@ import {
 } from '../../utils/eeg';
 
 import {
-  getQuestionSet
-  // getRandomQuestionSet,
-  // getRandomControlQuestionSet,
-  // getRandomQuestionSetAfterExperimental
+  getQuestionSet,
+  getRandomQuestionSet,
+  getRandomControlQuestionSet,
+  getControlQuestionstAfterExp
 } from '../../utils/questionSets';
 
 interface State {
@@ -135,12 +135,10 @@ export default class VideoSet extends Component<Props, State> {
         this.props.location.state.thirdVideoType === 'control' &&
         this.props.location.state.fourthVideoType === 'control'
       ) {
-        questionSetTemp = this.getRandomControlQuestionSet(
-          this.state.currentVideo
-        );
+        questionSetTemp = getRandomControlQuestionSet(this.state.currentVideo);
         this.setState({ allFourControlVideos: true });
       } else {
-        questionSetTemp = this.getRandomQuestionSet(this.state.currentVideo);
+        questionSetTemp = getRandomQuestionSet(this.state.currentVideo);
       }
     }
 
@@ -216,115 +214,6 @@ export default class VideoSet extends Component<Props, State> {
         this.setState({ thirdExpQuestionSetLength: expLengthTemp });
       }
     }
-  }
-
-  getRandomQuestionSet(currVid) {
-    const videoQuestions = getQuestionSet(currVid);
-
-    let randomNumbers = [];
-    const arr = [];
-    const newQuestionSet = [];
-
-    // find random values between 1 and questionSet.length
-    while (arr.length < Math.floor(videoQuestions.length / 3)) {
-      const r = Math.floor(Math.random() * videoQuestions.length) + 1;
-      if (arr.indexOf(r) === -1) arr.push(r);
-    }
-
-    // sort array of random numbers
-    randomNumbers = arr.sort((a, b) => a - b);
-    console.log('getRandomQuestionSet: randomrandomNumbers', randomNumbers);
-
-    // copy corresponding questions to new array
-    for (let i = 0; i < randomNumbers.length; i++) {
-      for (let j = 0; j < videoQuestions.length; j++) {
-        if (randomNumbers[i] === videoQuestions[j].key) {
-          newQuestionSet.push(videoQuestions[j]);
-        }
-      }
-    }
-
-    console.log('newQuestionSet', newQuestionSet);
-
-    this.setState({
-      questionSet: newQuestionSet
-    });
-
-    return newQuestionSet;
-  }
-
-  getRandomControlQuestionSet(currVid) {
-    const videoQuestions = getQuestionSet(currVid);
-    let randomNumbers = [];
-    const arr = [];
-    const newQuestionSet = [];
-    // find random values between 1 and videoQuestions.length
-    while (arr.length < Math.floor((videoQuestions.length * 2) / 3)) {
-      const r = Math.floor(Math.random() * videoQuestions.length) + 1;
-      if (arr.indexOf(r) === -1) arr.push(r);
-    }
-
-    // sort array of random numbers
-    randomNumbers = arr.sort((a, b) => a - b);
-    console.log('randomrandomNumbers Control', randomNumbers);
-
-    // copy corresponding questions to new array
-    for (let i = 0; i < randomNumbers.length; i++) {
-      for (let j = 0; j < videoQuestions.length; j++) {
-        if (randomNumbers[i] === videoQuestions[j].key) {
-          newQuestionSet.push(videoQuestions[j]);
-        }
-      }
-    }
-
-    console.log('newQuestionSet - Control', newQuestionSet);
-
-    this.setState({
-      questionSet: newQuestionSet
-    });
-
-    return newQuestionSet;
-  }
-
-  getRandomQuestionSetAfterExperimental(currVid, numOfPreviousExpQuestions) {
-    const videoQuestions = getQuestionSet(currVid);
-
-    let randomNumbers = [];
-    const arr = [];
-    const newQuestionSet = [];
-
-    const videoQuestionsLength = Math.min(
-      numOfPreviousExpQuestions,
-      videoQuestions.length
-    );
-
-    // find random values between 1 and videoQuestions.length
-    // console.log("what is videoQuestionsLength", videoQuestionsLength);
-    while (arr.length < Math.floor(videoQuestionsLength / 3)) {
-      const r = Math.floor(Math.random() * videoQuestionsLength) + 1;
-      if (arr.indexOf(r) === -1) arr.push(r);
-    }
-
-    // sort array of random numbers
-    randomNumbers = arr.sort((a, b) => a - b);
-    console.log('randomNumbers(sortedarray) Control after Exp', randomNumbers);
-
-    // copy corresponding questions to new array
-    for (let i = 0; i < randomNumbers.length; i++) {
-      for (let j = 0; j < videoQuestions.length; j++) {
-        if (randomNumbers[i] === videoQuestions[j].key) {
-          newQuestionSet.push(videoQuestions[j]);
-        }
-      }
-    }
-
-    console.log('newQuestionSet - Control after Experimental', newQuestionSet);
-
-    this.setState({
-      questionSet: newQuestionSet
-    });
-
-    return newQuestionSet;
   }
 
   closeModal = () => {
@@ -550,18 +439,18 @@ export default class VideoSet extends Component<Props, State> {
       let questionSetTemp = [];
       if (this.props.location.state.secondVideoType === 'control') {
         if (this.state.allFourControlVideos) {
-          questionSetTemp = this.getRandomControlQuestionSet(
+          questionSetTemp = getRandomControlQuestionSet(
             this.props.location.state.secondVideo
           );
         } else if (
           this.props.location.state.firstVideoType === 'experimental'
         ) {
-          questionSetTemp = this.getRandomQuestionSetAfterExperimental(
+          questionSetTemp = getControlQuestionstAfterExp(
             this.props.location.state.secondVideo,
             this.state.firstExpQuestionSetLength
           );
         } else {
-          questionSetTemp = this.getRandomQuestionSet(
+          questionSetTemp = getRandomQuestionSet(
             this.props.location.state.secondVideo
           );
         }
@@ -580,25 +469,25 @@ export default class VideoSet extends Component<Props, State> {
       let questionSetTemp = [];
       if (this.props.location.state.thirdVideoType === 'control') {
         if (this.state.allFourControlVideos) {
-          questionSetTemp = this.getRandomControlQuestionSet(
+          questionSetTemp = getRandomControlQuestionSet(
             this.props.location.state.thirdVideo
           );
         } else if (
           this.props.location.state.secondVideoType === 'experimental'
         ) {
-          questionSetTemp = this.getRandomQuestionSetAfterExperimental(
+          questionSetTemp = getControlQuestionstAfterExp(
             this.props.location.state.thirdVideo,
             this.state.secondExpQuestionSetLength
           );
         } else if (
           this.props.location.state.firstVideoType === 'experimental'
         ) {
-          questionSetTemp = this.getRandomQuestionSetAfterExperimental(
+          questionSetTemp = getControlQuestionstAfterExp(
             this.props.location.state.thirdVideo,
             this.state.firstExpQuestionSetLength
           );
         } else {
-          questionSetTemp = this.getRandomQuestionSet(
+          questionSetTemp = getRandomQuestionSet(
             this.props.location.state.thirdVideo
           );
         }
@@ -617,32 +506,32 @@ export default class VideoSet extends Component<Props, State> {
       let questionSetTemp = [];
       if (this.props.location.state.fourthVideoType === 'control') {
         if (this.state.allFourControlVideos) {
-          questionSetTemp = this.getRandomControlQuestionSet(
+          questionSetTemp = getRandomControlQuestionSet(
             this.props.location.state.fourthVideo
           );
         } else if (
           this.props.location.state.thirdVideoType === 'experimental'
         ) {
-          questionSetTemp = this.getRandomQuestionSetAfterExperimental(
+          questionSetTemp = getControlQuestionstAfterExp(
             this.props.location.state.fourthVideo,
             this.state.thirdExpQuestionSetLength
           );
         } else if (
           this.props.location.state.secondVideoType === 'experimental'
         ) {
-          questionSetTemp = this.getRandomQuestionSetAfterExperimental(
+          questionSetTemp = getControlQuestionstAfterExp(
             this.props.location.state.fourthVideo,
             this.state.secondExpQuestionSetLength
           );
         } else if (
           this.props.location.state.firstVideoType === 'experimental'
         ) {
-          questionSetTemp = this.getRandomQuestionSetAfterExperimental(
+          questionSetTemp = getControlQuestionstAfterExp(
             this.props.location.state.fourthVideo,
             this.state.firstExpQuestionSetLength
           );
         } else {
-          questionSetTemp = this.getRandomQuestionSet(
+          questionSetTemp = getRandomQuestionSet(
             this.props.location.state.fourthVideo
           );
         }
@@ -733,9 +622,6 @@ export default class VideoSet extends Component<Props, State> {
     this.setState({
       answers
     });
-    this.setState({
-      answers
-    });
 
     for (let i = 0; i < videoQuestions.length; i++) {
       if (videoQuestions[i].key === q.questionNumber) {
@@ -748,6 +634,8 @@ export default class VideoSet extends Component<Props, State> {
         });
       }
     }
+
+    console.log('AnswerSet', this.state.answers);
   }
 
   /* When the openFullscreen() function is executed, open the video in fullscreen.
@@ -801,7 +689,6 @@ export default class VideoSet extends Component<Props, State> {
   }
 
   getAnswerSet() {
-    console.log('AnswerSet', this.state.answers);
     const newAnswers = this.state.updatedAnswers;
     const answersTemp = this.state.answers;
 
