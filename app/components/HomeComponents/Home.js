@@ -20,6 +20,7 @@ import { Observable } from 'rxjs';
 import routes from '../../constants/routes.json';
 import styles from './Home.css';
 import { createEEGObservable } from '../../utils/eeg';
+import { createWorkspaceDir, writeExperimentCSV } from '../../utils/write';
 
 import videoSrc1 from '../Biomass.mp4';
 import videoSrc2 from '../Fuel.mp4';
@@ -102,6 +103,7 @@ export default class Home extends Component<Props, State> {
   handleExperimentType: Object => void;
   handleConnectEEG: () => void;
   handleClassiferType: (Object, Object) => void;
+  handleCreateWorkspace: () => void;
   selectAllElectrodes: Object => void;
   electrodesChosen: Object => void;
 
