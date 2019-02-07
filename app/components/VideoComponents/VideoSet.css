@@ -24,7 +24,7 @@ h3 {
 }
 
 .modal {
-  max-height: 540px;
+  max-height: 560px;
   height: 100%;
   width: 100%;
   margin: 0;
@@ -33,14 +33,16 @@ h3 {
   display: block;
   text-align: center;
 }
+
 .inner {
   display: block;
   background-color: #fff;
   color: #000;
-  height: 40%;
+  height: 50%;
   width: 60%;
-  padding: 30px;
-  margin-left: 20%;
+  min-width: 500px;
+  padding: 0px;
+  margin-left: 14%;
   margin-top: 12%;
   border-radius: 15px;
 }
@@ -56,7 +58,24 @@ h3 {
   margin-top: 12%;
   border-radius: 15px;
 }
+
+div.description {
+  min-width: 600px;
+  margin: -50px;
+}
+.qHeader {
+  font-size: 26px;
+  margin-top: 1rem;
+}
+
+.qSubHeader {
+  font-size: 22px;
+  margin-top: 1rem;
+}
+
 .engagement {
+  font-size: 22px;
+  margin-top: 1rem;
   margin-bottom: 2rem;
 }
 
@@ -65,8 +84,9 @@ h3 {
   margin-top: 1rem;
 }
 
-.questions {
-  margin-top: 1rem;
+div.radio {
+  font-size: 20px;
+  margin-top: 0.5rem;
 }
 
 form {
