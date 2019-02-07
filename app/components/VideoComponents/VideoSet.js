@@ -980,6 +980,34 @@ export default class VideoSet extends Component<Props, State> {
                         }
                       />
                     </label>
+                    6
+                    <label
+                      className={styles.engagementRadio}
+                      htmlFor="something"
+                    >
+                      <input
+                        name="engagement"
+                        type="radio"
+                        value="e6"
+                        onChange={e =>
+                          this.handleEngagement({ questionNumber }, e)
+                        }
+                      />
+                    </label>
+                    7
+                    <label
+                      className={styles.engagementRadio}
+                      htmlFor="something"
+                    >
+                      <input
+                        name="engagement"
+                        type="radio"
+                        value="e7"
+                        onChange={e =>
+                          this.handleEngagement({ questionNumber }, e)
+                        }
+                      />
+                    </label>
                   </div>
                 </div>
                 <hr />
@@ -988,13 +1016,13 @@ export default class VideoSet extends Component<Props, State> {
                 <div className={styles.qSubHeader}>
                   Please select an answer to continue:
                 </div>
-                <div>
+                <div className={styles.engagement}>
                   <div className="radio">
                     <label htmlFor="True">
                       <input
                         name="True"
                         type="radio"
-                        value="True"
+                        value=" True"
                         onChange={e =>
                           this.handleQuestion({ questionNumber }, e)
                         }
@@ -1007,7 +1035,7 @@ export default class VideoSet extends Component<Props, State> {
                       <input
                         name="False"
                         type="radio"
-                        value="False"
+                        value=" False"
                         onChange={e =>
                           this.handleQuestion({ questionNumber }, e)
                         }
@@ -1020,7 +1048,7 @@ export default class VideoSet extends Component<Props, State> {
                       <input
                         name="DK"
                         type="radio"
-                        value="I don't know"
+                        value=" I don't know"
                         onChange={e =>
                           this.handleQuestion({ questionNumber }, e)
                         }
