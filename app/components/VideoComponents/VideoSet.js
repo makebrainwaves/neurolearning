@@ -980,6 +980,34 @@ export default class VideoSet extends Component<Props, State> {
                         }
                       />
                     </label>
+                    6
+                    <label
+                      className={styles.engagementRadio}
+                      htmlFor="something"
+                    >
+                      <input
+                        name="engagement"
+                        type="radio"
+                        value="e6"
+                        onChange={e =>
+                          this.handleEngagement({ questionNumber }, e)
+                        }
+                      />
+                    </label>
+                    7
+                    <label
+                      className={styles.engagementRadio}
+                      htmlFor="something"
+                    >
+                      <input
+                        name="engagement"
+                        type="radio"
+                        value="e7"
+                        onChange={e =>
+                          this.handleEngagement({ questionNumber }, e)
+                        }
+                      />
+                    </label>
                   </div>
                 </div>
                 <hr />
