@@ -296,8 +296,8 @@ export default class VideoSet extends Component<Props, State> {
 
     for (let i = 0; i < videoQuestions.length; i++) {
       if (videoQuestions[i].key === key) {
-        this.pauseVideo();
         this.togglePlay();
+        this.pauseVideo();
         this.setState({
           questionNumber: videoQuestions[i].key,
           questionText: videoQuestions[i].value.question,
@@ -902,8 +902,12 @@ export default class VideoSet extends Component<Props, State> {
             <Modal.Header />
             <Modal.Content className={styles.content}>
               <Modal.Description>
-                <h4>1. On a scale of 1 to 5, how engaged are you right now?</h4>
-                <h5>(1 = not engaged at all, 5 = very engaged)</h5>
+                <div className={styles.qHeader}>
+                  1. On a scale of 1 to 5, how engaged are you right now?
+                </div>
+                <div className={styles.qSubHeader}>
+                  (1 = not engaged at all, 5 = very engaged)
+                </div>
                 <div className={styles.engagement}>
                   <div className="radio">
                     1
@@ -979,11 +983,11 @@ export default class VideoSet extends Component<Props, State> {
                   </div>
                 </div>
                 <hr />
-                <h4 className={styles.questions}>
-                  2.
-                  {this.state.questionText}
-                </h4>
-                <h5>Please select an answer to continue:</h5>
+                <div className={styles.qHeader}>2. True or False?</div>
+                <div className={styles.qHeader}>{this.state.questionText}</div>
+                <div className={styles.qSubHeader}>
+                  Please select an answer to continue:
+                </div>
                 <div>
                   <div className="radio">
                     <label htmlFor="True">
