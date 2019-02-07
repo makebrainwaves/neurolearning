@@ -296,8 +296,8 @@ export default class VideoSet extends Component<Props, State> {
 
     for (let i = 0; i < videoQuestions.length; i++) {
       if (videoQuestions[i].key === key) {
-        this.pauseVideo();
         this.togglePlay();
+        this.pauseVideo();
         this.setState({
           questionNumber: videoQuestions[i].key,
           questionText: videoQuestions[i].value.question,
