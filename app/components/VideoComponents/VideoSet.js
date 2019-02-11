@@ -1089,9 +1089,9 @@ export default class VideoSet extends Component<Props, State> {
                       className={styles.surveyLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      href="https://docs.google.com/forms/d/1CGDZeZKCKTXQ4fstQ8ahbDp1gvvsPBC74_GZUchNClM/"
+                      href="https://docs.google.com/forms/d/1bimC_1hqYJMA_voXurEdG1JXhtCPb5c7mU-mfBtYu-g/"
                     >
-                      https://docs.google.com/forms/d/1CGDZeZKCKTXQ4fstQ8ahbDp1gvvsPBC74_GZUchNClM/
+                      https://docs.google.com/forms/d/1bimC_1hqYJMA_voXurEdG1JXhtCPb5c7mU-mfBtYu-g/
                     </a>
                   </h5>
                 )}
@@ -1102,9 +1102,9 @@ export default class VideoSet extends Component<Props, State> {
                       className={styles.surveyLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      href="https://docs.google.com/forms/d/1KG2Dby7SubhQTlKByzwNjsGPgcbEoD8L_dRajKIrJ_o/"
+                      href="https://docs.google.com/forms/d/12cbA8iuHiOjloteTS3n2aNq4UMI6Udmq-Y54rn4g5oM/"
                     >
-                      https://docs.google.com/forms/d/1KG2Dby7SubhQTlKByzwNjsGPgcbEoD8L_dRajKIrJ_o/
+                      https://docs.google.com/forms/d/12cbA8iuHiOjloteTS3n2aNq4UMI6Udmq-Y54rn4g5oM/
                     </a>
                   </h5>
                 )}
@@ -1115,9 +1115,9 @@ export default class VideoSet extends Component<Props, State> {
                       className={styles.surveyLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      href="https://docs.google.com/forms/d/1TCT2shE1hY24WkNQs9eEhmkS7lBRPg9Z-gt0I6UUU2U/"
+                      href="https://docs.google.com/forms/d/1ME6NjEnEZGxbobiGynzt6-9kTvPwiuwqPRczqSCpl4Y/"
                     >
-                      https://docs.google.com/forms/d/1TCT2shE1hY24WkNQs9eEhmkS7lBRPg9Z-gt0I6UUU2U/
+                      https://docs.google.com/forms/d/1ME6NjEnEZGxbobiGynzt6-9kTvPwiuwqPRczqSCpl4Y/
                     </a>
                   </h5>
                 )}
@@ -1128,9 +1128,9 @@ export default class VideoSet extends Component<Props, State> {
                       className={styles.surveyLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      href="https://docs.google.com/forms/d/10fahrtOU9nHBVUqQB-WTSciiXveIOafEfxROktz11P4/"
+                      href="https://docs.google.com/forms/d/1DuZCT5JBNbUi9lRBJ-FxtUgYOqbwPvHmRRgHcMWnhLU/"
                     >
-                      https://docs.google.com/forms/d/10fahrtOU9nHBVUqQB-WTSciiXveIOafEfxROktz11P4/
+                      https://docs.google.com/forms/d/1DuZCT5JBNbUi9lRBJ-FxtUgYOqbwPvHmRRgHcMWnhLU/
                     </a>
                   </h5>
                 )}
