@@ -24,7 +24,7 @@ import {
 import { emit } from 'cluster';
 
 const ENOBIO_SAMPLE_RATE = 500;
-const VARIANCE_THRESHOLD = 10; // ~100uV variance? Will have to update depend. on format of Enobio data
+const VARIANCE_THRESHOLD = 20; // ~100uV variance? Will have to update depend. on format of Enobio data
 const FFT_BINS = 512; // closest power of 2 to sampling rate
 const BASELINE_DURATION = 60000; // 60 seconds
 const DECISION_INTERVAL = 5000; // 5 seconds
@@ -151,8 +151,8 @@ export const createClassifierObservable = (
     map(featureBuffer => {
       const averagedPowerEstimate = average(featureBuffer);
       const decision = averagedPowerEstimate >= threshold;
-      const goodEpochs = featureBuffer.length;
-
+      // const goodEpochs = featureBuffer.length;
+      const goodEpochs = feature.length <= 2 ? 'NaN' : featureBuffer.length;
       return { averagedPowerEstimate, decision, goodEpochs };
     })
   );
@@ -182,6 +182,9 @@ export const removeNoise = (threshold: number = VARIANCE_THRESHOLD) =>
   pipe(
     deMean(),
     addSignalQuality(),
+    tap(epoch =>
+      console.log('signal quality removeNoise: ', epoch.signalQuality)
+    ),
     map(epo => {
       const filteredData = epo.data.filter(
         (_, index) => epo.signalQuality[index] < threshold

@@ -320,8 +320,8 @@ export default class VideoSet extends Component<Props, State> {
 
     for (let i = 0; i < videoQuestions.length; i++) {
       if (videoQuestions[i].key === key) {
-        this.pauseVideo();
         this.togglePlay();
+        this.pauseVideo();
         this.setState({
           questionNumber: videoQuestions[i].key,
           questionText: videoQuestions[i].value.question,
@@ -926,8 +926,12 @@ export default class VideoSet extends Component<Props, State> {
             <Modal.Header />
             <Modal.Content className={styles.content}>
               <Modal.Description>
-                <h4>1. On a scale of 1 to 5, how engaged are you right now?</h4>
-                <h5>(1 = not engaged at all, 5 = very engaged)</h5>
+                <div className={styles.qHeader}>
+                  1. On a scale of 1 to 5, how engaged are you right now?
+                </div>
+                <div className={styles.qSubHeader}>
+                  (1 = not engaged at all, 5 = very engaged)
+                </div>
                 <div className={styles.engagement}>
                   <div className="radio">
                     1
@@ -1000,21 +1004,49 @@ export default class VideoSet extends Component<Props, State> {
                         }
                       />
                     </label>
+                    6
+                    <label
+                      className={styles.engagementRadio}
+                      htmlFor="something"
+                    >
+                      <input
+                        name="engagement"
+                        type="radio"
+                        value="e6"
+                        onChange={e =>
+                          this.handleEngagement({ questionNumber }, e)
+                        }
+                      />
+                    </label>
+                    7
+                    <label
+                      className={styles.engagementRadio}
+                      htmlFor="something"
+                    >
+                      <input
+                        name="engagement"
+                        type="radio"
+                        value="e7"
+                        onChange={e =>
+                          this.handleEngagement({ questionNumber }, e)
+                        }
+                      />
+                    </label>
                   </div>
                 </div>
                 <hr />
-                <h4 className={styles.questions}>
-                  2.
-                  {this.state.questionText}
-                </h4>
-                <h5>Please select an answer to continue:</h5>
-                <div>
+                <div className={styles.qHeader}>2. True or False?</div>
+                <div className={styles.qHeader}>{this.state.questionText}</div>
+                <div className={styles.qSubHeader}>
+                  Please select an answer to continue:
+                </div>
+                <div className={styles.engagement}>
                   <div className="radio">
                     <label htmlFor="True">
                       <input
                         name="True"
                         type="radio"
-                        value="True"
+                        value=" True"
                         onChange={e =>
                           this.handleQuestion({ questionNumber }, e)
                         }
@@ -1027,7 +1059,7 @@ export default class VideoSet extends Component<Props, State> {
                       <input
                         name="False"
                         type="radio"
-                        value="False"
+                        value=" False"
                         onChange={e =>
                           this.handleQuestion({ questionNumber }, e)
                         }
@@ -1040,7 +1072,7 @@ export default class VideoSet extends Component<Props, State> {
                       <input
                         name="DK"
                         type="radio"
-                        value="I don't know"
+                        value=" I don't know"
                         onChange={e =>
                           this.handleQuestion({ questionNumber }, e)
                         }
@@ -1081,9 +1113,9 @@ export default class VideoSet extends Component<Props, State> {
                       className={styles.surveyLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      href="https://docs.google.com/forms/d/1CGDZeZKCKTXQ4fstQ8ahbDp1gvvsPBC74_GZUchNClM/"
+                      href="https://docs.google.com/forms/d/1bimC_1hqYJMA_voXurEdG1JXhtCPb5c7mU-mfBtYu-g/"
                     >
-                      https://docs.google.com/forms/d/1CGDZeZKCKTXQ4fstQ8ahbDp1gvvsPBC74_GZUchNClM/
+                      https://docs.google.com/forms/d/1bimC_1hqYJMA_voXurEdG1JXhtCPb5c7mU-mfBtYu-g/
                     </a>
                   </h5>
                 )}
@@ -1094,9 +1126,9 @@ export default class VideoSet extends Component<Props, State> {
                       className={styles.surveyLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      href="https://docs.google.com/forms/d/1KG2Dby7SubhQTlKByzwNjsGPgcbEoD8L_dRajKIrJ_o/"
+                      href="https://docs.google.com/forms/d/12cbA8iuHiOjloteTS3n2aNq4UMI6Udmq-Y54rn4g5oM/"
                     >
-                      https://docs.google.com/forms/d/1KG2Dby7SubhQTlKByzwNjsGPgcbEoD8L_dRajKIrJ_o/
+                      https://docs.google.com/forms/d/12cbA8iuHiOjloteTS3n2aNq4UMI6Udmq-Y54rn4g5oM/
                     </a>
                   </h5>
                 )}
@@ -1107,9 +1139,9 @@ export default class VideoSet extends Component<Props, State> {
                       className={styles.surveyLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      href="https://docs.google.com/forms/d/1TCT2shE1hY24WkNQs9eEhmkS7lBRPg9Z-gt0I6UUU2U/"
+                      href="https://docs.google.com/forms/d/1ME6NjEnEZGxbobiGynzt6-9kTvPwiuwqPRczqSCpl4Y/"
                     >
-                      https://docs.google.com/forms/d/1TCT2shE1hY24WkNQs9eEhmkS7lBRPg9Z-gt0I6UUU2U/
+                      https://docs.google.com/forms/d/1ME6NjEnEZGxbobiGynzt6-9kTvPwiuwqPRczqSCpl4Y/
                     </a>
                   </h5>
                 )}
@@ -1120,9 +1152,9 @@ export default class VideoSet extends Component<Props, State> {
                       className={styles.surveyLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      href="https://docs.google.com/forms/d/10fahrtOU9nHBVUqQB-WTSciiXveIOafEfxROktz11P4/"
+                      href="https://docs.google.com/forms/d/1DuZCT5JBNbUi9lRBJ-FxtUgYOqbwPvHmRRgHcMWnhLU/"
                     >
-                      https://docs.google.com/forms/d/10fahrtOU9nHBVUqQB-WTSciiXveIOafEfxROktz11P4/
+                      https://docs.google.com/forms/d/1DuZCT5JBNbUi9lRBJ-FxtUgYOqbwPvHmRRgHcMWnhLU/
                     </a>
                   </h5>
                 )}
