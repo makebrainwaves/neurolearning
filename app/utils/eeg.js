@@ -152,7 +152,7 @@ export const createClassifierObservable = (
       const averagedPowerEstimate = average(featureBuffer);
       const decision = averagedPowerEstimate >= threshold;
       // const goodEpochs = featureBuffer.length;
-      const goodEpochs = feature.length <= 2 ? 'NaN' : featureBuffer.length;
+      const goodEpochs = featureBuffer.length <= 2 ? 'NaN' : featureBuffer.length;
       return { averagedPowerEstimate, decision, goodEpochs };
     })
   );
