@@ -161,6 +161,7 @@ export default class VideoSet extends Component<Props, State> {
     }
 
     this.handleStartEEG();
+    this.playVideo();
   }
 
   handleStartEEG() {
@@ -239,6 +240,7 @@ export default class VideoSet extends Component<Props, State> {
   closeFinalModal = () => {
     this.moveAlongVideoSequence();
     this.setState({ finalModalIsOpen: false });
+    this.playVideo();
   };
 
   playVideo = () => {
@@ -247,7 +249,25 @@ export default class VideoSet extends Component<Props, State> {
     }
     this.openFullscreen();
     const videoRef = this.getVideoRef;
-    videoRef.play();
+
+    // Show loading animation.
+    const playPromise = videoRef.play();
+
+    if (playPromise !== undefined) {
+      playPromise
+        .then(
+          // Automatic playback started!
+          // Show playing UI.
+          videoRef.play()
+        )
+        .catch(error => {
+          // Auto-play was prevented
+          // Show paused UI.
+          // console.log('vid err');
+          videoRef.play();
+        });
+    }
+
     this.setState({ isRunning: true });
   };
 
