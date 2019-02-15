@@ -238,9 +238,12 @@ export default class VideoSet extends Component<Props, State> {
   };
 
   closeFinalModal = () => {
-    this.moveAlongVideoSequence();
+    if (this.state.currentVideo !== this.props.location.state.fourthVideo) {
+      this.moveAlongVideoSequence();
+      this.playVideo();
+    }
+
     this.setState({ finalModalIsOpen: false });
-    this.playVideo();
   };
 
   playVideo = () => {
