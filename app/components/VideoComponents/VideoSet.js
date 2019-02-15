@@ -926,10 +926,10 @@ export default class VideoSet extends Component<Props, State> {
             <Modal.Content className={styles.content}>
               <Modal.Description>
                 <div className={styles.qHeader}>
-                  1. On a scale of 1 to 5, how engaged are you right now?
+                  1. On a scale of 1 to 7, how engaged are you right now?
                 </div>
                 <div className={styles.qSubHeader}>
-                  (1 = not engaged at all, 5 = very engaged)
+                  (1 = not engaged at all, 7 = very engaged)
                 </div>
                 <div className={styles.engagement}>
                   <div className="radio">
