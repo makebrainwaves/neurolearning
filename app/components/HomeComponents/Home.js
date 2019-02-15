@@ -47,7 +47,7 @@ interface State {
   rawEEGObservable: Observable<Object>;
   classifierType: string;
   electrodes: Object;
-  electrodesChosen: string;
+  electrodesChosen: string[];
 }
 
 const time = new Date().getTime();
@@ -105,7 +105,7 @@ export default class Home extends Component<Props, State> {
   handleClassiferType: (Object, Object) => void;
   handleCreateWorkspace: () => void;
   selectAllElectrodes: Object => void;
-  electrodesChosen: Object => void;
+  electrodesChosen: () => string[];
 
   constructor(props: Props) {
     super(props);
@@ -139,7 +139,6 @@ export default class Home extends Component<Props, State> {
     this.handleExperimentType = this.handleExperimentType.bind(this);
     this.handleConnectEEG = this.handleConnectEEG.bind(this);
     this.handleClassiferType = this.handleClassiferType.bind(this);
-    this.handleCreateWorkspace = this.handleCreateWorkspace.bind(this);
     this.selectAllElectrodes = this.selectAllElectrodes.bind(this);
     this.electrodesChosen = this.electrodesChosen.bind(this);
   }
@@ -214,46 +213,6 @@ export default class Home extends Component<Props, State> {
     this.setState({ classifierType: data.value });
   }
 
-  // TODO: make sure all values are in state by the time this function runs. Right now it seems that some things aren't loaded when options are selected in dropdowns
-  handleCreateWorkspace() {
-    const {
-      subjectId,
-      experimenterId,
-      classifierType,
-      electrodes,
-      firstVideoName,
-      secondVideoName,
-      thirdVideoName,
-      fourthVideoName,
-      firstVideoType,
-      secondVideoType,
-      thirdVideoType,
-      fourthVideoType
-    } = this.state;
-    const videoNames = [
-      firstVideoName,
-      secondVideoName,
-      thirdVideoName,
-      fourthVideoName
-    ];
-    const videoTypes = [
-      firstVideoType,
-      secondVideoType,
-      thirdVideoType,
-      fourthVideoType
-    ];
-    const workspacePath = createWorkspaceDir(this.state.subjectId);
-    writeExperimentCSV(workspacePath, {
-      date: new Date().toString(),
-      subjectId,
-      experimenterId,
-      classifierType,
-      electrodes: this.electrodesChosen(electrodes),
-      videoNames,
-      videoTypes
-    });
-  }
-
   selectAllElectrodes() {
     const x = document.getElementsByTagName('Checkbox')[0];
     console.log('all class', x);
@@ -270,19 +229,10 @@ export default class Home extends Component<Props, State> {
     this.setState({ electrodes });
   };
 
-  electrodesChosen(electrodes) {
-    let electrodesChosen =
-      'P7, P4, Cz, Pz, P3, P8, O1, O2, T8, F8, C4, F4, Fp2, Fz, C3, F3, Fp1, T7, F7, Oz, PO4, FC6, FC2, AF4, CP6, CP2, CP1, CP5, FC1, FC5, AF3, PO3, ';
-    const selectedElectrodes = this.state.electrodes;
-
-    selectedElectrodes.forEach(selectedElectrode => {
-      if (selectedElectrode.checked === false) {
-        electrodesChosen = electrodesChosen.replace(
-          `${selectedElectrode.value}, `,
-          ''
-        );
-      }
-    });
+  electrodesChosen() {
+    const electrodesChosen = this.state.electrodes
+      .filter(electrode => electrode.checked)
+      .map(electrode => electrode.value);
 
     return electrodesChosen;
   }
@@ -341,7 +291,7 @@ export default class Home extends Component<Props, State> {
       { key: 'experimental', value: 'experimental', text: 'E' }
     ];
 
-    const electrodesChosen = this.electrodesChosen(electrodes);
+    const electrodesChosen = this.electrodesChosen();
 
     const subjectCsvData = [
       {
@@ -352,7 +302,7 @@ export default class Home extends Component<Props, State> {
         VideoName: firstVideoName,
         ExperimentType: firstVideoType,
         Classifier: classifierType,
-        Electrodes: electrodesChosen
+        Electrodes: electrodesChosen.toString()
       },
       {
         DayTime: date,
@@ -868,7 +818,7 @@ export default class Home extends Component<Props, State> {
         <Grid.Row columns={1}>
           <Grid.Column>
             {electrodesChosen && (
-              <Button onClick={this.handleCreateWorkspace} secondary>
+              <Button secondary>
                 <Link
                   to={{
                     pathname: routes.VIDEOSET,
@@ -883,9 +833,7 @@ export default class Home extends Component<Props, State> {
                       fourthVideoType,
                       subjectId,
                       rawEEGObservable,
-                      classifierType
-                    },
-                    props: {
+                      classifierType,
                       electrodesChosen
                     }
                   }}
