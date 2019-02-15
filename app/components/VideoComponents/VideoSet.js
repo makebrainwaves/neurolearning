@@ -62,7 +62,7 @@ const biomassVideo =
 const fuelVideo =
   'http://localhost:1212/dist/bcc000d9e3048f485822cc246c74a0e5.mp4';
 const gasVideo =
-  'http://localhost:1212/dist/0e6ab5cbc3f80301b4cbf5a6ff8a0db6.mp4';
+  'http://localhost:1212/dist/aaa7c3c877bf842df980088c9b239dce.mp4';
 const photosynthVideo =
   'http://localhost:1212/dist/adf2b55277c0e5538ff5ba60a1f4a756.mp4';
 
@@ -753,7 +753,7 @@ export default class VideoSet extends Component<Props, State> {
           answersTemp[0].fuel[questionNum].engagement;
         newAnswers[key].Answer = answersTemp[0].fuel[questionNum].answer;
       }
-      if (key >= 44 && key < 83) {
+      if (key >= 44 && key < 70) {
         const questionNum = `q${questVal - 43}`;
         newAnswers[key].Subject = this.props.location.state.subjectId;
         newAnswers[key].VideoName = 'gas';
@@ -770,8 +770,8 @@ export default class VideoSet extends Component<Props, State> {
         newAnswers[key].Engagement = answersTemp[0].gas[questionNum].engagement;
         newAnswers[key].Answer = answersTemp[0].gas[questionNum].answer;
       }
-      if (key >= 83 && key < 110) {
-        const questionNum = `q${questVal - 82}`;
+      if (key >= 70 && key < 97) {
+        const questionNum = `q${questVal - 69}`;
         newAnswers[key].Subject = this.props.location.state.subjectId;
         newAnswers[key].VideoName = 'photosynth';
         newAnswers[key].ExperimentType =
