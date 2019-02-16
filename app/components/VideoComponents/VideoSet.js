@@ -57,14 +57,10 @@ const updatedAnswersArray = require('../../constants/UpdatedAnswers.js');
 
 const soundFileLoc = require('../beep-ping.flac');
 
-const biomassVideo =
-  'http://localhost:1212/dist/bab08a1b5e70073aa05bda2923a835f2.mp4';
-const fuelVideo =
-  'http://localhost:1212/dist/bcc000d9e3048f485822cc246c74a0e5.mp4';
-const gasVideo =
-  'http://localhost:1212/dist/aaa7c3c877bf842df980088c9b239dce.mp4';
-const photosynthVideo =
-  'http://localhost:1212/dist/adf2b55277c0e5538ff5ba60a1f4a756.mp4';
+const biomassVideo = './dist/bab08a1b5e70073aa05bda2923a835f2.mp4';
+const fuelVideo = './dist/bcc000d9e3048f485822cc246c74a0e5.mp4';
+const gasVideo = './dist/aaa7c3c877bf842df980088c9b239dce.mp4';
+const photosynthVideo = './dist/adf2b55277c0e5538ff5ba60a1f4a756.mp4';
 
 export default class VideoSet extends Component<Props, State> {
   props: Props;
