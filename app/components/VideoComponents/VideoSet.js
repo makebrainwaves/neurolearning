@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Button, Modal } from 'semantic-ui-react';
 import { CSVLink } from 'react-csv';
 import { Subscription } from 'rxjs';
+import { WriteStream } from 'fs';
 import styles from './VideoSet.css';
 import routes from '../../constants/routes.json';
 import * as data from '../../questions/questions.json';
@@ -54,6 +55,7 @@ interface State {
   decision: boolean;
   score: number;
   electrodesChosen: string[];
+  rawEEGWriteStream: WriteStream | null;
 }
 
 const rollBackTime = 5;
@@ -106,7 +108,8 @@ export default class VideoSet extends Component<Props, State> {
       classifierCsv: [],
       addedToCsv: false,
       decision: false,
-      score: 0
+      score: 0,
+      rawEEGWriteStream: null
     };
     // These are just so that we can unsubscribe from the observables
     this.rawEEGSubscription = null;
@@ -180,21 +183,29 @@ export default class VideoSet extends Component<Props, State> {
       classifierType === 'alpha' ? computeAlpha : computeThetaBeta;
 
     // TODO: this worskpacedir variable needs to be set by a workspace property inherited from Home, ideally unique for each
-    const workspaceDir = createWorkspaceDir('Neurolearning Write Test');
+    const workspaceDir = createWorkspaceDir(
+      this.props.location.state.subjectId
+    );
+
     const rawEEGWriteStream = createRawEEGWriteStream(
       workspaceDir,
       // Not sure if this is the right state variable to use. Need something that can be used to identify the particular video displated in this component
-      this.state.firstVideo
+      this.props.location.state.firstVideo
     );
 
     if (rawEEGWriteStream) {
-      writeHeader(rawEEGWriteStream, this.props.electrodesChosen);
+      writeHeader(
+        rawEEGWriteStream,
+        this.props.location.state.electrodesChosen
+      );
       rawEEGObservable.subscribe(
         rawData => writeEEGData(rawEEGWriteStream, rawData),
         // These callbacks should force the write stream to close when the raw eeg stream is either completed or errors out
         complete => rawEEGWriteStream.close(),
         error => rawEEGWriteStream.close()
       );
+
+      this.setState({ rawEEGWriteStream });
     }
 
     // create baseline observable
@@ -450,7 +461,9 @@ export default class VideoSet extends Component<Props, State> {
 
   moveAlongVideoSequence() {
     const videoQuestions = this.state.questionSet;
-
+    if (this.state.rawEEGWriteStream) {
+      this.state.rawEEGWriteStream.close();
+    }
     for (let i = 0; i < videoQuestions.length; i++) {
       const questionAnswered = `questionAnswered${i + 1}`;
       const askQuestion = `askQuestion${i + 1}`;
