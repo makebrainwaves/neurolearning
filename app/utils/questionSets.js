@@ -5,7 +5,7 @@ const biomassVideo =
 const fuelVideo =
   'http://localhost:1212/dist/bcc000d9e3048f485822cc246c74a0e5.mp4';
 const gasVideo =
-  'http://localhost:1212/dist/0e6ab5cbc3f80301b4cbf5a6ff8a0db6.mp4';
+  'http://localhost:1212/dist/aaa7c3c877bf842df980088c9b239dce.mp4';
 const photosynthVideo =
   'http://localhost:1212/dist/adf2b55277c0e5538ff5ba60a1f4a756.mp4';
 

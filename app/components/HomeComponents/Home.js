@@ -23,7 +23,7 @@ import { createEEGObservable } from '../../utils/eeg';
 
 import videoSrc1 from '../Biomass.mp4';
 import videoSrc2 from '../Fuel.mp4';
-import videoSrc3 from '../Combustion.mp4';
+import videoSrc3 from '../Combustion_new.mp4';
 import videoSrc4 from '../Photosynth.mp4';
 import { createWorkspaceDir, writeExperimentCSV } from '../../utils/write';
 
@@ -145,7 +145,6 @@ export default class Home extends Component<Props, State> {
 
   getVideoName = value => {
     let videoName = '';
-    console.log('value', value);
     if (
       value ===
       'http://localhost:1212/dist/bab08a1b5e70073aa05bda2923a835f2.mp4'
@@ -158,7 +157,7 @@ export default class Home extends Component<Props, State> {
       videoName = 'Fuel';
     } else if (
       value ===
-      'http://localhost:1212/dist/0e6ab5cbc3f80301b4cbf5a6ff8a0db6.mp4'
+      'http://localhost:1212/dist/aaa7c3c877bf842df980088c9b239dce.mp4'
     ) {
       videoName = 'Gas';
     } else if (
@@ -173,7 +172,6 @@ export default class Home extends Component<Props, State> {
   };
 
   handleVideo(event: Object, data) {
-    console.log('data.value', data.value);
     this.setState({
       [data.name.slice(0, -4)]: data.value,
       [data.name]: this.getVideoName(data.value)
