@@ -79,7 +79,7 @@ export const createEEGObservable = (
         chunk // Operation to convert lsl chunks into single samples so that we can use eeg-pipes' epoching operator
       ) => {
         const currentTime = new Date().getTime();
-        const numSamples = chunk.timestamp.length;
+        const numSamples = chunk.timestamps.length;
         return of(
           ...chunk.timestamps.map((timestamp, index) => ({
             data: chunk.data
