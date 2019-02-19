@@ -17,7 +17,6 @@ import {
   computeThetaBeta
 } from '../../utils/eeg';
 import {
-  createWorkspaceDir,
   createRawEEGWriteStream,
   writeEEGData,
   writeHeader
@@ -182,15 +181,11 @@ export default class VideoSet extends Component<Props, State> {
     const classifierPipe =
       classifierType === 'alpha' ? computeAlpha : computeThetaBeta;
 
-    // TODO: this worskpacedir variable needs to be set by a workspace property inherited from Home, ideally unique for each
-    const workspaceDir = createWorkspaceDir(
-      this.props.location.state.subjectId
-    );
+    const workspaceDir = this.props.location.state.subjectId;
 
     const rawEEGWriteStream = createRawEEGWriteStream(
       workspaceDir,
-      // Not sure if this is the right state variable to use. Need something that can be used to identify the particular video displated in this component
-      this.props.location.state.firstVideo
+      this.getVideoName(this.state.currentVideo)
     );
 
     if (rawEEGWriteStream) {

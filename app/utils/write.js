@@ -76,16 +76,3 @@ export const writeEEGData = (writeStream: fs.WriteStream, eegData: any) => {
 export const mkdirPathSync = dirPath => {
   mkdirp.sync(dirPath);
 };
-
-// -----------------------------------------------------------------------------------------------
-// Creating and Getting
-
-// Creates a new directory for a given workspace with the passed title if it doesn't already exist. Returns filesystem location of workspace
-export const createWorkspaceDir = (title: string) => {
-  const workspacePath = getWorkspaceDir(title);
-  mkdirPathSync(workspacePath);
-  return workspacePath;
-};
-// Gets the absolute path for an experimental folderfrom a given title
-export const getWorkspaceDir = (title: string) =>
-  path.join(os.homedir(), 'Neurolearning', title);
