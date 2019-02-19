@@ -51,7 +51,7 @@ export const writeHeader = (
   channels: Array<string>
 ) => {
   try {
-    const headerLabels = `Timestamp,${channels.join(',')},Marker\n`;
+    const headerLabels = `Timestamp,${channels.join(',')}\n`;
     writeStream.write(headerLabels);
   } catch (e) {
     console.log('writeHeader: ', e);
@@ -66,7 +66,7 @@ export const writeEEGData = (writeStream: fs.WriteStream, eegData: any) => {
   for (let i = 0; i < len; i++) {
     writeStream.write(`${eegData.data[i].toString()},`); // Round data
   }
-  writeStream.write(`0\n`);
+  writeStream.write(`\n`);
 };
 
 // ------------------------------------------------------------------------
