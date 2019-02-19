@@ -1,5 +1,5 @@
 import { fromEvent, Observable, of, interval } from 'rxjs';
-import { take, map } from 'rxjs/operators';
+import { take, map, tap } from 'rxjs/operators';
 import { utilities } from 'openbci-utilities';
 import * as fs from 'fs';
 import {
@@ -11,7 +11,7 @@ import {
 
 function setup() {
   // 9 channbels
-  const sampleGenerator = utilities.randomSample(9, 500, true, false);
+  const sampleGenerator = utilities.randomSample(10, 500, true, false);
   const rawEEGObservable = interval(2).pipe(
     map(sampleGenerator),
     map(({ channelData }) => ({
