@@ -77,8 +77,10 @@ export const createEEGObservable = (
       filter(eegChunk => eegChunk.timestamps.length > 0),
       mergeMap((
         chunk // Operation to convert lsl chunks into single samples so that we can use eeg-pipes' epoching operator
-      ) =>
-        of(
+      ) => {
+        const currentTime = new Date().getTime();
+        const numSamples = chunk.timestamp.length;
+        return of(
           ...chunk.timestamps.map((timestamp, index) => ({
             data: chunk.data
               .map(channelData => channelData[index])
@@ -89,10 +91,12 @@ export const createEEGObservable = (
                 }
                 return true;
               }),
-            timestamp
+            timestamp:
+              currentTime -
+              (1000 * (numSamples - index) * 1) / ENOBIO_SAMPLE_RATE
           }))
-        )
-      )
+        );
+      })
     );
   }
 };
