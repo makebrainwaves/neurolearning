@@ -25,6 +25,7 @@ import videoSrc1 from '../Biomass.mp4';
 import videoSrc2 from '../Fuel.mp4';
 import videoSrc3 from '../Combustion_new.mp4';
 import videoSrc4 from '../Photosynth.mp4';
+import { createWorkspaceDir, writeExperimentCSV } from '../../utils/write';
 
 type Props = {};
 
@@ -46,7 +47,7 @@ interface State {
   rawEEGObservable: Observable<Object>;
   classifierType: string;
   electrodes: Object;
-  electrodesChosen: string;
+  electrodesChosen: string[];
 }
 
 const time = new Date().getTime();
@@ -102,8 +103,9 @@ export default class Home extends Component<Props, State> {
   handleExperimentType: Object => void;
   handleConnectEEG: () => void;
   handleClassiferType: (Object, Object) => void;
+  handleCreateWorkspace: () => void;
   selectAllElectrodes: Object => void;
-  electrodesChosen: Object => void;
+  electrodesChosen: () => string[];
 
   constructor(props: Props) {
     super(props);
@@ -225,19 +227,10 @@ export default class Home extends Component<Props, State> {
     this.setState({ electrodes });
   };
 
-  electrodesChosen(electrodes) {
-    let electrodesChosen =
-      'P7, P4, Cz, Pz, P3, P8, O1, O2, T8, F8, C4, F4, Fp2, Fz, C3, F3, Fp1, T7, F7, Oz, PO4, FC6, FC2, AF4, CP6, CP2, CP1, CP5, FC1, FC5, AF3, PO3, ';
-    const selectedElectrodes = this.state.electrodes;
-
-    selectedElectrodes.forEach(selectedElectrode => {
-      if (selectedElectrode.checked === false) {
-        electrodesChosen = electrodesChosen.replace(
-          `${selectedElectrode.value}, `,
-          ''
-        );
-      }
-    });
+  electrodesChosen() {
+    const electrodesChosen = this.state.electrodes
+      .filter(electrode => electrode.checked)
+      .map(electrode => electrode.value);
 
     return electrodesChosen;
   }
@@ -296,7 +289,7 @@ export default class Home extends Component<Props, State> {
       { key: 'experimental', value: 'experimental', text: 'E' }
     ];
 
-    const electrodesChosen = this.electrodesChosen(electrodes);
+    const electrodesChosen = this.electrodesChosen();
 
     const subjectCsvData = [
       {
@@ -307,7 +300,7 @@ export default class Home extends Component<Props, State> {
         VideoName: firstVideoName,
         ExperimentType: firstVideoType,
         Classifier: classifierType,
-        Electrodes: electrodesChosen
+        Electrodes: electrodesChosen.toString()
       },
       {
         DayTime: date,
@@ -838,9 +831,7 @@ export default class Home extends Component<Props, State> {
                       fourthVideoType,
                       subjectId,
                       rawEEGObservable,
-                      classifierType
-                    },
-                    props: {
+                      classifierType,
                       electrodesChosen
                     }
                   }}

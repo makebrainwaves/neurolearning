@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Button, Modal } from 'semantic-ui-react';
 import { CSVLink } from 'react-csv';
 import { Subscription } from 'rxjs';
+import { WriteStream } from 'fs';
 import styles from './VideoSet.css';
 import routes from '../../constants/routes.json';
 import * as data from '../../questions/questions.json';
@@ -15,6 +16,11 @@ import {
   computeAlpha,
   computeThetaBeta
 } from '../../utils/eeg';
+import {
+  createRawEEGWriteStream,
+  writeEEGData,
+  writeHeader
+} from '../../utils/write';
 
 import {
   getQuestionSet,
@@ -43,8 +49,12 @@ interface State {
   firstExpQuestionSetLength: number;
   secondExpQuestionSetLength: number;
   thirdExpQuestionSetLength: number;
-  classifierCsv: array;
+  classifierCsv: Array<any>;
   addedToCsv: boolean;
+  decision: boolean;
+  score: number;
+  electrodesChosen: string[];
+  rawEEGWriteStream: WriteStream | null;
 }
 
 const rollBackTime = 5;
@@ -95,7 +105,10 @@ export default class VideoSet extends Component<Props, State> {
       secondExpQuestionSetLength: 0,
       thirdExpQuestionSetLength: 0,
       classifierCsv: [],
-      addedToCsv: false
+      addedToCsv: false,
+      decision: false,
+      score: 0,
+      rawEEGWriteStream: null
     };
     // These are just so that we can unsubscribe from the observables
     this.rawEEGSubscription = null;
@@ -168,7 +181,28 @@ export default class VideoSet extends Component<Props, State> {
     const { classifierType, rawEEGObservable } = this.props.location.state;
     const classifierPipe =
       classifierType === 'alpha' ? computeAlpha : computeThetaBeta;
-    // start recording raw EEG
+
+    const workspaceDir = this.props.location.state.subjectId;
+
+    const rawEEGWriteStream = createRawEEGWriteStream(
+      workspaceDir,
+      this.getVideoName(this.state.currentVideo)
+    );
+
+    if (rawEEGWriteStream) {
+      writeHeader(
+        rawEEGWriteStream,
+        this.props.location.state.electrodesChosen
+      );
+      rawEEGObservable.subscribe(
+        rawData => writeEEGData(rawEEGWriteStream, rawData),
+        // These callbacks should force the write stream to close when the raw eeg stream is either completed or errors out
+        complete => rawEEGWriteStream.close(),
+        error => rawEEGWriteStream.close()
+      );
+
+      this.setState({ rawEEGWriteStream });
+    }
 
     // create baseline observable
     const baselineObs = createBaselineObservable(rawEEGObservable, {
@@ -445,7 +479,9 @@ export default class VideoSet extends Component<Props, State> {
 
   moveAlongVideoSequence() {
     const videoQuestions = this.state.questionSet;
-
+    if (this.state.rawEEGWriteStream) {
+      this.state.rawEEGWriteStream.close();
+    }
     for (let i = 0; i < videoQuestions.length; i++) {
       const questionAnswered = `questionAnswered${i + 1}`;
       const askQuestion = `askQuestion${i + 1}`;
