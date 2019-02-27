@@ -14,6 +14,7 @@ import {
   Checkbox,
   Header
 } from 'semantic-ui-react';
+import $ from 'jquery';
 import { CSVLink } from 'react-csv';
 import { isNil } from 'lodash';
 import { Observable } from 'rxjs';
@@ -139,6 +140,8 @@ export default class Home extends Component<Props, State> {
     this.handleClassiferType = this.handleClassiferType.bind(this);
     this.selectAllElectrodes = this.selectAllElectrodes.bind(this);
     this.electrodesChosen = this.electrodesChosen.bind(this);
+    this.checkVideosSelected = this.checkVideosSelected.bind(this);
+    this.checkVideoSequence = this.checkVideoSequence.bind(this);
   }
 
   getVideoName = value => {
@@ -169,10 +172,10 @@ export default class Home extends Component<Props, State> {
     return videoName;
   };
 
-  handleVideo(event: Object, data) {
+  handleVideo(event: Object) {
     this.setState({
-      [data.name.slice(0, -4)]: data.value,
-      [data.name]: this.getVideoName(data.value)
+      [event.target.name.slice(0, -4)]: event.target.value, // thirdVideo = localhost...
+      [event.target.name]: this.getVideoName(event.target.value) // thirdVideoName = Gas
     });
   }
 
@@ -263,6 +266,55 @@ export default class Home extends Component<Props, State> {
     );
   }
 
+  checkVideoSequence() {
+    console.log('checkVideoSequence called');
+    $(document).ready(() => {
+      $('#selectVideo').on('change', '.positionTypes', () => {
+        // Get the selected options of all positions
+        const allSelected = $('.positionTypes')
+          .map(() => {
+            console.log('this.val', $(this).val());
+            return $(this).val();
+          })
+          .get();
+        console.log('allSelected', allSelected);
+        // set all enabled
+        $('.positionTypes option').removeAttr('disabled');
+
+        // Disable selected options in other positions
+        $(".positionTypes option:not(:selected):not([value='0'])").each(() => {
+          if ($.inArray($(this).val(), allSelected) !== -1) {
+            $(this).attr('disabled', true);
+          }
+        });
+      });
+    });
+  }
+
+  checkVideosSelected() {
+    $(document).ready(() => {
+      $('#nomineeInfo').on('change', '.positionTypes', () => {
+        // Get the selected options of all positions
+        const allSelected = $('.positionTypes')
+          .map(() => {
+            console.log('this.val', $(this).val());
+            return $(this).val();
+          })
+          .get();
+        console.log('allSelected', allSelected);
+        // set all enabled
+        $('.positionTypes option').removeAttr('disabled');
+
+        // Disable selected options in other positions
+        $(".positionTypes option:not(:selected):not([value='0'])").each(() => {
+          if ($.inArray($(this).val(), allSelected) !== -1) {
+            $(this).attr('disabled', true);
+          }
+        });
+      });
+    });
+  }
+
   render() {
     const {
       subjectId,
@@ -285,6 +337,7 @@ export default class Home extends Component<Props, State> {
     } = this.state;
 
     const videoOptions = [
+      { key: 'vid0', value: 0, text: 'Select Video' },
       { key: 'vid1', value: videoSrc1, text: 'Biomass' },
       { key: 'vid2', value: videoSrc2, text: 'Fuel' },
       { key: 'vid3', value: videoSrc3, text: 'Gas' },
@@ -338,6 +391,9 @@ export default class Home extends Component<Props, State> {
       }
     ];
 
+    this.checkVideosSelected();
+    this.checkVideoSequence();
+
     return (
       <Grid divided="vertically">
         <Grid.Row columns={1} className={styles.title}>
@@ -346,14 +402,74 @@ export default class Home extends Component<Props, State> {
           </Grid.Column>
         </Grid.Row>
 
+        <div id="nomineeInfo">
+          <div>
+            1.
+            <select
+              name="firstVideoName"
+              className="ui selection dropdown positionTypes"
+              onChange={this.handleVideo}
+            >
+              <option value="0">Select First Video</option>
+              <option value={this.state.firstVideo}>Biomass</option>
+              <option value={this.state.secondVideo}>Fuel</option>
+              <option value={this.state.thirdVideo}>Gas</option>
+              <option value={this.state.fourthVideo}>Photosynth</option>
+            </select>
+          </div>
+          <div>
+            2.
+            <select
+              name="secondVideoName"
+              className="ui selection dropdown positionTypes"
+              onChange={this.handleVideo}
+            >
+              <option value="0">Select Second Video</option>
+              <option value={this.state.firstVideo}>Biomass</option>
+              <option value={this.state.secondVideo}>Fuel</option>
+              <option value={this.state.thirdVideo}>Gas</option>
+              <option value={this.state.fourthVideo}>Photosynth</option>
+            </select>
+          </div>
+          <div>
+            3.
+            <select
+              name="thirdVideoName"
+              className="ui selection dropdown positionTypes"
+              onChange={this.handleVideo}
+            >
+              <option value="0">Select Third Video</option>
+              <option value={this.state.firstVideo}>Biomass</option>
+              <option value={this.state.secondVideo}>Fuel</option>
+              <option value={this.state.thirdVideo}>Gas</option>
+              <option value={this.state.fourthVideo}>Photosynth</option>
+            </select>
+          </div>
+          <div>
+            4.
+            <select
+              name="fourthVideoName"
+              className="ui selection dropdown positionTypes"
+              onChange={this.handleVideo}
+            >
+              <option value="0">Select Fourth Video</option>
+              <option value={this.state.firstVideo}>Biomass</option>
+              <option value={this.state.secondVideo}>Fuel</option>
+              <option value={this.state.thirdVideo}>Gas</option>
+              <option value={this.state.fourthVideo}>Photosynth</option>
+            </select>
+          </div>
+        </div>
+
         <Grid.Row columns={2} divided>
           <Grid.Column>
             <h3>Step 1: Choose a video sequence:</h3>
             <Grid columns={2}>
               <Grid.Row>
-                <Grid.Column>
+                <Grid.Column id="selectVideo">
                   1.
                   <Dropdown
+                    className={styles.positionTypes}
                     placeholder="Select First Video"
                     name="firstVideoName"
                     onChange={this.handleVideo}
@@ -377,6 +493,7 @@ export default class Home extends Component<Props, State> {
                 <Grid.Column>
                   2.
                   <Dropdown
+                    className={styles.positionTypes}
                     placeholder="Select Second Video"
                     name="secondVideoName"
                     onChange={this.handleVideo}
@@ -400,6 +517,7 @@ export default class Home extends Component<Props, State> {
                 <Grid.Column>
                   3.
                   <Dropdown
+                    className={styles.positionTypes}
                     placeholder="Select Third Video"
                     name="thirdVideoName"
                     onChange={this.handleVideo}
@@ -423,6 +541,7 @@ export default class Home extends Component<Props, State> {
                 <Grid.Column>
                   4.
                   <Dropdown
+                    className={styles.positionTypes}
                     placeholder="Select Fourth Video"
                     name="fourthVideoName"
                     onChange={this.handleVideo}
