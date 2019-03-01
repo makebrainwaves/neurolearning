@@ -36,7 +36,7 @@ export const createRawEEGWriteStream = (
 ): ?fs.WriteStream => {
   try {
     const dir = path.join(workspacePath, 'Raw');
-    const filename = `raw_${videoName}.csv`;
+    const filename = `raw_${videoName}_${workspacePath}.csv`;
     mkdirPathSync(dir);
     return fs.createWriteStream(path.join(dir, filename));
   } catch (e) {
