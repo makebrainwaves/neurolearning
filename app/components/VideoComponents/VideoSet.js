@@ -1,5 +1,5 @@
 // @flow
-/* eslint class-methods-use-this: ["error", { "exceptMethods": ["getQuestionSet"] }] */
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["getQuestionSet", "getCsvFileName"] }] */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Modal } from 'semantic-ui-react';
@@ -860,6 +860,11 @@ export default class VideoSet extends Component<Props, State> {
     }
   }
 
+  getCsvFileName(fileType, subjectId) {
+    const csvFileName = `${fileType}_${subjectId}\.csv\.c`;
+    return csvFileName;
+  }
+
   getClassifierCsv() {
     const newAnswers = this.state.classifierCsv;
     return newAnswers;
@@ -942,12 +947,24 @@ export default class VideoSet extends Component<Props, State> {
           </div>
         </div>
         <Button>
-          <CSVLink data={answersCsv} filename="answers.csv">
+          <CSVLink
+            data={answersCsv}
+            filename={this.getCsvFileName(
+              'answers',
+              this.props.location.state.subjectId
+            )}
+          >
             Download Subject Answers
           </CSVLink>
         </Button>
         <Button>
-          <CSVLink data={classifierCsv} filename="classifier.csv">
+          <CSVLink
+            data={classifierCsv}
+            filename={this.getCsvFileName(
+              'classifier',
+              this.props.location.state.subjectId
+            )}
+          >
             Download Classifier CSV
           </CSVLink>
         </Button>
