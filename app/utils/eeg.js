@@ -187,9 +187,9 @@ export const removeNoise = (threshold: number = VARIANCE_THRESHOLD) =>
   pipe(
     deMean(),
     addSignalQuality(),
-    // tap(epoch =>
-    // console.log('signal quality removeNoise: ', epoch.signalQuality)
-    // ),
+    tap(epoch =>
+      console.log('signal quality removeNoise: ', epoch.signalQuality)
+    ),
     map(epo => {
       const filteredData = epo.data.filter(
         (_, index) => epo.signalQuality[index] < threshold
