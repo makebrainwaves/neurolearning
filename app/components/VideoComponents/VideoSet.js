@@ -44,6 +44,9 @@ interface State {
   question2AlreadyShown: boolean;
   questionNumber: string;
   questionText: string;
+  firstOption: string;
+  secondOption: string;
+  thirdOption: string;
   obscureButton: boolean;
   allFourControlVideos: boolean;
   firstExpQuestionSetLength: number;
@@ -96,6 +99,9 @@ export default class VideoSet extends Component<Props, State> {
       photosynthSequenceNumber: 4,
       questionNumber: '',
       questionText: '',
+      firstOption: '',
+      secondOption: '',
+      thirdOption: '',
       answers: answersArray,
       updatedAnswers: updatedAnswersArray,
       askQuestion: false,
@@ -358,6 +364,9 @@ export default class VideoSet extends Component<Props, State> {
         this.setState({
           questionNumber: videoQuestions[i].key,
           questionText: videoQuestions[i].value.question,
+          firstOption: videoQuestions[i].value.option1,
+          secondOption: videoQuestions[i].value.option2,
+          thirdOption: videoQuestions[i].value.option3,
           modalIsOpen: true
         });
         this.setModalTimes(videoQuestions[i].key, vidCurrTime);
@@ -861,7 +870,7 @@ export default class VideoSet extends Component<Props, State> {
   }
 
   getCsvFileName(fileType, subjectId) {
-    const csvFileName = `${fileType}_${subjectId}\.csv\.c`;
+    const csvFileName = `${fileType}_${subjectId}`;
     return csvFileName;
   }
 
@@ -877,6 +886,9 @@ export default class VideoSet extends Component<Props, State> {
       answers,
       questionNumber,
       questionText,
+      firstOption,
+      secondOption,
+      thirdOption,
       currentVideo,
       videoName,
       biomassSequenceNumber,
@@ -1094,11 +1106,11 @@ export default class VideoSet extends Component<Props, State> {
                 </div>
                 <div className={styles.engagement}>
                   <div className="radio">
-                    <label htmlFor="True">
+                    <label htmlFor={this.state.firstOption}>
                       <input
-                        name="True"
+                        name="option"
                         type="radio"
-                        value=" True"
+                        value="option1"
                         onChange={e =>
                           this.handleQuestion({ questionNumber }, e)
                         }
@@ -1107,11 +1119,11 @@ export default class VideoSet extends Component<Props, State> {
                     True
                   </div>
                   <div className="radio">
-                    <label htmlFor="2False">
+                    <label htmlFor={this.state.secondOption}>
                       <input
-                        name="False"
+                        name="option"
                         type="radio"
-                        value=" False"
+                        value="option2"
                         onChange={e =>
                           this.handleQuestion({ questionNumber }, e)
                         }
@@ -1120,11 +1132,11 @@ export default class VideoSet extends Component<Props, State> {
                     False
                   </div>
                   <div className="radio">
-                    <label htmlFor="DK">
+                    <label htmlFor={this.state.thirdOption}>
                       <input
-                        name="DK"
+                        name="option"
                         type="radio"
-                        value=" I don't know"
+                        value="option3"
                         onChange={e =>
                           this.handleQuestion({ questionNumber }, e)
                         }
