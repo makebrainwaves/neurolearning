@@ -2,6 +2,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -14,6 +15,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -26,6 +28,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -38,6 +41,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -50,6 +54,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -62,6 +67,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -74,6 +80,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -86,6 +93,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -98,6 +106,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -110,6 +119,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -122,6 +132,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -134,6 +145,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -146,6 +158,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -158,6 +171,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -170,6 +184,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -182,6 +197,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -194,6 +210,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -206,6 +223,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -218,6 +236,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -230,6 +249,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -242,6 +262,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -254,6 +275,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -266,6 +288,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -278,6 +301,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -290,6 +314,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -302,6 +327,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -314,6 +340,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -326,6 +353,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -338,6 +366,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -350,6 +379,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -362,6 +392,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -374,6 +405,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -386,6 +418,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -398,6 +431,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -410,6 +444,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -422,6 +457,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -434,6 +470,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -446,6 +483,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -458,6 +496,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -470,6 +509,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -482,6 +522,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -494,6 +535,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -506,6 +548,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -518,6 +561,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -530,6 +574,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -542,6 +587,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -554,6 +600,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -566,6 +613,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -578,6 +626,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -590,6 +639,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -602,6 +652,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -614,6 +665,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -626,6 +678,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -638,6 +691,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -650,6 +704,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -662,6 +717,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -674,6 +730,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -686,6 +743,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -698,6 +756,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -710,6 +769,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -722,6 +782,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -734,6 +795,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -746,6 +808,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -758,6 +821,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -770,6 +834,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -782,6 +847,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -794,6 +860,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -806,6 +873,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -818,6 +886,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -830,6 +899,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -842,6 +912,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -854,6 +925,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -866,6 +938,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -878,6 +951,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -890,6 +964,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -902,6 +977,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -914,6 +990,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -926,6 +1003,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -938,6 +1016,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -950,6 +1029,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -962,6 +1042,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -974,6 +1055,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -986,6 +1068,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -998,6 +1081,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -1010,6 +1094,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -1022,6 +1107,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -1034,6 +1120,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -1046,6 +1133,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -1058,6 +1146,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -1070,6 +1159,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -1082,6 +1172,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -1094,6 +1185,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -1106,6 +1198,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -1118,6 +1211,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -1130,6 +1224,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -1142,6 +1237,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
@@ -1154,6 +1250,7 @@ module.exports = [
   {
     Subject: '',
     VideoName: '',
+    VidStartTimeTOD: '',
     ExperimentType: '',
     SequenceNo: '',
     ModalPopupTOD: '',
