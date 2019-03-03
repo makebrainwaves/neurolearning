@@ -94,9 +94,13 @@ export default class VideoSet extends Component<Props, State> {
       question1AlreadyShown: false,
       question2AlreadyShown: false,
       biomassSequenceNumber: 1,
+      biomassVidStartTimeTOD: 0,
       fuelSequenceNumber: 2,
+      fuelVidStartTimeTOD: 0,
       gasSequenceNumber: 3,
+      gasVidStartTimeTOD: 0,
       photosynthSequenceNumber: 4,
+      photosynthVidStartTimeTOD: 0,
       questionNumber: '',
       questionText: '',
       firstOption: '',
@@ -164,6 +168,7 @@ export default class VideoSet extends Component<Props, State> {
     if (this.props.location.state.firstVideoType === 'experimental') {
       questionSetTemp = getQuestionSet(this.state.currentVideo);
     }
+
     this.setState({
       questionSet: questionSetTemp
     });
@@ -260,11 +265,11 @@ export default class VideoSet extends Component<Props, State> {
   closeModal = () => {
     const { questionNumber } = this.state;
     const answers = this.state.answers;
-    const time = new Date().getTime();
+    const closeTime = Date.now();
     const qNumberForSubmit = `q${questionNumber}`;
 
     answers.forEach(answer => {
-      answer[this.state.videoName][qNumberForSubmit].submitTimeTOD = time;
+      answer[this.state.videoName][qNumberForSubmit].submitTimeTOD = closeTime;
     });
 
     this.setState({ answers });
@@ -291,6 +296,7 @@ export default class VideoSet extends Component<Props, State> {
       this.handleStartEEG();
     }
     this.openFullscreen();
+
     const videoRef = this.getVideoRef;
 
     // Show loading animation.
@@ -301,17 +307,47 @@ export default class VideoSet extends Component<Props, State> {
         .then(
           // Automatic playback started!
           // Show playing UI.
-          videoRef.play()
+          videoRef.play(),
+          this.setVideoStartTime()
         )
         .catch(error => {
           // Auto-play was prevented
           // Show paused UI.
           // console.log('vid err');
           videoRef.play();
+          this.setVideoStartTime();
         });
     }
 
     this.setState({ isRunning: true });
+  };
+
+  setVideoStartTime = () => {
+    // add start time to answers csv
+    const startTime = Date.now();
+    const currentVideoName = this.getVideoName(this.state.currentVideo);
+
+    if (
+      currentVideoName === 'biomass' &&
+      this.state.biomassVidStartTimeTOD === 0
+    ) {
+      this.setState({ biomassVidStartTimeTOD: startTime });
+    } else if (
+      currentVideoName === 'fuel' &&
+      this.state.fuelVidStartTimeTOD === 0
+    ) {
+      this.setState({ fuelVidStartTimeTOD: startTime });
+    } else if (
+      currentVideoName === 'gas' &&
+      this.state.gasVidStartTimeTOD === 0
+    ) {
+      this.setState({ gasVidStartTimeTOD: startTime });
+    } else if (
+      currentVideoName === 'photosynth' &&
+      this.state.photosynthVidStartTimeTOD === 0
+    ) {
+      this.setState({ photosynthVidStartTimeTOD: startTime });
+    }
   };
 
   pauseVideo = () => {
@@ -324,7 +360,7 @@ export default class VideoSet extends Component<Props, State> {
 
   setModalTimes = (questionNumber, vidCurrTime) => {
     const answers = this.state.answers;
-    const time = new Date().getTime();
+    const time = Date.now();
     const qNumberForModal = `q${questionNumber}`;
 
     answers.forEach(answer => {
@@ -766,6 +802,7 @@ export default class VideoSet extends Component<Props, State> {
         const questionNum = `q${questVal + 1}`;
         newAnswers[key].Subject = this.props.location.state.subjectId;
         newAnswers[key].VideoName = 'biomass';
+        newAnswers[key].VidStartTimeTOD = this.state.biomassVidStartTimeTOD;
         newAnswers[key].ExperimentType =
           answersTemp[0].biomass[questionNum].experimentType;
         newAnswers[key].SequenceNo = this.state.biomassSequenceNumber;
@@ -784,6 +821,7 @@ export default class VideoSet extends Component<Props, State> {
         const questionNum = `q${questVal - 20}`;
         newAnswers[key].Subject = this.props.location.state.subjectId;
         newAnswers[key].VideoName = 'fuel';
+        newAnswers[key].VidStartTimeTOD = this.state.fuelVidStartTimeTOD;
         newAnswers[key].ExperimentType =
           answersTemp[0].fuel[questionNum].experimentType;
         newAnswers[key].SequenceNo = this.state.fuelSequenceNumber;
@@ -802,6 +840,7 @@ export default class VideoSet extends Component<Props, State> {
         const questionNum = `q${questVal - 43}`;
         newAnswers[key].Subject = this.props.location.state.subjectId;
         newAnswers[key].VideoName = 'gas';
+        newAnswers[key].VidStartTimeTOD = this.state.gasVidStartTimeTOD;
         newAnswers[key].ExperimentType =
           answersTemp[0].gas[questionNum].experimentType;
         newAnswers[key].SequenceNo = this.state.gasSequenceNumber;
@@ -819,6 +858,7 @@ export default class VideoSet extends Component<Props, State> {
         const questionNum = `q${questVal - 69}`;
         newAnswers[key].Subject = this.props.location.state.subjectId;
         newAnswers[key].VideoName = 'photosynth';
+        newAnswers[key].VidStartTimeTOD = this.state.photosynthVidStartTimeTOD;
         newAnswers[key].ExperimentType =
           answersTemp[0].photosynth[questionNum].experimentType;
         newAnswers[key].SequenceNo = this.state.photosynthSequenceNumber;
@@ -841,7 +881,7 @@ export default class VideoSet extends Component<Props, State> {
   addToClassifierCSV(value, vidCurrTime) {
     const videoQuestions = this.state.questionSet;
     const classifierCsvTemp = this.state.classifierCsv;
-    const time = new Date().getTime();
+    const time = Date.now();
 
     const classifierEntry = {
       Subject: this.props.location.state.subjectId,
@@ -892,9 +932,13 @@ export default class VideoSet extends Component<Props, State> {
       currentVideo,
       videoName,
       biomassSequenceNumber,
+      biomassVidStartTimeTOD,
       fuelSequenceNumber,
+      fuelVidStartTimeTOD,
       gasSequenceNumber,
+      gasVidStartTimeTOD,
       photosynthSequenceNumber,
+      photosynthVidStartTimeTOD,
       updatedAnswers,
       decision,
       score
