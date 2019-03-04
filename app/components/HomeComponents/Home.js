@@ -25,7 +25,6 @@ import videoSrc1 from '../Biomass.mp4';
 import videoSrc2 from '../Fuel.mp4';
 import videoSrc3 from '../Combustion_new_final.mp4';
 import videoSrc4 from '../Photosynth.mp4';
-import { writeExperimentCSV } from '../../utils/write';
 
 type Props = {};
 

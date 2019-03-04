@@ -16,11 +16,13 @@ import {
   computeAlpha,
   computeThetaBeta
 } from '../../utils/eeg';
+/*
 import {
   createRawEEGWriteStream,
   writeEEGData,
   writeHeader
 } from '../../utils/write';
+*/
 
 import {
   getQuestionSet,
@@ -195,6 +197,7 @@ export default class VideoSet extends Component<Props, State> {
 
     const workspaceDir = this.props.location.state.subjectId;
 
+    /*
     const rawEEGWriteStream = createRawEEGWriteStream(
       workspaceDir,
       this.getVideoName(this.state.currentVideo)
@@ -213,7 +216,9 @@ export default class VideoSet extends Component<Props, State> {
       );
 
       this.setState({ rawEEGWriteStream });
+      
     }
+    */
 
     // create baseline observable
     const baselineObs = createBaselineObservable(rawEEGObservable, {
