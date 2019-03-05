@@ -32,6 +32,8 @@ h3 {
   position: absolute;
   display: block;
   text-align: center;
+  min-height: 100%;
+  min-width: 100%;
 }
 
 .inner {

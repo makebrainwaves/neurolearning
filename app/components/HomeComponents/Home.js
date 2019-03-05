@@ -23,7 +23,7 @@ import { createEEGObservable } from '../../utils/eeg';
 
 import videoSrc1 from '../Biomass.mp4';
 import videoSrc2 from '../Fuel.mp4';
-import videoSrc3 from '../Combustion_new.mp4';
+import videoSrc3 from '../Combustion_new_final.mp4';
 import videoSrc4 from '../Photosynth.mp4';
 
 type Props = {};
@@ -156,7 +156,7 @@ export default class Home extends Component<Props, State> {
       videoName = 'Fuel';
     } else if (
       value ===
-      'http://localhost:1212/dist/aaa7c3c877bf842df980088c9b239dce.mp4'
+      'http://localhost:1212/dist/8eaa1fc371098f3407941ac9ef7b99b2.mp4'
     ) {
       videoName = 'Gas';
     } else if (

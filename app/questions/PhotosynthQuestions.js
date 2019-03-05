@@ -205,7 +205,7 @@ module.exports = [
       name: 'Question 18:',
       period: 420, // '6:40-7:00' or 400-420
       question:
-        'True or false? We have been using petroleum much longer than we have been using animal fats for oil. ',
+        'We have been using petroleum much longer than we have been using animal fats for oil. ',
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
