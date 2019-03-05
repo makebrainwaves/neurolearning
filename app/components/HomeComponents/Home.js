@@ -761,11 +761,9 @@ export default class Home extends Component<Props, State> {
             Step 5: Connect to EEG Stream
             {this.renderEEGConnector()}
           </Grid.Column>
-        </Grid.Row>
 
-        <Grid.Row columns={1}>
-          <Grid.Column>
-            {electrodesChosen && (
+          <Grid.Column className={styles.submitButton}>
+            {electrodesChosen.length !== 0 && (
               <Button secondary>
                 <Link
                   to={{
@@ -795,7 +793,22 @@ export default class Home extends Component<Props, State> {
                 </Link>
               </Button>
             )}
-            {!electrodesChosen && (
+          </Grid.Column>
+        </Grid.Row>
+
+        <Grid.Row columns={1}>
+          <Grid.Column>
+            {!subjectId && (
+              <h3 className={styles.electrodeWarning}>
+                Please enter a subject ID to continue.
+              </h3>
+            )}
+            {!experimenterId && (
+              <h3 className={styles.electrodeWarning}>
+                Please enter an experimenter ID to continue.
+              </h3>
+            )}
+            {electrodesChosen.length === 0 && (
               <h3 className={styles.electrodeWarning}>
                 Please select at least one electrode to continue.
               </h3>
