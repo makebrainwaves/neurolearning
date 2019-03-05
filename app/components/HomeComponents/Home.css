@@ -25,4 +25,10 @@ body {
 
 .electrodeWarning {
   color: red;
+  margin-top: 0px;
+  margin-bottom: 0px !important;
+}
+
+.submitButton {
+  padding-top: 18px !important;
 }

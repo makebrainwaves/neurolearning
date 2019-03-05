@@ -16,6 +16,7 @@ import {
   computeAlpha,
   computeThetaBeta
 } from '../../utils/eeg';
+
 /*
 import {
   createRawEEGWriteStream,
@@ -34,12 +35,16 @@ import {
 interface State {
   subjectId: string;
   firstVideo: string;
+  firstVideoName: string;
   firstVideoType: string;
   secondVideo: string;
+  secondVideoName: string;
   secondVideoType: string;
   thirdVideo: string;
+  thirdVideoName: string;
   thirdVideoType: string;
   fourthVideo: string;
+  fourthVideoName: string;
   fourthVideoType: string;
   isRunning: boolean;
   question1AlreadyShown: boolean;
@@ -80,6 +85,9 @@ const gasVideo =
   'http://localhost:1212/dist/8eaa1fc371098f3407941ac9ef7b99b2.mp4';
 const photosynthVideo =
   'http://localhost:1212/dist/adf2b55277c0e5538ff5ba60a1f4a756.mp4';
+
+const time = new Date().getTime();
+const date = new Date(time).toString();
 
 export default class VideoSet extends Component<Props, State> {
   props: Props;
@@ -952,18 +960,67 @@ export default class VideoSet extends Component<Props, State> {
     const { state } = location;
     const {
       subjectId,
+      experimenterId,
       firstVideo,
+      firstVideoName,
       firstVideoType,
       secondVideo,
+      secondVideoName,
       secondVideoType,
       thirdVideo,
+      thirdVideoName,
       thirdVideoType,
       fourthVideo,
-      fourthVideoType
+      fourthVideoName,
+      fourthVideoType,
+      classifierType,
+      electrodesChosen
     } = state;
 
     const answersCsv = this.getAnswerSet();
     const classifierCsv = this.getClassifierCsv();
+
+    const electrodes = electrodesChosen;
+
+    const subjectCsvData = [
+      {
+        DayTime: date,
+        SubjectID: subjectId,
+        ExperimenterID: experimenterId,
+        SequenceNumber: '1',
+        VideoName: firstVideoName,
+        ExperimentType: firstVideoType,
+        Classifier: classifierType,
+        Electrodes: electrodes.toString()
+      },
+      {
+        DayTime: date,
+        SubjectID: subjectId,
+        ExperimenterID: experimenterId,
+        SequenceNumber: '2',
+        VideoName: secondVideoName,
+        ExperimentType: secondVideoType,
+        Classifier: classifierType
+      },
+      {
+        DayTime: date,
+        SubjectID: subjectId,
+        ExperimenterID: experimenterId,
+        SequenceNumber: '3',
+        VideoName: thirdVideoName,
+        ExperimentType: thirdVideoType,
+        Classifier: classifierType
+      },
+      {
+        DayTime: date,
+        SubjectID: subjectId,
+        ExperimenterID: experimenterId,
+        SequenceNumber: '4',
+        VideoName: fourthVideoName,
+        ExperimentType: fourthVideoType,
+        Classifier: classifierType
+      }
+    ];
 
     return (
       <div className={styles.videoContainer}>
@@ -988,26 +1045,19 @@ export default class VideoSet extends Component<Props, State> {
           >
             <track kind="captions" />
           </video>
-          <div className={styles.btnGroup}>
-            <Button
-              className={styles.btn}
-              onClick={() => this.playVideo()}
-              data-tclass="btn"
-              type="button"
-            >
-              Play
-            </Button>
-            <Button
-              className={styles.btn}
-              onClick={this.pauseVideo}
-              data-tclass="btn"
-              type="button"
-            >
-              Pause
-            </Button>
-          </div>
         </div>
-        <Button>
+        <Button secondary>
+          <CSVLink
+            data={subjectCsvData}
+            filename={this.getCsvFileName(
+              'subjectInfo',
+              this.props.location.state.subjectId
+            )}
+          >
+            Download Subject Info
+          </CSVLink>
+        </Button>
+        <Button secondary>
           <CSVLink
             data={answersCsv}
             filename={this.getCsvFileName(
@@ -1018,7 +1068,7 @@ export default class VideoSet extends Component<Props, State> {
             Download Subject Answers
           </CSVLink>
         </Button>
-        <Button>
+        <Button secondary>
           <CSVLink
             data={classifierCsv}
             filename={this.getCsvFileName(

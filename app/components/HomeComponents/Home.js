@@ -290,46 +290,6 @@ export default class Home extends Component<Props, State> {
 
     const electrodesChosen = this.electrodesChosen();
 
-    const subjectCsvData = [
-      {
-        DayTime: date,
-        SubjectID: subjectId,
-        ExperimenterID: experimenterId,
-        SequenceNumber: '1',
-        VideoName: firstVideoName,
-        ExperimentType: firstVideoType,
-        Classifier: classifierType,
-        Electrodes: electrodesChosen.toString()
-      },
-      {
-        DayTime: date,
-        SubjectID: subjectId,
-        ExperimenterID: experimenterId,
-        SequenceNumber: '2',
-        VideoName: secondVideoName,
-        ExperimentType: secondVideoType,
-        Classifier: classifierType
-      },
-      {
-        DayTime: date,
-        SubjectID: subjectId,
-        ExperimenterID: experimenterId,
-        SequenceNumber: '3',
-        VideoName: thirdVideoName,
-        ExperimentType: thirdVideoType,
-        Classifier: classifierType
-      },
-      {
-        DayTime: date,
-        SubjectID: subjectId,
-        ExperimenterID: experimenterId,
-        SequenceNumber: '4',
-        VideoName: fourthVideoName,
-        ExperimentType: fourthVideoType,
-        Classifier: classifierType
-      }
-    ];
-
     return (
       <Grid divided="vertically">
         <Grid.Row columns={1} className={styles.title}>
@@ -802,33 +762,27 @@ export default class Home extends Component<Props, State> {
             {this.renderEEGConnector()}
           </Grid.Column>
 
-          <Grid.Column>
-            Step 6: D/L subject info
-            <Button secondary>
-              <CSVLink data={subjectCsvData} filename={subjectId}>
-                Download Subject Info
-              </CSVLink>
-            </Button>
-          </Grid.Column>
-        </Grid.Row>
-
-        <Grid.Row columns={1}>
-          <Grid.Column>
-            {electrodesChosen && (
+          <Grid.Column className={styles.submitButton}>
+            {electrodesChosen.length !== 0 && (
               <Button secondary>
                 <Link
                   to={{
                     pathname: routes.VIDEOSET,
                     state: {
                       firstVideo,
+                      firstVideoName,
                       firstVideoType,
                       secondVideo,
+                      secondVideoName,
                       secondVideoType,
                       thirdVideo,
+                      thirdVideoName,
                       thirdVideoType,
                       fourthVideo,
+                      fourthVideoName,
                       fourthVideoType,
                       subjectId,
+                      experimenterId,
                       rawEEGObservable,
                       classifierType,
                       electrodesChosen
@@ -839,7 +793,22 @@ export default class Home extends Component<Props, State> {
                 </Link>
               </Button>
             )}
-            {!electrodesChosen && (
+          </Grid.Column>
+        </Grid.Row>
+
+        <Grid.Row columns={1}>
+          <Grid.Column>
+            {!subjectId && (
+              <h3 className={styles.electrodeWarning}>
+                Please enter a subject ID to continue.
+              </h3>
+            )}
+            {!experimenterId && (
+              <h3 className={styles.electrodeWarning}>
+                Please enter an experimenter ID to continue.
+              </h3>
+            )}
+            {electrodesChosen.length === 0 && (
               <h3 className={styles.electrodeWarning}>
                 Please select at least one electrode to continue.
               </h3>
