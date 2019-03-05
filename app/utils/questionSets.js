@@ -76,7 +76,7 @@ export const getRandomControlQuestionSet = video => {
   const arr = [];
   const newQuestionSet = [];
   // find random values between 1 and videoQuestions.length
-  while (arr.length < Math.floor((videoQuestions.length * 2) / 3)) {
+  while (arr.length < Math.ceil((videoQuestions.length * 1.5) / 3)) {
     const r = Math.floor(Math.random() * videoQuestions.length) + 1;
     if (arr.indexOf(r) === -1) arr.push(r);
   }
