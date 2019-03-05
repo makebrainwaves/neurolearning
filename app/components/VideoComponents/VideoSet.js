@@ -1045,24 +1045,6 @@ export default class VideoSet extends Component<Props, State> {
           >
             <track kind="captions" />
           </video>
-          <div className={styles.btnGroup}>
-            <Button
-              className={styles.btn}
-              onClick={() => this.playVideo()}
-              data-tclass="btn"
-              type="button"
-            >
-              Play
-            </Button>
-            <Button
-              className={styles.btn}
-              onClick={this.pauseVideo}
-              data-tclass="btn"
-              type="button"
-            >
-              Pause
-            </Button>
-          </div>
         </div>
         <Button secondary>
           <CSVLink
