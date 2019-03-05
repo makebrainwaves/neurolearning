@@ -1075,7 +1075,7 @@ export default class VideoSet extends Component<Props, State> {
             Download Subject Info
           </CSVLink>
         </Button>
-        <Button>
+        <Button secondary>
           <CSVLink
             data={answersCsv}
             filename={this.getCsvFileName(
@@ -1086,7 +1086,7 @@ export default class VideoSet extends Component<Props, State> {
             Download Subject Answers
           </CSVLink>
         </Button>
-        <Button>
+        <Button secondary>
           <CSVLink
             data={classifierCsv}
             filename={this.getCsvFileName(
