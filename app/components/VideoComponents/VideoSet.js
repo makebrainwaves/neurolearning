@@ -16,6 +16,7 @@ import {
   computeAlpha,
   computeThetaBeta
 } from '../../utils/eeg';
+
 import {
   createRawEEGWriteStream,
   writeEEGData,
@@ -32,12 +33,16 @@ import {
 interface State {
   subjectId: string;
   firstVideo: string;
+  firstVideoName: string;
   firstVideoType: string;
   secondVideo: string;
+  secondVideoName: string;
   secondVideoType: string;
   thirdVideo: string;
+  thirdVideoName: string;
   thirdVideoType: string;
   fourthVideo: string;
+  fourthVideoName: string;
   fourthVideoType: string;
   isRunning: boolean;
   question1AlreadyShown: boolean;
@@ -75,6 +80,9 @@ const gasVideo =
   'http://localhost:1212/dist/aaa7c3c877bf842df980088c9b239dce.mp4';
 const photosynthVideo =
   'http://localhost:1212/dist/adf2b55277c0e5538ff5ba60a1f4a756.mp4';
+
+const time = new Date().getTime();
+const date = new Date(time).toString();
 
 export default class VideoSet extends Component<Props, State> {
   props: Props;
@@ -886,18 +894,67 @@ export default class VideoSet extends Component<Props, State> {
     const { state } = location;
     const {
       subjectId,
+      experimenterId,
       firstVideo,
+      firstVideoName,
       firstVideoType,
       secondVideo,
+      secondVideoName,
       secondVideoType,
       thirdVideo,
+      thirdVideoName,
       thirdVideoType,
       fourthVideo,
-      fourthVideoType
+      fourthVideoName,
+      fourthVideoType,
+      classifierType,
+      electrodesChosen
     } = state;
 
     const answersCsv = this.getAnswerSet();
     const classifierCsv = this.getClassifierCsv();
+
+    const electrodes = electrodesChosen;
+
+    const subjectCsvData = [
+      {
+        DayTime: date,
+        SubjectID: subjectId,
+        ExperimenterID: experimenterId,
+        SequenceNumber: '1',
+        VideoName: firstVideoName,
+        ExperimentType: firstVideoType,
+        Classifier: classifierType,
+        Electrodes: electrodes.toString()
+      },
+      {
+        DayTime: date,
+        SubjectID: subjectId,
+        ExperimenterID: experimenterId,
+        SequenceNumber: '2',
+        VideoName: secondVideoName,
+        ExperimentType: secondVideoType,
+        Classifier: classifierType
+      },
+      {
+        DayTime: date,
+        SubjectID: subjectId,
+        ExperimenterID: experimenterId,
+        SequenceNumber: '3',
+        VideoName: thirdVideoName,
+        ExperimentType: thirdVideoType,
+        Classifier: classifierType
+      },
+      {
+        DayTime: date,
+        SubjectID: subjectId,
+        ExperimenterID: experimenterId,
+        SequenceNumber: '4',
+        VideoName: fourthVideoName,
+        ExperimentType: fourthVideoType,
+        Classifier: classifierType
+      }
+    ];
 
     return (
       <div className={styles.videoContainer}>
@@ -941,12 +998,17 @@ export default class VideoSet extends Component<Props, State> {
             </Button>
           </div>
         </div>
-        <Button>
+        <Button secondary>
+          <CSVLink data={subjectCsvData} filename={subjectId}>
+            Download Subject Info
+          </CSVLink>
+        </Button>
+        <Button secondary>
           <CSVLink data={answersCsv} filename="answers.csv">
             Download Subject Answers
           </CSVLink>
         </Button>
-        <Button>
+        <Button secondary>
           <CSVLink data={classifierCsv} filename="classifier.csv">
             Download Classifier CSV
           </CSVLink>

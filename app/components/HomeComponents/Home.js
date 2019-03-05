@@ -25,7 +25,6 @@ import videoSrc1 from '../Biomass.mp4';
 import videoSrc2 from '../Fuel.mp4';
 import videoSrc3 from '../Combustion_new.mp4';
 import videoSrc4 from '../Photosynth.mp4';
-import { createWorkspaceDir, writeExperimentCSV } from '../../utils/write';
 
 type Props = {};
 
@@ -290,46 +289,6 @@ export default class Home extends Component<Props, State> {
     ];
 
     const electrodesChosen = this.electrodesChosen();
-
-    const subjectCsvData = [
-      {
-        DayTime: date,
-        SubjectID: subjectId,
-        ExperimenterID: experimenterId,
-        SequenceNumber: '1',
-        VideoName: firstVideoName,
-        ExperimentType: firstVideoType,
-        Classifier: classifierType,
-        Electrodes: electrodesChosen.toString()
-      },
-      {
-        DayTime: date,
-        SubjectID: subjectId,
-        ExperimenterID: experimenterId,
-        SequenceNumber: '2',
-        VideoName: secondVideoName,
-        ExperimentType: secondVideoType,
-        Classifier: classifierType
-      },
-      {
-        DayTime: date,
-        SubjectID: subjectId,
-        ExperimenterID: experimenterId,
-        SequenceNumber: '3',
-        VideoName: thirdVideoName,
-        ExperimentType: thirdVideoType,
-        Classifier: classifierType
-      },
-      {
-        DayTime: date,
-        SubjectID: subjectId,
-        ExperimenterID: experimenterId,
-        SequenceNumber: '4',
-        VideoName: fourthVideoName,
-        ExperimentType: fourthVideoType,
-        Classifier: classifierType
-      }
-    ];
 
     return (
       <Grid divided="vertically">
@@ -802,15 +761,6 @@ export default class Home extends Component<Props, State> {
             Step 5: Connect to EEG Stream
             {this.renderEEGConnector()}
           </Grid.Column>
-
-          <Grid.Column>
-            Step 6: D/L subject info
-            <Button secondary>
-              <CSVLink data={subjectCsvData} filename={subjectId}>
-                Download Subject Info
-              </CSVLink>
-            </Button>
-          </Grid.Column>
         </Grid.Row>
 
         <Grid.Row columns={1}>
@@ -822,14 +772,19 @@ export default class Home extends Component<Props, State> {
                     pathname: routes.VIDEOSET,
                     state: {
                       firstVideo,
+                      firstVideoName,
                       firstVideoType,
                       secondVideo,
+                      secondVideoName,
                       secondVideoType,
                       thirdVideo,
+                      thirdVideoName,
                       thirdVideoType,
                       fourthVideo,
+                      fourthVideoName,
                       fourthVideoType,
                       subjectId,
+                      experimenterId,
                       rawEEGObservable,
                       classifierType,
                       electrodesChosen
