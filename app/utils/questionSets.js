@@ -5,7 +5,7 @@ const biomassVideo =
 const fuelVideo =
   'http://localhost:1212/dist/bcc000d9e3048f485822cc246c74a0e5.mp4';
 const gasVideo =
-  'http://localhost:1212/dist/aaa7c3c877bf842df980088c9b239dce.mp4';
+  'http://localhost:1212/dist/8eaa1fc371098f3407941ac9ef7b99b2.mp4';
 const photosynthVideo =
   'http://localhost:1212/dist/adf2b55277c0e5538ff5ba60a1f4a756.mp4';
 
@@ -76,7 +76,7 @@ export const getRandomControlQuestionSet = video => {
   const arr = [];
   const newQuestionSet = [];
   // find random values between 1 and videoQuestions.length
-  while (arr.length < Math.floor((videoQuestions.length * 2) / 3)) {
+  while (arr.length < Math.ceil((videoQuestions.length * 1.5) / 3)) {
     const r = Math.floor(Math.random() * videoQuestions.length) + 1;
     if (arr.indexOf(r) === -1) arr.push(r);
   }

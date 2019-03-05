@@ -31,6 +31,7 @@
     "no-undef": "off",
     "no-unneeded-ternary": "off",
     "no-unused-vars": "off",
+    "no-useless-escape": "off",
     "promise/param-names": "error",
     "promise/always-return": "error",
     "promise/catch-or-return": "error",

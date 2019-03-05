@@ -1,10 +1,11 @@
 // @flow
-/* eslint class-methods-use-this: ["error", { "exceptMethods": ["getQuestionSet"] }] */
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["getQuestionSet", "getCsvFileName"] }] */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Modal } from 'semantic-ui-react';
 import { CSVLink } from 'react-csv';
 import { Subscription } from 'rxjs';
+import { WriteStream } from 'fs';
 import styles from './VideoSet.css';
 import routes from '../../constants/routes.json';
 import * as data from '../../questions/questions.json';
@@ -16,6 +17,14 @@ import {
   computeThetaBeta
 } from '../../utils/eeg';
 
+/*
+import {
+  createRawEEGWriteStream,
+  writeEEGData,
+  writeHeader
+} from '../../utils/write';
+*/
+
 import {
   getQuestionSet,
   getRandomQuestionSet,
@@ -26,25 +35,36 @@ import {
 interface State {
   subjectId: string;
   firstVideo: string;
+  firstVideoName: string;
   firstVideoType: string;
   secondVideo: string;
+  secondVideoName: string;
   secondVideoType: string;
   thirdVideo: string;
+  thirdVideoName: string;
   thirdVideoType: string;
   fourthVideo: string;
+  fourthVideoName: string;
   fourthVideoType: string;
   isRunning: boolean;
   question1AlreadyShown: boolean;
   question2AlreadyShown: boolean;
   questionNumber: string;
   questionText: string;
+  firstOption: string;
+  secondOption: string;
+  thirdOption: string;
   obscureButton: boolean;
   allFourControlVideos: boolean;
   firstExpQuestionSetLength: number;
   secondExpQuestionSetLength: number;
   thirdExpQuestionSetLength: number;
-  classifierCsv: array;
+  classifierCsv: Array<any>;
   addedToCsv: boolean;
+  decision: boolean;
+  score: number;
+  electrodesChosen: string[];
+  rawEEGWriteStream: WriteStream | null;
 }
 
 const rollBackTime = 5;
@@ -62,9 +82,12 @@ const biomassVideo =
 const fuelVideo =
   'http://localhost:1212/dist/bcc000d9e3048f485822cc246c74a0e5.mp4';
 const gasVideo =
-  'http://localhost:1212/dist/aaa7c3c877bf842df980088c9b239dce.mp4';
+  'http://localhost:1212/dist/8eaa1fc371098f3407941ac9ef7b99b2.mp4';
 const photosynthVideo =
   'http://localhost:1212/dist/adf2b55277c0e5538ff5ba60a1f4a756.mp4';
+
+const time = new Date().getTime();
+const date = new Date(time).toString();
 
 export default class VideoSet extends Component<Props, State> {
   props: Props;
@@ -81,11 +104,18 @@ export default class VideoSet extends Component<Props, State> {
       question1AlreadyShown: false,
       question2AlreadyShown: false,
       biomassSequenceNumber: 1,
+      biomassVidStartTimeTOD: 0,
       fuelSequenceNumber: 2,
+      fuelVidStartTimeTOD: 0,
       gasSequenceNumber: 3,
+      gasVidStartTimeTOD: 0,
       photosynthSequenceNumber: 4,
+      photosynthVidStartTimeTOD: 0,
       questionNumber: '',
       questionText: '',
+      firstOption: '',
+      secondOption: '',
+      thirdOption: '',
       answers: answersArray,
       updatedAnswers: updatedAnswersArray,
       askQuestion: false,
@@ -95,7 +125,10 @@ export default class VideoSet extends Component<Props, State> {
       secondExpQuestionSetLength: 0,
       thirdExpQuestionSetLength: 0,
       classifierCsv: [],
-      addedToCsv: false
+      addedToCsv: false,
+      decision: false,
+      score: 0,
+      rawEEGWriteStream: null
     };
     // These are just so that we can unsubscribe from the observables
     this.rawEEGSubscription = null;
@@ -145,6 +178,7 @@ export default class VideoSet extends Component<Props, State> {
     if (this.props.location.state.firstVideoType === 'experimental') {
       questionSetTemp = getQuestionSet(this.state.currentVideo);
     }
+
     this.setState({
       questionSet: questionSetTemp
     });
@@ -168,7 +202,31 @@ export default class VideoSet extends Component<Props, State> {
     const { classifierType, rawEEGObservable } = this.props.location.state;
     const classifierPipe =
       classifierType === 'alpha' ? computeAlpha : computeThetaBeta;
-    // start recording raw EEG
+
+    const workspaceDir = this.props.location.state.subjectId;
+
+    /*
+    const rawEEGWriteStream = createRawEEGWriteStream(
+      workspaceDir,
+      this.getVideoName(this.state.currentVideo)
+    );
+
+    if (rawEEGWriteStream) {
+      writeHeader(
+        rawEEGWriteStream,
+        this.props.location.state.electrodesChosen
+      );
+      rawEEGObservable.subscribe(
+        rawData => writeEEGData(rawEEGWriteStream, rawData),
+        // These callbacks should force the write stream to close when the raw eeg stream is either completed or errors out
+        complete => rawEEGWriteStream.close(),
+        error => rawEEGWriteStream.close()
+      );
+
+      this.setState({ rawEEGWriteStream });
+      
+    }
+    */
 
     // create baseline observable
     const baselineObs = createBaselineObservable(rawEEGObservable, {
@@ -220,11 +278,11 @@ export default class VideoSet extends Component<Props, State> {
   closeModal = () => {
     const { questionNumber } = this.state;
     const answers = this.state.answers;
-    const time = new Date().getTime();
+    const closeTime = Date.now();
     const qNumberForSubmit = `q${questionNumber}`;
 
     answers.forEach(answer => {
-      answer[this.state.videoName][qNumberForSubmit].submitTimeTOD = time;
+      answer[this.state.videoName][qNumberForSubmit].submitTimeTOD = closeTime;
     });
 
     this.setState({ answers });
@@ -251,6 +309,7 @@ export default class VideoSet extends Component<Props, State> {
       this.handleStartEEG();
     }
     this.openFullscreen();
+
     const videoRef = this.getVideoRef;
 
     // Show loading animation.
@@ -261,17 +320,47 @@ export default class VideoSet extends Component<Props, State> {
         .then(
           // Automatic playback started!
           // Show playing UI.
-          videoRef.play()
+          videoRef.play(),
+          this.setVideoStartTime()
         )
         .catch(error => {
           // Auto-play was prevented
           // Show paused UI.
           // console.log('vid err');
           videoRef.play();
+          this.setVideoStartTime();
         });
     }
 
     this.setState({ isRunning: true });
+  };
+
+  setVideoStartTime = () => {
+    // add start time to answers csv
+    const startTime = Date.now();
+    const currentVideoName = this.getVideoName(this.state.currentVideo);
+
+    if (
+      currentVideoName === 'biomass' &&
+      this.state.biomassVidStartTimeTOD === 0
+    ) {
+      this.setState({ biomassVidStartTimeTOD: startTime });
+    } else if (
+      currentVideoName === 'fuel' &&
+      this.state.fuelVidStartTimeTOD === 0
+    ) {
+      this.setState({ fuelVidStartTimeTOD: startTime });
+    } else if (
+      currentVideoName === 'gas' &&
+      this.state.gasVidStartTimeTOD === 0
+    ) {
+      this.setState({ gasVidStartTimeTOD: startTime });
+    } else if (
+      currentVideoName === 'photosynth' &&
+      this.state.photosynthVidStartTimeTOD === 0
+    ) {
+      this.setState({ photosynthVidStartTimeTOD: startTime });
+    }
   };
 
   pauseVideo = () => {
@@ -284,7 +373,7 @@ export default class VideoSet extends Component<Props, State> {
 
   setModalTimes = (questionNumber, vidCurrTime) => {
     const answers = this.state.answers;
-    const time = new Date().getTime();
+    const time = Date.now();
     const qNumberForModal = `q${questionNumber}`;
 
     answers.forEach(answer => {
@@ -324,6 +413,9 @@ export default class VideoSet extends Component<Props, State> {
         this.setState({
           questionNumber: videoQuestions[i].key,
           questionText: videoQuestions[i].value.question,
+          firstOption: videoQuestions[i].value.option1,
+          secondOption: videoQuestions[i].value.option2,
+          thirdOption: videoQuestions[i].value.option3,
           modalIsOpen: true
         });
         this.setModalTimes(videoQuestions[i].key, vidCurrTime);
@@ -445,7 +537,9 @@ export default class VideoSet extends Component<Props, State> {
 
   moveAlongVideoSequence() {
     const videoQuestions = this.state.questionSet;
-
+    if (this.state.rawEEGWriteStream) {
+      this.state.rawEEGWriteStream.close();
+    }
     for (let i = 0; i < videoQuestions.length; i++) {
       const questionAnswered = `questionAnswered${i + 1}`;
       const askQuestion = `askQuestion${i + 1}`;
@@ -721,6 +815,7 @@ export default class VideoSet extends Component<Props, State> {
         const questionNum = `q${questVal + 1}`;
         newAnswers[key].Subject = this.props.location.state.subjectId;
         newAnswers[key].VideoName = 'biomass';
+        newAnswers[key].VidStartTimeTOD = this.state.biomassVidStartTimeTOD;
         newAnswers[key].ExperimentType =
           answersTemp[0].biomass[questionNum].experimentType;
         newAnswers[key].SequenceNo = this.state.biomassSequenceNumber;
@@ -739,6 +834,7 @@ export default class VideoSet extends Component<Props, State> {
         const questionNum = `q${questVal - 20}`;
         newAnswers[key].Subject = this.props.location.state.subjectId;
         newAnswers[key].VideoName = 'fuel';
+        newAnswers[key].VidStartTimeTOD = this.state.fuelVidStartTimeTOD;
         newAnswers[key].ExperimentType =
           answersTemp[0].fuel[questionNum].experimentType;
         newAnswers[key].SequenceNo = this.state.fuelSequenceNumber;
@@ -757,6 +853,7 @@ export default class VideoSet extends Component<Props, State> {
         const questionNum = `q${questVal - 43}`;
         newAnswers[key].Subject = this.props.location.state.subjectId;
         newAnswers[key].VideoName = 'gas';
+        newAnswers[key].VidStartTimeTOD = this.state.gasVidStartTimeTOD;
         newAnswers[key].ExperimentType =
           answersTemp[0].gas[questionNum].experimentType;
         newAnswers[key].SequenceNo = this.state.gasSequenceNumber;
@@ -774,6 +871,7 @@ export default class VideoSet extends Component<Props, State> {
         const questionNum = `q${questVal - 69}`;
         newAnswers[key].Subject = this.props.location.state.subjectId;
         newAnswers[key].VideoName = 'photosynth';
+        newAnswers[key].VidStartTimeTOD = this.state.photosynthVidStartTimeTOD;
         newAnswers[key].ExperimentType =
           answersTemp[0].photosynth[questionNum].experimentType;
         newAnswers[key].SequenceNo = this.state.photosynthSequenceNumber;
@@ -796,7 +894,7 @@ export default class VideoSet extends Component<Props, State> {
   addToClassifierCSV(value, vidCurrTime) {
     const videoQuestions = this.state.questionSet;
     const classifierCsvTemp = this.state.classifierCsv;
-    const time = new Date().getTime();
+    const time = Date.now();
 
     const classifierEntry = {
       Subject: this.props.location.state.subjectId,
@@ -824,6 +922,11 @@ export default class VideoSet extends Component<Props, State> {
     }
   }
 
+  getCsvFileName(fileType, subjectId) {
+    const csvFileName = `${fileType}_${subjectId}`;
+    return csvFileName;
+  }
+
   getClassifierCsv() {
     const newAnswers = this.state.classifierCsv;
     return newAnswers;
@@ -836,12 +939,19 @@ export default class VideoSet extends Component<Props, State> {
       answers,
       questionNumber,
       questionText,
+      firstOption,
+      secondOption,
+      thirdOption,
       currentVideo,
       videoName,
       biomassSequenceNumber,
+      biomassVidStartTimeTOD,
       fuelSequenceNumber,
+      fuelVidStartTimeTOD,
       gasSequenceNumber,
+      gasVidStartTimeTOD,
       photosynthSequenceNumber,
+      photosynthVidStartTimeTOD,
       updatedAnswers,
       decision,
       score
@@ -850,18 +960,67 @@ export default class VideoSet extends Component<Props, State> {
     const { state } = location;
     const {
       subjectId,
+      experimenterId,
       firstVideo,
+      firstVideoName,
       firstVideoType,
       secondVideo,
+      secondVideoName,
       secondVideoType,
       thirdVideo,
+      thirdVideoName,
       thirdVideoType,
       fourthVideo,
-      fourthVideoType
+      fourthVideoName,
+      fourthVideoType,
+      classifierType,
+      electrodesChosen
     } = state;
 
     const answersCsv = this.getAnswerSet();
     const classifierCsv = this.getClassifierCsv();
+
+    const electrodes = electrodesChosen;
+
+    const subjectCsvData = [
+      {
+        DayTime: date,
+        SubjectID: subjectId,
+        ExperimenterID: experimenterId,
+        SequenceNumber: '1',
+        VideoName: firstVideoName,
+        ExperimentType: firstVideoType,
+        Classifier: classifierType,
+        Electrodes: electrodes.toString()
+      },
+      {
+        DayTime: date,
+        SubjectID: subjectId,
+        ExperimenterID: experimenterId,
+        SequenceNumber: '2',
+        VideoName: secondVideoName,
+        ExperimentType: secondVideoType,
+        Classifier: classifierType
+      },
+      {
+        DayTime: date,
+        SubjectID: subjectId,
+        ExperimenterID: experimenterId,
+        SequenceNumber: '3',
+        VideoName: thirdVideoName,
+        ExperimentType: thirdVideoType,
+        Classifier: classifierType
+      },
+      {
+        DayTime: date,
+        SubjectID: subjectId,
+        ExperimenterID: experimenterId,
+        SequenceNumber: '4',
+        VideoName: fourthVideoName,
+        ExperimentType: fourthVideoType,
+        Classifier: classifierType
+      }
+    ];
 
     return (
       <div className={styles.videoContainer}>
@@ -886,32 +1045,37 @@ export default class VideoSet extends Component<Props, State> {
           >
             <track kind="captions" />
           </video>
-          <div className={styles.btnGroup}>
-            <Button
-              className={styles.btn}
-              onClick={() => this.playVideo()}
-              data-tclass="btn"
-              type="button"
-            >
-              Play
-            </Button>
-            <Button
-              className={styles.btn}
-              onClick={this.pauseVideo}
-              data-tclass="btn"
-              type="button"
-            >
-              Pause
-            </Button>
-          </div>
         </div>
-        <Button>
-          <CSVLink data={answersCsv} filename="answers.csv">
+        <Button secondary>
+          <CSVLink
+            data={subjectCsvData}
+            filename={this.getCsvFileName(
+              'subjectInfo',
+              this.props.location.state.subjectId
+            )}
+          >
+            Download Subject Info
+          </CSVLink>
+        </Button>
+        <Button secondary>
+          <CSVLink
+            data={answersCsv}
+            filename={this.getCsvFileName(
+              'answers',
+              this.props.location.state.subjectId
+            )}
+          >
             Download Subject Answers
           </CSVLink>
         </Button>
-        <Button>
-          <CSVLink data={classifierCsv} filename="classifier.csv">
+        <Button secondary>
+          <CSVLink
+            data={classifierCsv}
+            filename={this.getCsvFileName(
+              'classifier',
+              this.props.location.state.subjectId
+            )}
+          >
             Download Classifier CSV
           </CSVLink>
         </Button>
@@ -1041,11 +1205,11 @@ export default class VideoSet extends Component<Props, State> {
                 </div>
                 <div className={styles.engagement}>
                   <div className="radio">
-                    <label htmlFor="True">
+                    <label htmlFor={this.state.firstOption}>
                       <input
-                        name="True"
+                        name="option"
                         type="radio"
-                        value=" True"
+                        value="option1"
                         onChange={e =>
                           this.handleQuestion({ questionNumber }, e)
                         }
@@ -1054,11 +1218,11 @@ export default class VideoSet extends Component<Props, State> {
                     True
                   </div>
                   <div className="radio">
-                    <label htmlFor="2False">
+                    <label htmlFor={this.state.secondOption}>
                       <input
-                        name="False"
+                        name="option"
                         type="radio"
-                        value=" False"
+                        value="option2"
                         onChange={e =>
                           this.handleQuestion({ questionNumber }, e)
                         }
@@ -1067,11 +1231,11 @@ export default class VideoSet extends Component<Props, State> {
                     False
                   </div>
                   <div className="radio">
-                    <label htmlFor="DK">
+                    <label htmlFor={this.state.thirdOption}>
                       <input
-                        name="DK"
+                        name="option"
                         type="radio"
-                        value=" I don't know"
+                        value="option3"
                         onChange={e =>
                           this.handleQuestion({ questionNumber }, e)
                         }

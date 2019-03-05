@@ -156,7 +156,7 @@ module.exports = [
       name: 'Question 14:',
       period: 340, // '5:20-5:40' or 320-340
       question:
-        "True or false? Octane ratings are a measure of the fuel's tendency to explode in an uncontrolled manner.",
+        "Octane ratings are a measure of the fuel's tendency to explode in an uncontrolled manner.",
       option1: 'True',
       option2: 'False',
       option3: "I don't know"
