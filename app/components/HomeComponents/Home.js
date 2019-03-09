@@ -14,6 +14,7 @@ import {
   Checkbox,
   Header
 } from 'semantic-ui-react';
+import $ from 'jquery';
 import { CSVLink } from 'react-csv';
 import { isNil } from 'lodash';
 import { Observable } from 'rxjs';
@@ -93,6 +94,27 @@ const ELECTRODES = [
   { id: 31, value: 'PO3', checked: false }
 ];
 
+$(document).ready(() => {
+  $('#nomineeInfo').on('change', '.positionTypes', () => {
+    // Get the selected options of all positions
+    const allSelected = $('.positionTypes')
+      .map(function() {
+        return $(this).val();
+      })
+      .get();
+
+    // set all enabled
+    $('.positionTypes option').removeAttr('disabled');
+
+    // Disable selected options in other positions
+    $(".positionTypes option:not(:selected):not([value='0'])").each(function() {
+      if ($.inArray($(this).val(), allSelected) !== -1) {
+        $(this).attr('disabled', true);
+      }
+    });
+  });
+});
+
 export default class Home extends Component<Props, State> {
   props: Props;
   state: State;
@@ -108,10 +130,6 @@ export default class Home extends Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-
-    this.props = {
-      electrodesChosen: ''
-    };
 
     this.state = {
       subjectId: '',
@@ -170,11 +188,31 @@ export default class Home extends Component<Props, State> {
     return videoName;
   };
 
-  handleVideo(event: Object, data) {
-    this.setState({
-      [data.name.slice(0, -4)]: data.value,
-      [data.name]: this.getVideoName(data.value)
-    });
+  handleVideo(event: Object) {
+    if (event.target.value === '1') {
+      this.setState({
+        [event.target.id.slice(0, -4)]: videoSrc1, // thirdVideo = localhost...
+        [event.target.id]: 'biomass' // thirdVideoName = Gas
+      });
+    }
+    if (event.target.value === '2') {
+      this.setState({
+        [event.target.id.slice(0, -4)]: videoSrc2, // thirdVideo = localhost...
+        [event.target.id]: 'fuel' // thirdVideoName = Gas
+      });
+    }
+    if (event.target.value === '3') {
+      this.setState({
+        [event.target.id.slice(0, -4)]: videoSrc3, // thirdVideo = localhost...
+        [event.target.id]: 'gas' // thirdVideoName = Gas
+      });
+    }
+    if (event.target.value === '4') {
+      this.setState({
+        [event.target.id.slice(0, -4)]: videoSrc4, // thirdVideo = localhost...
+        [event.target.id]: 'photosynth' // thirdVideoName = Gas
+      });
+    }
   }
 
   handleExperimentType(event: Object, data) {
@@ -277,6 +315,7 @@ export default class Home extends Component<Props, State> {
     } = this.state;
 
     const videoOptions = [
+      { key: 'vid0', value: 0, text: 'Select Video' },
       { key: 'vid1', value: videoSrc1, text: 'Biomass' },
       { key: 'vid2', value: videoSrc2, text: 'Fuel' },
       { key: 'vid3', value: videoSrc3, text: 'Gas' },
@@ -302,97 +341,104 @@ export default class Home extends Component<Props, State> {
           <Grid.Column>
             <h3>Step 1: Choose a video sequence:</h3>
             <Grid columns={2}>
-              <Grid.Row>
-                <Grid.Column>
-                  1.
-                  <Dropdown
-                    placeholder="Select First Video"
-                    name="firstVideoName"
-                    onChange={this.handleVideo}
-                    selection
-                    options={videoOptions}
-                  />
-                </Grid.Column>
-                <Grid.Column>
-                  <Dropdown
-                    placeholder="Select Experiment Type"
-                    name="firstVideoType"
-                    value={firstVideoType}
-                    onChange={this.handleExperimentType}
-                    selection
-                    options={experimentOptions}
-                  />
-                </Grid.Column>
-              </Grid.Row>
+              <Grid.Column>
+                <div id="nomineeInfo">
+                  <div>
+                    1.
+                    <select
+                      className="ui selection dropdown positionTypes"
+                      onChange={this.handleVideo}
+                      id="firstVideoName"
+                    >
+                      <option value="0">Select First Video</option>
+                      <option value="1">Biomass</option>
+                      <option value="2">Fuel</option>
+                      <option value="3">Gas</option>
+                      <option value="4">Photosynth</option>
+                    </select>
+                  </div>
+                  <div>
+                    2.
+                    <select
+                      className="ui selection dropdown positionTypes"
+                      onChange={this.handleVideo}
+                      id="secondVideoName"
+                    >
+                      <option value="0">Select Second Video</option>
+                      <option value="1">Biomass</option>
+                      <option value="2">Fuel</option>
+                      <option value="3">Gas</option>
+                      <option value="4">Photosynth</option>
+                    </select>
+                  </div>
+                  <div>
+                    3.
+                    <select
+                      className="ui selection dropdown positionTypes"
+                      onChange={this.handleVideo}
+                      id="thirdVideoName"
+                    >
+                      <option value="0">Select Third Video</option>
+                      <option value="1">Biomass</option>
+                      <option value="2">Fuel</option>
+                      <option value="3">Gas</option>
+                      <option value="4">Photosynth</option>
+                    </select>
+                  </div>
+                  <div>
+                    4.
+                    <select
+                      className="ui selection dropdown positionTypes"
+                      onChange={this.handleVideo}
+                      id="fourthVideoName"
+                    >
+                      <option value="0">Select Fourth Video</option>
+                      <option value="1">Biomass</option>
+                      <option value="2">Fuel</option>
+                      <option value="3">Gas</option>
+                      <option value="4">Photosynth</option>
+                    </select>
+                  </div>
+                </div>
+              </Grid.Column>
 
-              <Grid.Row>
-                <Grid.Column>
-                  2.
-                  <Dropdown
-                    placeholder="Select Second Video"
-                    name="secondVideoName"
-                    onChange={this.handleVideo}
-                    selection
-                    options={videoOptions}
-                  />
-                </Grid.Column>
-                <Grid.Column>
-                  <Dropdown
-                    placeholder="Select Experiment Type"
-                    name="secondVideoType"
-                    value={secondVideoType}
-                    onChange={this.handleExperimentType}
-                    selection
-                    options={experimentOptions}
-                  />
-                </Grid.Column>
-              </Grid.Row>
+              <Grid.Column>
+                <Dropdown
+                  placeholder="Select Experiment Type"
+                  name="firstVideoType"
+                  value={firstVideoType}
+                  onChange={this.handleExperimentType}
+                  selection
+                  options={experimentOptions}
+                />
 
-              <Grid.Row>
-                <Grid.Column>
-                  3.
-                  <Dropdown
-                    placeholder="Select Third Video"
-                    name="thirdVideoName"
-                    onChange={this.handleVideo}
-                    selection
-                    options={videoOptions}
-                  />
-                </Grid.Column>
-                <Grid.Column>
-                  <Dropdown
-                    placeholder="Select Experiment Type"
-                    name="thirdVideoType"
-                    value={thirdVideoType}
-                    onChange={this.handleExperimentType}
-                    selection
-                    options={experimentOptions}
-                  />
-                </Grid.Column>
-              </Grid.Row>
+                <Dropdown
+                  placeholder="Select Experiment Type"
+                  name="secondVideoType"
+                  value={secondVideoType}
+                  onChange={this.handleExperimentType}
+                  selection
+                  options={experimentOptions}
+                />
 
-              <Grid.Row>
-                <Grid.Column>
-                  4.
-                  <Dropdown
-                    placeholder="Select Fourth Video"
-                    name="fourthVideoName"
-                    onChange={this.handleVideo}
-                    selection
-                    options={videoOptions}
-                  />
-                </Grid.Column>
-                <Grid.Column>
-                  <Dropdown
-                    placeholder="Select Experiment Type"
-                    name="fourthVideoType"
-                    value={fourthVideoType}
-                    onChange={this.handleExperimentType}
-                    selection
-                    options={experimentOptions}
-                  />
-                </Grid.Column>
-              </Grid.Row>
+                <Dropdown
+                  placeholder="Select Experiment Type"
+                  name="thirdVideoType"
+                  value={thirdVideoType}
+                  onChange={this.handleExperimentType}
+                  selection
+                  options={experimentOptions}
+                />
+
+                <Dropdown
+                  placeholder="Select Experiment Type"
+                  name="fourthVideoType"
+                  value={fourthVideoType}
+                  onChange={this.handleExperimentType}
+                  selection
+                  options={experimentOptions}
+                />
+              </Grid.Column>
             </Grid>
           </Grid.Column>
 
