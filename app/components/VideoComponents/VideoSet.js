@@ -54,7 +54,8 @@ interface State {
   firstOption: string;
   secondOption: string;
   thirdOption: string;
-  obscureButton: boolean;
+  answerClicked: boolean;
+  engagementClicked: boolean;
   allFourControlVideos: boolean;
   firstExpQuestionSetLength: number;
   secondExpQuestionSetLength: number;
@@ -119,7 +120,8 @@ export default class VideoSet extends Component<Props, State> {
       answers: answersArray,
       updatedAnswers: updatedAnswersArray,
       askQuestion: false,
-      obscureButton: true, // TODO: set this based on baseline data collection
+      answerClicked: false,
+      engagementClicked: false,
       allFourControlVideos: false,
       firstExpQuestionSetLength: 0,
       secondExpQuestionSetLength: 0,
@@ -289,7 +291,8 @@ export default class VideoSet extends Component<Props, State> {
 
     this.setState({
       modalIsOpen: false,
-      obscureButton: true
+      answerClicked: false,
+      engagementClicked: false
     });
 
     this.playVideo();
@@ -669,18 +672,6 @@ export default class VideoSet extends Component<Props, State> {
     this.setState({ finalModalIsOpen: true });
   };
 
-  handleEngagement(q, e) {
-    const answers = this.state.answers;
-    const qNumberForEngagement = `q${q.questionNumber}`;
-
-    answers.forEach(answer => {
-      answer[this.state.videoName][qNumberForEngagement].engagement =
-        e.target.value;
-    });
-
-    this.setState({ answers });
-  }
-
   getExperimentType() {
     const currentVideoName = this.getVideoName(this.state.currentVideo);
     let seqNo = '';
@@ -721,8 +712,23 @@ export default class VideoSet extends Component<Props, State> {
     return expType;
   }
 
+  handleEngagement(q, e) {
+    this.setState({ engagementClicked: true });
+
+    const answers = this.state.answers;
+    const qNumberForEngagement = `q${q.questionNumber}`;
+
+    answers.forEach(answer => {
+      answer[this.state.videoName][qNumberForEngagement].engagement =
+        e.target.value;
+    });
+
+    this.setState({ answers });
+  }
+
   handleQuestion(q, e) {
-    this.setState({ obscureButton: false });
+    this.setState({ answerClicked: true });
+
     const answers = this.state.answers;
     const questionNumber = `q${q.questionNumber}`;
     const videoQuestions = this.state.questionSet;
@@ -1244,11 +1250,12 @@ export default class VideoSet extends Component<Props, State> {
                     I don&apos;t know
                   </div>
                   <br />
-                  {!this.state.obscureButton && (
-                    <Button onClick={this.closeModal} type="submit">
-                      Submit
-                    </Button>
-                  )}
+                  {this.state.engagementClicked &&
+                    this.state.answerClicked && (
+                      <Button onClick={this.closeModal} type="submit">
+                        Submit
+                      </Button>
+                    )}
                 </div>
               </Modal.Description>
             </Modal.Content>
@@ -1266,8 +1273,7 @@ export default class VideoSet extends Component<Props, State> {
             <Modal.Content className={styles.content}>
               <Modal.Description>
                 <h4>
-                  Please click on the following link to take a survey, then
-                  click to continue:
+                  Please click the following link to complete a short survey:
                 </h4>
 
                 {currentVideo === biomassVideo && (
@@ -1323,6 +1329,11 @@ export default class VideoSet extends Component<Props, State> {
                 )}
 
                 <br />
+                <br />
+                <br />
+
+                <h4>Once you submit your response, press Continue:</h4>
+
                 <br />
                 <br />
 
