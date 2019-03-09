@@ -54,7 +54,8 @@ interface State {
   firstOption: string;
   secondOption: string;
   thirdOption: string;
-  obscureButton: boolean;
+  answerClicked: boolean;
+  engagementClicked: boolean;
   allFourControlVideos: boolean;
   firstExpQuestionSetLength: number;
   secondExpQuestionSetLength: number;
@@ -119,7 +120,6 @@ export default class VideoSet extends Component<Props, State> {
       answers: answersArray,
       updatedAnswers: updatedAnswersArray,
       askQuestion: false,
-      obscureButton: true, // TODO: set this based on baseline data collection
       answerClicked: false,
       engagementClicked: false,
       allFourControlVideos: false,
@@ -291,7 +291,6 @@ export default class VideoSet extends Component<Props, State> {
 
     this.setState({
       modalIsOpen: false,
-      obscureButton: true,
       answerClicked: false,
       engagementClicked: false
     });
@@ -713,17 +712,8 @@ export default class VideoSet extends Component<Props, State> {
     return expType;
   }
 
-  checkQuestionRequirement() {
-    console.log('this.state.answerClicked', this.state.answerClicked);
-    console.log('this.state.engagementClicked', this.state.engagementClicked);
-    if (this.state.answerClicked && this.state.engagementClicked) {
-      this.setState({ obscureButton: false });
-    }
-  }
-
   handleEngagement(q, e) {
     this.setState({ engagementClicked: true });
-    this.checkQuestionRequirement();
 
     const answers = this.state.answers;
     const qNumberForEngagement = `q${q.questionNumber}`;
@@ -734,17 +724,10 @@ export default class VideoSet extends Component<Props, State> {
     });
 
     this.setState({ answers });
-
-    console.log(
-      'this.state.obscureButton handleEngagement',
-      this.state.obscureButton
-    );
   }
 
   handleQuestion(q, e) {
-    // this.setState({ obscureButton: false });
     this.setState({ answerClicked: true });
-    this.checkQuestionRequirement();
 
     const answers = this.state.answers;
     const questionNumber = `q${q.questionNumber}`;
@@ -774,10 +757,7 @@ export default class VideoSet extends Component<Props, State> {
         });
       }
     }
-    console.log(
-      'this.state.obscureButton handleQuestion',
-      this.state.obscureButton
-    );
+
     console.log('AnswerSet', this.state.answers);
   }
 
@@ -1270,11 +1250,12 @@ export default class VideoSet extends Component<Props, State> {
                     I don&apos;t know
                   </div>
                   <br />
-                  {!this.state.obscureButton && (
-                    <Button onClick={this.closeModal} type="submit">
-                      Submit
-                    </Button>
-                  )}
+                  {this.state.engagementClicked &&
+                    this.state.answerClicked && (
+                      <Button onClick={this.closeModal} type="submit">
+                        Submit
+                      </Button>
+                    )}
                 </div>
               </Modal.Description>
             </Modal.Content>
