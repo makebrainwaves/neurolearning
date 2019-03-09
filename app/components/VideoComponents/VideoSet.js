@@ -120,6 +120,8 @@ export default class VideoSet extends Component<Props, State> {
       updatedAnswers: updatedAnswersArray,
       askQuestion: false,
       obscureButton: true, // TODO: set this based on baseline data collection
+      answerClicked: false,
+      engagementClicked: false,
       allFourControlVideos: false,
       firstExpQuestionSetLength: 0,
       secondExpQuestionSetLength: 0,
@@ -289,7 +291,9 @@ export default class VideoSet extends Component<Props, State> {
 
     this.setState({
       modalIsOpen: false,
-      obscureButton: true
+      obscureButton: true,
+      answerClicked: false,
+      engagementClicked: false
     });
 
     this.playVideo();
@@ -669,18 +673,6 @@ export default class VideoSet extends Component<Props, State> {
     this.setState({ finalModalIsOpen: true });
   };
 
-  handleEngagement(q, e) {
-    const answers = this.state.answers;
-    const qNumberForEngagement = `q${q.questionNumber}`;
-
-    answers.forEach(answer => {
-      answer[this.state.videoName][qNumberForEngagement].engagement =
-        e.target.value;
-    });
-
-    this.setState({ answers });
-  }
-
   getExperimentType() {
     const currentVideoName = this.getVideoName(this.state.currentVideo);
     let seqNo = '';
@@ -721,8 +713,39 @@ export default class VideoSet extends Component<Props, State> {
     return expType;
   }
 
+  checkQuestionRequirement() {
+    console.log('this.state.answerClicked', this.state.answerClicked);
+    console.log('this.state.engagementClicked', this.state.engagementClicked);
+    if (this.state.answerClicked && this.state.engagementClicked) {
+      this.setState({ obscureButton: false });
+    }
+  }
+
+  handleEngagement(q, e) {
+    this.setState({ engagementClicked: true });
+    this.checkQuestionRequirement();
+
+    const answers = this.state.answers;
+    const qNumberForEngagement = `q${q.questionNumber}`;
+
+    answers.forEach(answer => {
+      answer[this.state.videoName][qNumberForEngagement].engagement =
+        e.target.value;
+    });
+
+    this.setState({ answers });
+
+    console.log(
+      'this.state.obscureButton handleEngagement',
+      this.state.obscureButton
+    );
+  }
+
   handleQuestion(q, e) {
-    this.setState({ obscureButton: false });
+    // this.setState({ obscureButton: false });
+    this.setState({ answerClicked: true });
+    this.checkQuestionRequirement();
+
     const answers = this.state.answers;
     const questionNumber = `q${q.questionNumber}`;
     const videoQuestions = this.state.questionSet;
@@ -751,7 +774,10 @@ export default class VideoSet extends Component<Props, State> {
         });
       }
     }
-
+    console.log(
+      'this.state.obscureButton handleQuestion',
+      this.state.obscureButton
+    );
     console.log('AnswerSet', this.state.answers);
   }
 
