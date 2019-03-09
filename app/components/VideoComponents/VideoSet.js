@@ -150,7 +150,7 @@ export default class VideoSet extends Component<Props, State> {
   componentWillMount() {
     this.setState({
       currentVideo: this.props.location.state.firstVideo,
-      videoName: this.getVideoName(this.props.location.state.firstVideo),
+      videoName: this.props.location.state.firstVideoName,
       biomassSequenceNumber: this.getSequenceNumber('biomass'),
       fuelSequenceNumber: this.getSequenceNumber('fuel'),
       gasSequenceNumber: this.getSequenceNumber('gas'),
