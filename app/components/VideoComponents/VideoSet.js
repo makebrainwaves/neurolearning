@@ -1266,8 +1266,7 @@ export default class VideoSet extends Component<Props, State> {
             <Modal.Content className={styles.content}>
               <Modal.Description>
                 <h4>
-                  Please click on the following link to take a survey, then
-                  click to continue:
+                  Please click the following link to complete a short survey:
                 </h4>
 
                 {currentVideo === biomassVideo && (
@@ -1323,6 +1322,11 @@ export default class VideoSet extends Component<Props, State> {
                 )}
 
                 <br />
+                <br />
+                <br />
+
+                <h4>Once you submit your response, press Continue:</h4>
+
                 <br />
                 <br />
 
