@@ -1111,7 +1111,7 @@ export default class VideoSet extends Component<Props, State> {
                       <input
                         name="engagement"
                         type="radio"
-                        value="e1"
+                        value="1"
                         onChange={e =>
                           this.handleEngagement({ questionNumber }, e)
                         }
@@ -1125,7 +1125,7 @@ export default class VideoSet extends Component<Props, State> {
                       <input
                         name="engagement"
                         type="radio"
-                        value="e2"
+                        value="2"
                         onChange={e =>
                           this.handleEngagement({ questionNumber }, e)
                         }
@@ -1139,7 +1139,7 @@ export default class VideoSet extends Component<Props, State> {
                       <input
                         name="engagement"
                         type="radio"
-                        value="e3"
+                        value="3"
                         onChange={e =>
                           this.handleEngagement({ questionNumber }, e)
                         }
@@ -1153,7 +1153,7 @@ export default class VideoSet extends Component<Props, State> {
                       <input
                         name="engagement"
                         type="radio"
-                        value="e4"
+                        value="4"
                         onChange={e =>
                           this.handleEngagement({ questionNumber }, e)
                         }
@@ -1167,7 +1167,7 @@ export default class VideoSet extends Component<Props, State> {
                       <input
                         name="engagement"
                         type="radio"
-                        value="e5"
+                        value="5"
                         onChange={e =>
                           this.handleEngagement({ questionNumber }, e)
                         }
@@ -1181,7 +1181,7 @@ export default class VideoSet extends Component<Props, State> {
                       <input
                         name="engagement"
                         type="radio"
-                        value="e6"
+                        value="6"
                         onChange={e =>
                           this.handleEngagement({ questionNumber }, e)
                         }
@@ -1195,7 +1195,7 @@ export default class VideoSet extends Component<Props, State> {
                       <input
                         name="engagement"
                         type="radio"
-                        value="e7"
+                        value="7"
                         onChange={e =>
                           this.handleEngagement({ questionNumber }, e)
                         }
