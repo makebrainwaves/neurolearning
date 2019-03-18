@@ -50,6 +50,7 @@ interface State {
   electrodesChosen: string[];
 }
 
+const expTypeWidth = '40%';
 const time = new Date().getTime();
 const date = new Date(time).toString();
 
@@ -402,7 +403,7 @@ export default class Home extends Component<Props, State> {
                 </div>
               </Grid.Column>
 
-              <Grid.Column>
+              <Grid.Column style={{ width: expTypeWidth }}>
                 <Dropdown
                   placeholder="Select Experiment Type"
                   name="firstVideoType"
