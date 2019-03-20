@@ -810,36 +810,38 @@ export default class Home extends Component<Props, State> {
           </Grid.Column>
 
           <Grid.Column className={styles.submitButton}>
-            {electrodesChosen.length !== 0 && (
-              <Button secondary>
-                <Link
-                  to={{
-                    pathname: routes.VIDEOSET,
-                    state: {
-                      firstVideo,
-                      firstVideoName,
-                      firstVideoType,
-                      secondVideo,
-                      secondVideoName,
-                      secondVideoType,
-                      thirdVideo,
-                      thirdVideoName,
-                      thirdVideoType,
-                      fourthVideo,
-                      fourthVideoName,
-                      fourthVideoType,
-                      subjectId,
-                      experimenterId,
-                      rawEEGObservable,
-                      classifierType,
-                      electrodesChosen
-                    }
-                  }}
-                >
-                  SUBMIT
-                </Link>
-              </Button>
-            )}
+            {electrodesChosen.length !== 0 &&
+              subjectId &&
+              experimenterId && (
+                <Button secondary>
+                  <Link
+                    to={{
+                      pathname: routes.VIDEOSET,
+                      state: {
+                        firstVideo,
+                        firstVideoName,
+                        firstVideoType,
+                        secondVideo,
+                        secondVideoName,
+                        secondVideoType,
+                        thirdVideo,
+                        thirdVideoName,
+                        thirdVideoType,
+                        fourthVideo,
+                        fourthVideoName,
+                        fourthVideoType,
+                        subjectId,
+                        experimenterId,
+                        rawEEGObservable,
+                        classifierType,
+                        electrodesChosen
+                      }
+                    }}
+                  >
+                    SUBMIT
+                  </Link>
+                </Button>
+              )}
           </Grid.Column>
         </Grid.Row>
 
