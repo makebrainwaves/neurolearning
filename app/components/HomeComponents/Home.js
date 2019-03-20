@@ -48,6 +48,7 @@ interface State {
   classifierType: string;
   electrodes: Object;
   electrodesChosen: string[];
+  connectEEGButtonPressed: boolean;
 }
 
 const expTypeWidth = '40%';
@@ -149,7 +150,8 @@ export default class Home extends Component<Props, State> {
       fourthVideoType: 'control',
       rawEEGObservable: null,
       classifierType: 'alpha',
-      electrodes: ELECTRODES
+      electrodes: ELECTRODES,
+      connectEEGButtonPressed: false
     };
     this.handleSubjectId = this.handleSubjectId.bind(this);
     this.handleExperimenterId = this.handleExperimenterId.bind(this);
@@ -242,6 +244,7 @@ export default class Home extends Component<Props, State> {
     } catch (e) {
       console.log('Error in handleConnectEEG: ', e);
     }
+    this.setState({ connectEEGButtonPressed: true });
   }
 
   handleClassiferType(event: Object, data: Object) {
@@ -312,7 +315,8 @@ export default class Home extends Component<Props, State> {
       fourthVideoType,
       rawEEGObservable,
       classifierType,
-      electrodes
+      electrodes,
+      connectEEGButtonPressed
     } = this.state;
 
     const videoOptions = [
@@ -812,7 +816,8 @@ export default class Home extends Component<Props, State> {
           <Grid.Column className={styles.submitButton}>
             {electrodesChosen.length !== 0 &&
               subjectId &&
-              experimenterId && (
+              experimenterId &&
+              connectEEGButtonPressed && (
                 <Button secondary>
                   <Link
                     to={{
@@ -860,6 +865,11 @@ export default class Home extends Component<Props, State> {
             {electrodesChosen.length === 0 && (
               <h3 className={styles.electrodeWarning}>
                 Please select at least one electrode to continue.
+              </h3>
+            )}
+            {!connectEEGButtonPressed && (
+              <h3 className={styles.electrodeWarning}>
+                Please connect to an EEG stream to continue.
               </h3>
             )}
           </Grid.Column>
