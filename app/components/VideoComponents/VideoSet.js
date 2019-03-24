@@ -102,6 +102,7 @@ export default class VideoSet extends Component<Props, State> {
       isRunning: false,
       modalIsOpen: false,
       finalModalIsOpen: false,
+      postExperimentSurvey: false,
       question1AlreadyShown: false,
       question2AlreadyShown: false,
       biomassSequenceNumber: 1,
@@ -304,7 +305,16 @@ export default class VideoSet extends Component<Props, State> {
       this.playVideo();
     }
 
-    this.setState({ finalModalIsOpen: false });
+    this.setState({
+      finalModalIsOpen: false,
+      postExperimentSurvey: true
+    });
+  };
+
+  closePostExpSurveyModal = () => {
+    this.setState({
+      postExperimentSurvey: false
+    });
   };
 
   playVideo = () => {
@@ -1340,6 +1350,51 @@ export default class VideoSet extends Component<Props, State> {
                 <Button onClick={this.closeFinalModal} type="submit">
                   Continue
                 </Button>
+              </Modal.Description>
+            </Modal.Content>
+          </div>
+        </Modal>
+
+        <Modal
+          open={this.state.postExperimentSurvey}
+          className={styles.modal}
+          closeOnEscape={false}
+          closeOnDimmerClick={false}
+        >
+          <div className={styles.finalInner}>
+            <Modal.Header />
+            <Modal.Content className={styles.content}>
+              <Modal.Description>
+                <h4>
+                  Please click the following link to complete a final short
+                  survey:
+                </h4>
+
+                <h5>
+                  <a
+                    className={styles.surveyLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://docs.google.com/forms/d/e/1FAIpQLSekIl0ePONvEbzUfg7ig-eJ3M8l37Mhgjon8_Hx1od3XPPcLw/viewform"
+                  >
+                    Click here: Post Experiment Survey
+                  </a>
+                </h5>
+                <br />
+                <br />
+                <br />
+
+                <h4>
+                  Once you submit your response, please tell the experimenter.
+                </h4>
+                <br />
+
+                <h4>Thank you for completing this experiment.</h4>
+                <br />
+                <Button onClick={this.closePostExpSurveyModal} type="submit">
+                  END
+                </Button>
+                <br />
               </Modal.Description>
             </Modal.Content>
           </div>
