@@ -66,6 +66,7 @@ interface State {
   score: number;
   electrodesChosen: string[];
   rawEEGWriteStream: WriteStream | null;
+  videoStartTimeNotSet: boolean;
 }
 
 const rollBackTime = 5;
@@ -131,7 +132,8 @@ export default class VideoSet extends Component<Props, State> {
       addedToCsv: false,
       decision: false,
       score: 0,
-      rawEEGWriteStream: null
+      rawEEGWriteStream: null,
+      videoStartTimeNotSet: true
     };
     // These are just so that we can unsubscribe from the observables
     this.rawEEGSubscription = null;
@@ -281,7 +283,7 @@ export default class VideoSet extends Component<Props, State> {
   closeModal = () => {
     const { questionNumber } = this.state;
     const answers = this.state.answers;
-    const closeTime = Date.now();
+    const closeTime = Date.now() + 5000;
     const qNumberForSubmit = `q${questionNumber}`;
 
     answers.forEach(answer => {
@@ -303,11 +305,13 @@ export default class VideoSet extends Component<Props, State> {
     if (this.state.currentVideo !== this.props.location.state.fourthVideo) {
       this.moveAlongVideoSequence();
       this.playVideo();
+    } else {
+      this.setState({
+        postExperimentSurvey: true
+      });
     }
-
     this.setState({
-      finalModalIsOpen: false,
-      postExperimentSurvey: true
+      finalModalIsOpen: false
     });
   };
 
@@ -333,15 +337,13 @@ export default class VideoSet extends Component<Props, State> {
         .then(
           // Automatic playback started!
           // Show playing UI.
-          videoRef.play(),
-          this.setVideoStartTime()
+          videoRef.play()
         )
         .catch(error => {
           // Auto-play was prevented
           // Show paused UI.
           // console.log('vid err');
           videoRef.play();
-          this.setVideoStartTime();
         });
     }
 
@@ -374,6 +376,8 @@ export default class VideoSet extends Component<Props, State> {
     ) {
       this.setState({ photosynthVidStartTimeTOD: startTime });
     }
+
+    this.setState({ videoStartTimeNotSet: false });
   };
 
   pauseVideo = () => {
@@ -470,7 +474,12 @@ export default class VideoSet extends Component<Props, State> {
     } = this.state;
 
     const vidCurrTime = document.getElementById('vidID').currentTime;
+
     const videoType = this.getExperimentType();
+
+    if (this.state.videoStartTimeNotSet) {
+      this.setVideoStartTime();
+    }
 
     if (videoType === 'experimental') {
       console.log('second vidCurrTime', vidCurrTime);
@@ -553,6 +562,9 @@ export default class VideoSet extends Component<Props, State> {
     if (this.state.rawEEGWriteStream) {
       this.state.rawEEGWriteStream.close();
     }
+
+    this.setState({ videoStartTimeNotSet: true });
+
     for (let i = 0; i < videoQuestions.length; i++) {
       const questionAnswered = `questionAnswered${i + 1}`;
       const askQuestion = `askQuestion${i + 1}`;
