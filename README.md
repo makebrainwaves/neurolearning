@@ -1,5 +1,7 @@
 # NYU Neurolearning Project
 
+The Neurolearning app is a Windows desktop app that intergrates EEG analysis capabilities with an online video learning platform.  It is built using Neuroelectric's Enobio 32-channel headset.
+
 ## Based on:
 
 # electron-react-boilerplate
