@@ -206,7 +206,7 @@
     "webpack-bundle-analyzer": "^2.9.2",
     "webpack-dev-server": "^2.11.1",
     "webpack-merge": "^4.1.1",
-    "yarn": "^1.9.2"
+    "yarn": "^1.22.0"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.2.0",

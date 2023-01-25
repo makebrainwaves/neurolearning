@@ -11203,9 +11203,9 @@ yargs@~3.10.0:
     decamelize "^1.0.0"
     window-size "0.1.0"
 
-yarn@^1.9.2:
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.10.1.tgz#b792ba28f050ae94cd7e719dbca80639d70da76f"
+yarn@^1.22.0:
+  version "1.22.0"
+  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.22.0.tgz#acf82906e36bcccd1ccab1cfb73b87509667c881"
 
 yauzl@2.4.1:
   version "2.4.1"
