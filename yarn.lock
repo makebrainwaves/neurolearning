@@ -6522,8 +6522,8 @@ jest@^23.4.2:
     jest-cli "^23.6.0"
 
 jquery@x.*:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
+  version "3.6.4"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.4.tgz#ba065c188142100be4833699852bf7c24dc0252f"
 
 js-base64@^2.1.8, js-base64@^2.1.9:
   version "2.4.9"
